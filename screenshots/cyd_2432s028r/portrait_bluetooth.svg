@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
+<rect width="240" height="320" fill="#000000"/>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.title{font-family:Georgia,"Times New Roman",serif}
+.mono{font-family:"SF Mono","Menlo",monospace}
+</style>
+<image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAABJ0AAASdAHeZh94AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhFJREFUeJzt279qFFEYhvH3O85cgdoGQUiv2OYmxD+NrWJvEeINpIm9pBUEbbyItLp1AjZu615Bkp3PQgIBR/dkn8mMYd8fbDOchY8HzjKHnYnMlK2vTD3ATeeAkANCDgg5IOSAkANCDgg5IOSAkANCDgg5IOSAkANCTc2i47ePb5dlu6PQ3ese6L8QudBZc7R98HGxamlVwCbLVhfak+IRn+4GyJh1On8taZiAkpQZJWIztnymStvWrd2IINfJASEHhBwQckDIASEHhKrvA6ukFoo8UsbPS1fvKHJHinFPMSPNMmjAlOZxHvvb7z59vbh2/Obpw9KU99K4x8CxZhl8C99qu06ZefFp2q6b6vGbMWbxbyDkgJADQg4IOSDkgJADQnGy++zlqkUpbYXihaR7/16Xc2V8iMgfV/3u0Mgsfd/9mzjZfe6nzAFvYcgBIQeEHBByQMgBIQeEHBBqlDqsWDfN/xpT6f8/pVfUvO76fe/Jg2XXHEZoI57OytSsKd2r+/ufv61a6y0MOSDkgJADQg4IOSDkgJADQlUPF8Vpu4i2+6KM2aXLf55Oap+IusKdfqVBZynS/PRsufIVB6nyJNKn73TSdwdfu46YchZvYcgBIQeEHBByQMgBIQeEHBBa+zWHvtNJ3x187TpiylnWPonYb97CkANCDgg5IOSAkANCDgg5IOSAkANCDgg5IPQLu98JBIDeNyUAAAAASUVORK5CYII=" x="6" y="4" width="40" height="40"/>
+<text x="110" y="33.92" font-size="24" fill="#faf9f5" dominant-baseline="middle" text-anchor="middle" class="title">Bluetooth</text>
+<rect x="20" y="62" width="200" height="108" rx="8" fill="#1f1f1e"/>
+<g transform="translate(30 70) scale(1.75)" fill="none" stroke="#b0aea5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></g>
+<text x="86" y="83" font-size="20" fill="#10a37f" dominant-baseline="middle" text-anchor="start" font-weight="700">Connected</text>
+<text x="30" y="114" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Device: Codex Meter</text>
+<text x="30" y="138" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Address: F0:08:D1:2A:BC:34</text>
+<rect x="20" y="186" width="200" height="60" rx="8" fill="#1f1f1e"/>
+<g transform="translate(46 204) scale(1)" fill="none" stroke="#b0aea5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g>
+<text x="84" y="216" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Reset Bluetooth</text>
+<text x="120" y="274" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">Codexmeter</text>
+<text x="120" y="300" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">Built from Clawdmeter</text>
+<rect x="170" y="6" width="64" height="34" rx="17" fill="#2a2a28"/>
+<text x="202" y="23" font-size="14" fill="#d97757" dominant-baseline="middle" text-anchor="middle" font-weight="700">SET</text>
+</svg>

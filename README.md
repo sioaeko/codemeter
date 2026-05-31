@@ -2,6 +2,10 @@
 
 Cheap Yellow Display `ESP32-2432S028R`에 Codex 사용량을 띄우는 작은 데스크 미터입니다.
 
+## 미리보기
+
+![CYD UI preview](screenshots/cyd_2432s028r/preview.svg)
+
 ## 바로 설치
 
 **웹 플래셔:** [https://sioaeko.github.io/codexmeter-cyd/web-flasher/](https://sioaeko.github.io/codexmeter-cyd/web-flasher/)
@@ -110,6 +114,12 @@ macOS에서 CLI 플래시:
 
 ```bash
 ./tools/update_web_flasher.sh
+```
+
+CYD 프리뷰 이미지 재생성:
+
+```bash
+node tools/render_cyd_previews.js
 ```
 
 웹 플래셔가 사용하는 factory images:

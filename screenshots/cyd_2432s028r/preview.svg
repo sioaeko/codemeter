@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1064" height="764" viewBox="0 0 1064 764">
+<rect width="1064" height="764" fill="#111110"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}</style>
+<text x="188" y="40" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">portrait usage</text>
+<image href="portrait_usage.svg" x="68" y="50" width="240" height="320"/>
+<rect x="67" y="49" width="242" height="322" rx="10" fill="none" stroke="#383631"/>
+<text x="532" y="40" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">portrait settings</text>
+<image href="portrait_settings.svg" x="412" y="50" width="240" height="320"/>
+<rect x="411" y="49" width="242" height="322" rx="10" fill="none" stroke="#383631"/>
+<text x="876" y="40" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">portrait bluetooth</text>
+<image href="portrait_bluetooth.svg" x="756" y="50" width="240" height="320"/>
+<rect x="755" y="49" width="242" height="322" rx="10" fill="none" stroke="#383631"/>
+<text x="188" y="406" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">landscape usage</text>
+<image href="landscape_usage.svg" x="28" y="416" width="320" height="240"/>
+<rect x="27" y="415" width="322" height="242" rx="10" fill="none" stroke="#383631"/>
+<text x="532" y="406" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">landscape settings</text>
+<image href="landscape_settings.svg" x="372" y="416" width="320" height="240"/>
+<rect x="371" y="415" width="322" height="242" rx="10" fill="none" stroke="#383631"/>
+<text x="876" y="406" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">landscape bluetooth</text>
+<image href="landscape_bluetooth.svg" x="716" y="416" width="320" height="240"/>
+<rect x="715" y="415" width="322" height="242" rx="10" fill="none" stroke="#383631"/>
+</svg>
