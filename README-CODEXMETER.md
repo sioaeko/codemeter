@@ -1,4 +1,4 @@
-# Codexmeter CYD Port
+# clawdmeter-cyd Port
 
 This fork turns Clawdmeter into a Codex usage display for the Cheap Yellow
 Display / ESP32-2432S028R board.
@@ -40,7 +40,7 @@ mirrored, start with `firmware/src/boards/cyd_2432s028r/board.h`.
 
 The easiest install path is the static ESP Web Tools page in `web-flasher/`.
 
-**Live flasher:** [https://sioaeko.github.io/codexmeter-cyd/web-flasher/](https://sioaeko.github.io/codexmeter-cyd/web-flasher/).
+**Live installer:** [https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/).
 
 Test locally:
 
@@ -48,8 +48,8 @@ Test locally:
 python3 -m http.server 8787 --directory web-flasher
 ```
 
-Then open `http://localhost:8787/` in Chrome or Edge and choose **Portrait**
-or **Landscape**.
+Then open `http://localhost:8787/` in a browser with Web Serial support and
+choose **Portrait** or **Landscape**.
 
 To refresh the bundled web-flasher firmware after a new build:
 

@@ -1,4 +1,4 @@
-# Codexmeter Web Flasher
+# clawdmeter-cyd installer
 
 Static ESP Web Tools installer for the CYD / ESP32-2432S028R build.
 
@@ -20,7 +20,7 @@ http://localhost:8787/
 **GitHub Pages (published site):**
 
 ```text
-https://sioaeko.github.io/codexmeter-cyd/web-flasher/
+https://sioaeko.github.io/clawdmeter-cyd/web-flasher/
 ```
 
 GitHub Pages is published from the repo root. Open `/web-flasher/` for the

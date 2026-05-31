@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <title>Codexmeter CYD 펌웨어 설치</title>
+    <title>clawdmeter-cyd 설치</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -464,7 +464,7 @@
           font-size: 48px;
         }
 
-        .device-preview {
+        .firmware-preview {
           width: 100%;
           max-width: 430px;
         }
@@ -499,7 +499,7 @@
           font-size: 16px;
         }
 
-        .device-preview {
+        .firmware-preview {
           margin-top: 30px;
         }
 
@@ -531,10 +531,10 @@
     <div class="page">
       <header class="topbar">
         <div class="container topbar-inner">
-          <a class="brand" href="#install" aria-label="Codexmeter 설치로 이동">
-            Codexmeter
+          <a class="brand" href="#install" aria-label="clawdmeter-cyd 설치로 이동">
+            clawdmeter-cyd
           </a>
-          <span class="topbar-note">Chrome / Edge 데스크톱</span>
+          <span class="topbar-note">Codex 호환</span>
         </div>
       </header>
 
@@ -542,22 +542,22 @@
         <section class="hero">
           <div class="container hero-grid">
             <div>
-              <p class="eyebrow">Web Serial firmware flasher</p>
-              <h1>Codexmeter CYD 웹 플래셔</h1>
+              <p class="eyebrow">Codex 호환 CYD firmware</p>
+              <h1>clawdmeter-cyd</h1>
               <p class="lede">
-                ESP32-2432S028R 보드를 USB로 연결하고 화면 방향만 고르면 바로
-                설치됩니다.
+                Clawdmeter 기반 ESP32-2432S028R 펌웨어입니다. Claude Code용
+                구성에 더해 Codex 사용량 표시도 호환됩니다.
               </p>
               <ul class="quick-list" aria-label="설치 조건">
                 <li>ESP32-2432S028R</li>
                 <li>USB 데이터 케이블</li>
-                <li>Chrome 또는 Edge</li>
+                <li>Web Serial</li>
               </ul>
 
               <figure
                 class="firmware-preview"
                 data-orientation="portrait"
-                aria-label="Codexmeter 펌웨어 화면 미리보기"
+                aria-label="clawdmeter-cyd 펌웨어 화면 미리보기"
               >
                 <figcaption class="preview-top">
                   <span>FIRMWARE PREVIEW</span>
@@ -568,7 +568,7 @@
                     <img
                       data-preview-image
                       src="previews/cyd_2432s028r/portrait_usage.svg"
-                      alt="Codexmeter portrait firmware preview"
+                      alt="clawdmeter-cyd portrait firmware preview"
                     />
                   </div>
                 </div>
@@ -608,8 +608,7 @@
                 <esp-web-install-button manifest="manifest.json">
                   <button slot="activate" class="install-button">Install Portrait</button>
                   <span slot="unsupported" class="unsupported">
-                    Web Serial을 지원하지 않는 브라우저입니다. 데스크톱 Chrome
-                    또는 Edge를 사용하세요.
+                    Web Serial을 지원하는 브라우저에서 열어주세요.
                   </span>
                   <span slot="not-allowed" class="not-allowed">
                     Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
@@ -625,8 +624,7 @@
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
                   <span slot="unsupported" class="unsupported">
-                    Web Serial을 지원하지 않는 브라우저입니다. 데스크톱 Chrome
-                    또는 Edge를 사용하세요.
+                    Web Serial을 지원하는 브라우저에서 열어주세요.
                   </span>
                   <span slot="not-allowed" class="not-allowed">
                     Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
@@ -665,7 +663,7 @@
 
       <footer class="footer">
         <div class="container footer-inner">
-          <span>Codexmeter CYD</span>
+          <span>clawdmeter-cyd · Codex 호환</span>
           <div class="footer-links">
             <a href="manifest.json">portrait manifest</a>
             <a href="manifest-landscape.json">landscape manifest</a>
@@ -684,11 +682,11 @@
       const previewSources = {
         portrait: {
           src: "previews/cyd_2432s028r/portrait_usage.svg",
-          alt: "Codexmeter portrait firmware preview",
+          alt: "clawdmeter-cyd portrait firmware preview",
         },
         landscape: {
           src: "previews/cyd_2432s028r/landscape_usage.svg",
-          alt: "Codexmeter landscape firmware preview",
+          alt: "clawdmeter-cyd landscape firmware preview",
         },
       };
 
