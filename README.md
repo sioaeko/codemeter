@@ -1,4 +1,4 @@
-# clawdmeter-cyd
+# Clawdmeter-CYD
 
 Cheap Yellow Display `ESP32-2432S028R`용 Clawdmeter fork입니다. Claude Code와
 Codex 사용량 표시를 모두 호환합니다.
