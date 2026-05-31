@@ -55,8 +55,15 @@
 #define TOUCH_RAW_X_MAX      3700
 #define TOUCH_RAW_Y_MIN      240
 #define TOUCH_RAW_Y_MAX      3800
-#define TOUCH_INVERT_X       0
+
+#if defined(BOARD_CYD_2432S028R_LANDSCAPE)
+// After landscape rotation, the screen Y axis comes from native touch X.
+#define TOUCH_INVERT_X       1
 #define TOUCH_INVERT_Y       0
+#else
+#define TOUCH_INVERT_X       0
+#define TOUCH_INVERT_Y       1
+#endif
 #define TOUCH_SWAP_XY        0
 
 // ---- Buttons ----

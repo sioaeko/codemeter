@@ -514,7 +514,7 @@ static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
 
 static lv_obj_t* make_settings_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
-    lv_obj_set_size(btn, (L.scr_h <= 340) ? 78 : 90, (L.scr_h <= 340) ? 46 : 52);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 76 : 90, (L.scr_h <= 340) ? 44 : 52);
     lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(btn, 0, 0);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -530,14 +530,16 @@ static lv_obj_t* make_settings_button(lv_obj_t* parent) {
     lv_obj_center(label);
     register_accent(label);
 
+    int edge = (L.scr_h <= 340) ? 4 : L.margin;
+    int y = (L.scr_h <= 340) ? 4 : L.title_y - 2;
     int battery_offset = board_caps().has_battery ? 54 : 0;
-    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin - battery_offset, L.title_y - 2);
+    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -edge - battery_offset, y);
     return btn;
 }
 
 static lv_obj_t* make_back_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
-    lv_obj_set_size(btn, (L.scr_h <= 340) ? 82 : 96, (L.scr_h <= 340) ? 46 : 52);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 86 : 96, (L.scr_h <= 340) ? 44 : 52);
     lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(btn, 0, 0);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -553,7 +555,9 @@ static lv_obj_t* make_back_button(lv_obj_t* parent) {
     lv_obj_center(label);
     register_accent(label);
 
-    lv_obj_align(btn, LV_ALIGN_TOP_LEFT, L.margin, L.title_y - 2);
+    int edge = (L.scr_h <= 340) ? 4 : L.margin;
+    int y = (L.scr_h <= 340) ? 4 : L.title_y - 2;
+    lv_obj_align(btn, LV_ALIGN_TOP_LEFT, edge, y);
     return btn;
 }
 
