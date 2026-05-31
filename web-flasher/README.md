@@ -17,6 +17,15 @@ Then open:
 http://localhost:8787/
 ```
 
+**GitHub Pages (published site):**
+
+```text
+https://sioaeko.github.io/codexmeter-cyd/web-flasher/
+```
+
+GitHub Pages is published from the repo root. Open `/web-flasher/` for the
+installer page.
+
 Use Chrome, Edge, or another browser with Web Serial support.
 
 ## Update Firmware

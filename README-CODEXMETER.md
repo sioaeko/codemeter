@@ -34,7 +34,10 @@ mirrored, start with `firmware/src/boards/cyd_2432s028r/board.h`.
 ### Web Flasher
 
 The easiest install path is the static ESP Web Tools page in `web-flasher/`.
-Host that folder on GitHub Pages, or test it locally:
+
+**Live flasher:** [https://sioaeko.github.io/codexmeter-cyd/web-flasher/](https://sioaeko.github.io/codexmeter-cyd/web-flasher/).
+
+Test locally:
 
 ```bash
 python3 -m http.server 8787 --directory web-flasher
