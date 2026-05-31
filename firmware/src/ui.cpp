@@ -101,7 +101,7 @@ static void compute_layout(const BoardCaps& c) {
         L.content_y = 52;
         L.panel_pad = 10;
         L.panel_pad_y = 6;
-        L.show_logo = false;
+        L.show_logo = true;
         L.usage_panel_h = 72;
         L.usage_panel_gap = 8;
         L.usage_bar_y = 34;
@@ -128,7 +128,7 @@ static void compute_layout(const BoardCaps& c) {
         L.content_y = 62;
         L.panel_pad = 10;
         L.panel_pad_y = 8;
-        L.show_logo = false;
+        L.show_logo = true;
         L.usage_panel_h = 86;
         L.usage_panel_gap = 8;
         L.usage_bar_y = 42;
@@ -879,7 +879,13 @@ void ui_init(void) {
     if (L.show_logo) {
         logo_img = lv_image_create(scr);
         lv_image_set_src(logo_img, &logo_dsc);
-        lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
+        if (L.scr_h <= 340) {
+            lv_image_set_scale(logo_img, 128);
+            lv_obj_set_pos(logo_img, 6, 4);
+        } else {
+            lv_image_set_scale(logo_img, LV_SCALE_NONE);
+            lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
+        }
     }
 
     battery_img = lv_image_create(scr);
@@ -1021,8 +1027,8 @@ void ui_show_screen(screen_t screen) {
     }
 
     if (logo_img) {
-        if (screen == SCREEN_SPLASH) lv_obj_add_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
-        else                          lv_obj_clear_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
+        if (screen == SCREEN_USAGE || screen == SCREEN_BLUETOOTH) lv_obj_clear_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
+        else                                                       lv_obj_add_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
     }
 
     if (screen != SCREEN_SPLASH) prev_non_splash_screen = screen;
