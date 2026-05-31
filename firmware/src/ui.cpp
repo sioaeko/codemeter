@@ -194,15 +194,15 @@ static lv_color_t col_bg(void) {
 }
 
 static lv_color_t col_panel(void) {
-    return theme_is_light() ? lv_color_hex(0x1f1f1e) : lv_color_hex(0x1f1f1e);
+    return theme_is_light() ? lv_color_hex(0xfffbf2) : lv_color_hex(0x1f1f1e);
 }
 
 static lv_color_t col_text(void) {
-    return lv_color_hex(0xfaf9f5);
+    return theme_is_light() ? lv_color_hex(0x2d2b27) : lv_color_hex(0xfaf9f5);
 }
 
 static lv_color_t col_dim(void) {
-    return theme_is_light() ? lv_color_hex(0xc7bfae) : lv_color_hex(0xb0aea5);
+    return theme_is_light() ? lv_color_hex(0x6f6258) : lv_color_hex(0xb0aea5);
 }
 
 static lv_color_t col_green(void) {
@@ -219,7 +219,7 @@ static lv_color_t col_red(void) {
 }
 
 static lv_color_t col_bar_bg(void) {
-    return lv_color_hex(0x2a2a28);
+    return theme_is_light() ? lv_color_hex(0xe3d3bf) : lv_color_hex(0x2a2a28);
 }
 
 #define COL_BG        col_bg()
