@@ -1,15 +1,15 @@
 #!/bin/bash
-# Build and flash Clawdmeter firmware on macOS.
+# Build and flash Codexmeter firmware on macOS.
 # Usage:
-#   ./flash-mac.sh <board>                       # auto-detect /dev/cu.usbmodem*
-#   ./flash-mac.sh <board> /dev/cu.usbmodem1101  # explicit USB serial port
+#   ./flash-mac.sh <board>                       # auto-detect common USB serial ports
+#   ./flash-mac.sh <board> /dev/cu.usbserial-110 # explicit USB serial port
 #
-# <board> is the PlatformIO env name, e.g. waveshare_amoled_216 or waveshare_amoled_18.
+# <board> is the PlatformIO env name, e.g. cyd_2432s028r or waveshare_amoled_18.
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-BOARD="$1"
-PORT="$2"
+BOARD="${1:-}"
+PORT="${2:-}"
 
 if [ -z "$BOARD" ]; then
     echo "Error: board env name is required."
@@ -20,27 +20,40 @@ if [ -z "$BOARD" ]; then
 fi
 
 if [ -z "$PORT" ]; then
-    PORT=$(ls /dev/cu.usbmodem* 2>/dev/null | head -1)
+    for pattern in /dev/cu.usbserial* /dev/cu.wchusbserial* /dev/cu.SLAB_USBtoUART* /dev/cu.usbmodem*; do
+        PORT=$(ls $pattern 2>/dev/null | head -1)
+        if [ -n "$PORT" ]; then
+            break
+        fi
+    done
     if [ -z "$PORT" ]; then
-        echo "Error: no /dev/cu.usbmodem* device found. Plug in via USB-C."
+        echo "Error: no USB serial device found. Plug in the board or pass a port explicitly."
         exit 1
     fi
 fi
 
-if ! command -v pio >/dev/null; then
-    echo "Error: 'pio' not found. Install with:"
-    echo "  brew install platformio"
-    exit 1
+if command -v pio >/dev/null; then
+    PIO="pio"
+elif [ -x "$SCRIPT_DIR/.pio-venv/bin/pio" ]; then
+    PIO="$SCRIPT_DIR/.pio-venv/bin/pio"
+else
+    echo "PlatformIO not found; creating local .pio-venv ..."
+    python3 -m venv "$SCRIPT_DIR/.pio-venv"
+    "$SCRIPT_DIR/.pio-venv/bin/pip" install --quiet --upgrade pip
+    "$SCRIPT_DIR/.pio-venv/bin/pip" install --quiet platformio
+    PIO="$SCRIPT_DIR/.pio-venv/bin/pio"
 fi
 
-echo "=== Flashing Clawdmeter ==="
+export PLATFORMIO_CORE_DIR="${PLATFORMIO_CORE_DIR:-$SCRIPT_DIR/.platformio}"
+
+echo "=== Flashing Codexmeter ==="
 echo "Board: $BOARD"
 echo "Port:  $PORT"
 echo ""
 
 cd "$SCRIPT_DIR/firmware"
-pio run -e "$BOARD" -t upload --upload-port "$PORT"
+"$PIO" run -e "$BOARD" -t upload --upload-port "$PORT"
 
 echo ""
 echo "=== Done ==="
-echo "Monitor with: pio device monitor -p $PORT -b 115200"
+echo "Monitor with: $PIO device monitor -p $PORT -b 115200"

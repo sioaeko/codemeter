@@ -1,0 +1,16 @@
+{
+  "name": "Codexmeter CYD",
+  "version": "0.1.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "firmware/codexmeter-cyd_2432s028r.factory.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

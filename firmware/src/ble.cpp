@@ -3,13 +3,13 @@
 #include <NimBLEDevice.h>
 #include <NimBLEHIDDevice.h>
 
-#define DEVICE_NAME "Claude Controller"
+#define DEVICE_NAME "Codex Meter"
 
 // Custom GATT UUIDs for data channel
-#define SERVICE_UUID        "4c41555a-4465-7669-6365-000000000001"
-#define RX_CHAR_UUID        "4c41555a-4465-7669-6365-000000000002"  // host writes here
-#define TX_CHAR_UUID        "4c41555a-4465-7669-6365-000000000003"  // device ack/nack notifies
-#define REQ_CHAR_UUID       "4c41555a-4465-7669-6365-000000000004"  // device-initiated refresh request
+#define SERVICE_UUID        "434f4445-582d-4d65-7465-720000000001"
+#define RX_CHAR_UUID        "434f4445-582d-4d65-7465-720000000002"  // host writes here
+#define TX_CHAR_UUID        "434f4445-582d-4d65-7465-720000000003"  // device ack/nack notifies
+#define REQ_CHAR_UUID       "434f4445-582d-4d65-7465-720000000004"  // device-initiated refresh request
 
 #define BLE_BUF_SIZE 512
 
@@ -72,8 +72,8 @@ static void start_advertising() {
     NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
     adv->reset();
     // Primary advertising packet (≤31 bytes):
-    //   flags (3) + appearance (4) + HID service 0x1812 (4) + name "Claude Controller" (19)
-    //   = 30 bytes. macOS Bluetooth Settings only surfaces BLE-only devices
+    //   flags (3) + appearance (4) + HID service 0x1812 (4) + name "Codex Meter" (13)
+    //   = 24 bytes. macOS Bluetooth Settings only surfaces BLE-only devices
     //   that explicitly advertise the standard HID service UUID (0x1812) —
     //   without it the device is recognized internally but hidden from the
     //   GUI nearby-devices list.
@@ -164,7 +164,7 @@ void ble_init(void) {
     // --- HID keyboard service ---
     hid_dev = new NimBLEHIDDevice(server);
     hid_dev->setReportMap((uint8_t*)HID_REPORT_MAP, sizeof(HID_REPORT_MAP));
-    hid_dev->setManufacturer("Anthropic");
+    hid_dev->setManufacturer("OpenAI");
     // PnP ID: (vendorIdSource, vendorId, productId, version).
     // Source 1 = Bluetooth SIG, vendor 0x02E5 = Espressif. Originally claimed
     // Apple's USB vendor 0x05AC + Magic Keyboard product 0x820A — macOS

@@ -15,6 +15,7 @@ LV_FONT_DECLARE(font_styrene_20);
 LV_FONT_DECLARE(font_styrene_16);
 LV_FONT_DECLARE(font_styrene_14);
 LV_FONT_DECLARE(font_mono_32);
+LV_FONT_DECLARE(font_mono_18);
 
 // Layout values computed from the active board's geometry. Populated once
 // in ui_init() and treated as const for the rest of the program. Adding a
@@ -24,14 +25,24 @@ struct Layout {
     int16_t scr_w, scr_h;
     int16_t margin;
     int16_t title_y;
+    int16_t title_x_offset;
     int16_t content_y;
     int16_t content_w;
+    int16_t panel_pad;
+    bool show_logo;
 
     // Usage screen
     int16_t usage_panel_h;
     int16_t usage_panel_gap;
     int16_t usage_bar_y;
+    int16_t usage_bar_h;
     int16_t usage_reset_y;
+    int16_t spinner_bottom;
+    const lv_font_t* title_font;
+    const lv_font_t* usage_pct_font;
+    const lv_font_t* usage_pill_font;
+    const lv_font_t* usage_reset_font;
+    const lv_font_t* spinner_font;
 
     // Bluetooth screen
     int16_t bt_info_panel_h;
@@ -53,6 +64,9 @@ static void compute_layout(const BoardCaps& c) {
     L.scr_h = c.height;
     L.margin = 20;
     L.title_y = 30;
+    L.title_x_offset = 16;
+    L.panel_pad = 16;
+    L.show_logo = true;
 
     if (c.height >= 460) {
         // Large layout — tuned for 480x480 (AMOLED-2.16).
@@ -60,7 +74,14 @@ static void compute_layout(const BoardCaps& c) {
         L.usage_panel_h = 150;
         L.usage_panel_gap = 16;
         L.usage_bar_y = 56;
+        L.usage_bar_h = 24;
         L.usage_reset_y = 94;
+        L.spinner_bottom = 15;
+        L.title_font      = &font_tiempos_56;
+        L.usage_pct_font  = &font_styrene_48;
+        L.usage_pill_font = &font_styrene_28;
+        L.usage_reset_font = &font_styrene_28;
+        L.spinner_font    = &font_mono_32;
         L.bt_info_panel_h = 160;
         L.bt_reset_zone_h = 110;
         L.bt_title_font    = &font_tiempos_56;
@@ -68,13 +89,46 @@ static void compute_layout(const BoardCaps& c) {
         L.bt_device_font   = &font_styrene_28;
         L.bt_credit_1_font = &font_styrene_24;
         L.bt_credit_2_font = &font_styrene_20;
+    } else if (c.width <= 260 && c.height <= 340) {
+        // Tiny portrait layout — tuned for 240x320 CYD.
+        L.margin = 20;
+        L.title_y = 18;
+        L.title_x_offset = 0;
+        L.content_y = 62;
+        L.panel_pad = 10;
+        L.show_logo = false;
+        L.usage_panel_h = 86;
+        L.usage_panel_gap = 8;
+        L.usage_bar_y = 42;
+        L.usage_bar_h = 16;
+        L.usage_reset_y = 62;
+        L.spinner_bottom = 8;
+        L.title_font      = &font_tiempos_34;
+        L.usage_pct_font  = &font_styrene_28;
+        L.usage_pill_font = &font_styrene_16;
+        L.usage_reset_font = &font_styrene_16;
+        L.spinner_font    = &font_mono_18;
+        L.bt_info_panel_h = 108;
+        L.bt_reset_zone_h = 60;
+        L.bt_title_font    = &font_tiempos_34;
+        L.bt_status_font   = &font_styrene_20;
+        L.bt_device_font   = &font_styrene_14;
+        L.bt_credit_1_font = &font_styrene_14;
+        L.bt_credit_2_font = &font_styrene_14;
     } else {
         // Compact layout — tuned for 368x448 (AMOLED-1.8).
         L.content_y = 85;
         L.usage_panel_h = 130;
         L.usage_panel_gap = 12;
         L.usage_bar_y = 48;
+        L.usage_bar_h = 24;
         L.usage_reset_y = 78;
+        L.spinner_bottom = 15;
+        L.title_font      = &font_tiempos_56;
+        L.usage_pct_font  = &font_styrene_48;
+        L.usage_pill_font = &font_styrene_28;
+        L.usage_reset_font = &font_styrene_28;
+        L.spinner_font    = &font_mono_32;
         L.bt_info_panel_h = 140;
         L.bt_reset_zone_h = 90;
         L.bt_title_font    = &font_tiempos_34;
@@ -211,8 +265,8 @@ static lv_obj_t* make_panel(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_set_style_bg_opa(panel, LV_OPA_COVER, 0);
     lv_obj_set_style_radius(panel, 8, 0);
     lv_obj_set_style_border_width(panel, 0, 0);
-    lv_obj_set_style_pad_left(panel, 16, 0);
-    lv_obj_set_style_pad_right(panel, 16, 0);
+    lv_obj_set_style_pad_left(panel, L.panel_pad, 0);
+    lv_obj_set_style_pad_right(panel, L.panel_pad, 0);
     lv_obj_set_style_pad_top(panel, 12, 0);
     lv_obj_set_style_pad_bottom(panel, 12, 0);
     lv_obj_clear_flag(panel, LV_OBJ_FLAG_SCROLLABLE);
@@ -256,13 +310,13 @@ static void init_icon_dsc_rgb565a8(lv_image_dsc_t* dsc, int w, int h, const uint
 static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
     lv_obj_t* lbl = lv_label_create(parent);
     lv_label_set_text(lbl, text);
-    lv_obj_set_style_text_font(lbl, &font_styrene_28, 0);
+    lv_obj_set_style_text_font(lbl, L.usage_pill_font, 0);
     lv_obj_set_style_text_color(lbl, COL_TEXT, 0);
     lv_obj_set_style_bg_color(lbl, COL_BAR_BG, 0);
     lv_obj_set_style_bg_opa(lbl, LV_OPA_COVER, 0);
     lv_obj_set_style_radius(lbl, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_pad_left(lbl, 18, 0);
-    lv_obj_set_style_pad_right(lbl, 18, 0);
+    lv_obj_set_style_pad_left(lbl, L.panel_pad, 0);
+    lv_obj_set_style_pad_right(lbl, L.panel_pad, 0);
     lv_obj_set_style_pad_top(lbl, 6, 0);
     lv_obj_set_style_pad_bottom(lbl, 6, 0);
     return lbl;
@@ -285,18 +339,19 @@ static void make_usage_panel(lv_obj_t* parent, int y, const char* pill_text,
 
     *out_pct = lv_label_create(panel);
     lv_label_set_text(*out_pct, "---%");
-    lv_obj_set_style_text_font(*out_pct, &font_styrene_48, 0);
+    lv_obj_set_style_text_font(*out_pct, L.usage_pct_font, 0);
     lv_obj_set_style_text_color(*out_pct, COL_TEXT, 0);
     lv_obj_set_pos(*out_pct, 0, 0);
 
     *out_pill = make_pill(panel, pill_text);
     lv_obj_align(*out_pill, LV_ALIGN_TOP_RIGHT, 0, 1);
 
-    *out_bar = make_bar(panel, 0, L.usage_bar_y, L.content_w - 32, 24);
+    *out_bar = make_bar(panel, 0, L.usage_bar_y,
+                        L.content_w - (2 * L.panel_pad), L.usage_bar_h);
 
     *out_reset = lv_label_create(panel);
     lv_label_set_text(*out_reset, "---");
-    lv_obj_set_style_text_font(*out_reset, &font_styrene_28, 0);
+    lv_obj_set_style_text_font(*out_reset, L.usage_reset_font, 0);
     lv_obj_set_style_text_color(*out_reset, COL_DIM, 0);
     lv_obj_set_pos(*out_reset, 0, L.usage_reset_y);
 }
@@ -313,11 +368,11 @@ static void init_usage_screen(lv_obj_t* scr) {
 
     lbl_title = lv_label_create(usage_container);
     lv_label_set_text(lbl_title, "Usage");
-    lv_obj_set_style_text_font(lbl_title, &font_tiempos_56, 0);
+    lv_obj_set_style_text_font(lbl_title, L.title_font, 0);
     lv_obj_set_style_text_color(lbl_title, COL_TEXT, 0);
-    lv_obj_align(lbl_title, LV_ALIGN_TOP_MID, 16, L.title_y);
+    lv_obj_align(lbl_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
 
-    make_usage_panel(usage_container, L.content_y, "Current",
+    make_usage_panel(usage_container, L.content_y, "5h",
                      &lbl_session_pct, &lbl_session_label,
                      &bar_session, &lbl_session_reset);
     make_usage_panel(usage_container,
@@ -327,9 +382,9 @@ static void init_usage_screen(lv_obj_t* scr) {
 
     lbl_anim = lv_label_create(usage_container);
     lv_label_set_text(lbl_anim, "");
-    lv_obj_set_style_text_font(lbl_anim, &font_mono_32, 0);
+    lv_obj_set_style_text_font(lbl_anim, L.spinner_font, 0);
     lv_obj_set_style_text_color(lbl_anim, COL_ACCENT, 0);
-    lv_obj_align(lbl_anim, LV_ALIGN_BOTTOM_MID, 0, -15);
+    lv_obj_align(lbl_anim, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
 }
 
 // ======== Bluetooth Screen ========
@@ -348,7 +403,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_label_set_text(lbl_ble_title, "Bluetooth");
     lv_obj_set_style_text_font(lbl_ble_title, L.bt_title_font, 0);
     lv_obj_set_style_text_color(lbl_ble_title, COL_TEXT, 0);
-    lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID, 16, L.title_y);
+    lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
 
     lv_obj_t* p_info = make_panel(ble_container, L.margin, L.content_y,
                                   L.content_w, L.bt_info_panel_h);
@@ -370,13 +425,13 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_label_set_text(lbl_ble_device, "Device: ---");
     lv_obj_set_style_text_font(lbl_ble_device, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_device, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_device, 0, 64);
+    lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 340) ? 52 : 64);
 
     lbl_ble_mac = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_mac, "Address: ---");
     lv_obj_set_style_text_font(lbl_ble_mac, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_mac, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_mac, 0, 100);
+    lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 340) ? 76 : 100);
 
     int reset_y = L.content_y + L.bt_info_panel_h + 16;
     lv_obj_t* reset_zone = lv_obj_create(ble_container);
@@ -403,13 +458,13 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_color(reset_lbl, COL_DIM, 0);
 
     lv_obj_t* lbl_credit = lv_label_create(ble_container);
-    lv_label_set_text(lbl_credit, "Built by @hermannbjorgvin");
+    lv_label_set_text(lbl_credit, "Codexmeter");
     lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
     lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
     lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);
 
     lv_obj_t* lbl_credit2 = lv_label_create(ble_container);
-    lv_label_set_text(lbl_credit2, "Clawd animation by @amaanbuilds");
+    lv_label_set_text(lbl_credit2, "Built from Clawdmeter");
     lv_obj_set_style_text_font(lbl_credit2, L.bt_credit_2_font, 0);
     lv_obj_set_style_text_color(lbl_credit2, COL_DIM, 0);
     lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
@@ -437,9 +492,11 @@ void ui_init(void) {
         lv_obj_add_event_cb(splash_get_root(), global_click_cb, LV_EVENT_CLICKED, NULL);
     }
 
-    logo_img = lv_image_create(scr);
-    lv_image_set_src(logo_img, &logo_dsc);
-    lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
+    if (L.show_logo) {
+        logo_img = lv_image_create(scr);
+        lv_image_set_src(logo_img, &logo_dsc);
+        lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
+    }
 
     battery_img = lv_image_create(scr);
     lv_image_set_src(battery_img, &battery_dscs[0]);
@@ -495,8 +552,11 @@ void ui_tick_anim(void) {
 static screen_t prev_non_splash_screen = SCREEN_USAGE;
 static void apply_battery_visibility(void) {
     if (!battery_img) return;
-    if (current_screen == SCREEN_SPLASH) lv_obj_add_flag(battery_img, LV_OBJ_FLAG_HIDDEN);
-    else                                  lv_obj_clear_flag(battery_img, LV_OBJ_FLAG_HIDDEN);
+    if (!board_caps().has_battery || current_screen == SCREEN_SPLASH) {
+        lv_obj_add_flag(battery_img, LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_obj_clear_flag(battery_img, LV_OBJ_FLAG_HIDDEN);
+    }
 }
 
 static void global_click_cb(lv_event_t* e) {
