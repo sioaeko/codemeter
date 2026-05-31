@@ -402,7 +402,7 @@ static void refresh_settings_labels(void) {
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
-    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "Tap row  BOOT exits");
+    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
 }
 
 static void format_reset_time(int mins, char* buf, size_t len) {
@@ -432,6 +432,7 @@ static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
 static void settings_accent_click_cb(lv_event_t* e);
 static void settings_button_click_cb(lv_event_t* e);
+static void settings_back_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
 
 static int panel_radius(void) {
@@ -528,6 +529,28 @@ static lv_obj_t* make_settings_button(lv_obj_t* parent) {
 
     int battery_offset = board_caps().has_battery ? 54 : 0;
     lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin - battery_offset, L.title_y - 2);
+    return btn;
+}
+
+static lv_obj_t* make_back_button(lv_obj_t* parent) {
+    lv_obj_t* btn = lv_obj_create(parent);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 64 : 78, (L.scr_h <= 340) ? 34 : 42);
+    lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(btn, 0, 0);
+    lv_obj_set_style_pad_all(btn, 0, 0);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(btn, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_event_cb(btn, settings_back_click_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t* label = lv_label_create(btn);
+    lv_label_set_text(label, "BACK");
+    lv_obj_set_style_text_font(label, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(label, COL_DIM, 0);
+    lv_obj_center(label);
+    register_dim(label);
+
+    lv_obj_align(btn, LV_ALIGN_TOP_LEFT, L.margin, L.title_y - 2);
     return btn;
 }
 
@@ -750,7 +773,6 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_obj_set_style_border_width(settings_container, 0, 0);
     lv_obj_set_style_pad_all(settings_container, 0, 0);
     lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_event_cb(settings_container, global_click_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* title = lv_label_create(settings_container);
     lv_label_set_text(title, "Settings");
@@ -758,6 +780,7 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_color(title, COL_TEXT, 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
     register_primary(title);
+    make_back_button(settings_container);
 
     make_settings_card(settings_container, 0, "Display", &lbl_metric_value,
                        settings_metric_click_cb);
@@ -767,7 +790,7 @@ static void init_settings_screen(lv_obj_t* scr) {
                        settings_accent_click_cb);
 
     lbl_settings_note = lv_label_create(settings_container);
-    lv_label_set_text(lbl_settings_note, "Tap row  BOOT exits");
+    lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
     lv_obj_set_style_text_font(lbl_settings_note, L.usage_reset_font, 0);
     lv_obj_set_style_text_color(lbl_settings_note, COL_DIM, 0);
     lv_obj_set_width(lbl_settings_note, L.scr_w - 2 * L.margin);
@@ -903,6 +926,7 @@ void ui_tick_anim(void) {
 }
 
 static screen_t prev_non_splash_screen = SCREEN_USAGE;
+static screen_t prev_non_settings_screen = SCREEN_USAGE;
 static void apply_battery_visibility(void) {
     if (!battery_img) return;
     if (!board_caps().has_battery || current_screen == SCREEN_SPLASH) {
@@ -944,7 +968,15 @@ static void settings_accent_click_cb(lv_event_t* e) {
 
 static void settings_button_click_cb(lv_event_t* e) {
     (void)e;
+    if (current_screen != SCREEN_SETTINGS && current_screen != SCREEN_SPLASH) {
+        prev_non_settings_screen = current_screen;
+    }
     ui_show_screen(SCREEN_SETTINGS);
+}
+
+static void settings_back_click_cb(lv_event_t* e) {
+    (void)e;
+    ui_show_screen(prev_non_settings_screen);
 }
 
 void ui_show_screen(screen_t screen) {
