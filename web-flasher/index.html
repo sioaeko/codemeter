@@ -3,462 +3,1075 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <title>Codexmeter CYD Web Flasher</title>
+    <meta name="color-scheme" content="light" />
+    <title>Codexmeter — CYD 펌웨어 설치</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <script
       type="module"
       src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
     ></script>
     <style>
       :root {
-        --bg: #10110f;
-        --surface: #191b18;
-        --surface-2: #22251f;
-        --line: #383d34;
-        --text: #f4f1ea;
-        --muted: #b6b1a8;
-        --accent: #10a37f;
-        --amber: #d9a441;
-        --danger: #e66b5b;
-        --shadow: rgba(0, 0, 0, 0.32);
+        --primary: #cc785c;
+        --primary-active: #a9583e;
+        --primary-disabled: #e6dfd8;
+        --ink: #141413;
+        --body: #3d3d3a;
+        --body-strong: #252523;
+        --muted: #6c6a64;
+        --muted-soft: #8e8b82;
+        --hairline: #e6dfd8;
+        --hairline-soft: #ebe6df;
+        --canvas: #faf9f5;
+        --surface-soft: #f5f0e8;
+        --surface-card: #efe9de;
+        --surface-cream-strong: #e8e0d2;
+        --surface-dark: #181715;
+        --surface-dark-elevated: #252320;
+        --surface-dark-soft: #1f1e1b;
+        --on-primary: #ffffff;
+        --on-dark: #faf9f5;
+        --on-dark-soft: #a09d96;
+        --accent-teal: #5db8a6;
+        --accent-amber: #e8a55a;
+        --success: #5db872;
+        --r-xs: 4px;
+        --r-sm: 6px;
+        --r-md: 8px;
+        --r-lg: 12px;
+        --r-xl: 16px;
+        --r-pill: 9999px;
+        --font-display: "Cormorant Garamond", "Tiempos Headline", Garamond,
+          "Times New Roman", serif;
+        --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --max-w: 1200px;
+        --nav-h: 64px;
       }
 
-      * {
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        background: var(--bg);
-        color: var(--text);
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
+        background: var(--canvas);
+        color: var(--body);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
       }
 
-      main {
-        width: min(100%, 1040px);
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .container {
+        width: min(100%, var(--max-w));
         margin: 0 auto;
-        padding: 32px 20px 40px;
+        padding-left: 24px;
+        padding-right: 24px;
       }
 
-      .shell {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 330px;
-        gap: 28px;
-        align-items: start;
+      /* Spike mark */
+      .spike {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
       }
 
-      .topline {
+      .spike svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Top nav */
+      .top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        height: var(--nav-h);
+        background: var(--canvas);
+        border-bottom: 1px solid var(--hairline-soft);
+      }
+
+      .top-nav-inner {
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 28px;
+        gap: 24px;
       }
 
-      .brand {
+      .wordmark {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .wordmark:hover {
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .nav-links a {
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--r-md);
+        text-decoration: none;
+      }
+
+      .nav-links a:hover {
+        background: var(--surface-soft);
+        text-decoration: none;
+      }
+
+      .nav-actions {
         display: flex;
         align-items: center;
         gap: 12px;
-        min-width: 0;
       }
 
-      .mark {
-        width: 34px;
-        height: 34px;
+      .btn-text {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 12px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: var(--r-md);
+      }
+
+      .btn-text:hover {
+        background: var(--surface-soft);
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 12px 20px;
+        border: 0;
+        border-radius: var(--r-md);
+        background: var(--primary);
+        color: var(--on-primary);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-active);
+        text-decoration: none;
+      }
+
+      .btn-primary:active {
+        background: var(--primary-active);
+      }
+
+      .btn-primary:focus-visible {
+        outline: 3px solid rgba(204, 120, 92, 0.35);
+        outline-offset: 2px;
+      }
+
+      .btn-secondary {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 12px 20px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--r-md);
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .btn-secondary:hover {
+        background: var(--surface-soft);
+        text-decoration: none;
+      }
+
+      .btn-on-coral {
+        background: var(--canvas);
+        color: var(--ink);
+        border: 0;
+      }
+
+      .btn-on-coral:hover {
+        background: var(--surface-soft);
+      }
+
+      .nav-toggle {
+        display: none;
+        appearance: none;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+        border-radius: var(--r-md);
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        color: var(--ink);
+      }
+
+      /* Hero */
+      .hero {
+        padding: 96px 0;
+      }
+
+      .hero-grid {
         display: grid;
-        place-items: center;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface);
-        color: var(--accent);
-        font-weight: 800;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
       }
 
-      .brand strong {
-        display: block;
-        font-size: 17px;
-        line-height: 1.1;
-      }
-
-      .brand span {
-        display: block;
-        color: var(--muted);
-        font-size: 13px;
-        margin-top: 2px;
-      }
-
-      .badge {
-        border: 1px solid rgba(16, 163, 127, 0.45);
-        color: #baf3df;
-        background: rgba(16, 163, 127, 0.1);
-        border-radius: 999px;
-        padding: 7px 10px;
-        font-size: 13px;
-        white-space: nowrap;
-      }
-
-      h1 {
+      .hero-copy h1 {
         margin: 0;
-        max-width: 720px;
-        font-size: 42px;
+        font-family: var(--font-display);
+        font-size: clamp(36px, 5vw, 64px);
+        font-weight: 400;
         line-height: 1.05;
-        font-weight: 760;
+        letter-spacing: -0.03em;
+        color: var(--ink);
       }
 
-      .lede {
-        margin: 18px 0 0;
-        max-width: 680px;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.55;
+      .hero-lede {
+        margin: 24px 0 0;
+        max-width: 520px;
+        font-size: 18px;
+        line-height: 1.5;
+        color: var(--body);
       }
 
-      .installer {
-        margin-top: 28px;
-        padding: 20px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface);
-        box-shadow: 0 18px 48px var(--shadow);
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .badge-coral {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 4px 12px;
+        border-radius: var(--r-pill);
+        background: var(--primary);
+        color: var(--on-primary);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .mockup-dark {
+        background: var(--surface-dark);
+        border-radius: var(--r-xl);
+        padding: 24px;
+        color: var(--on-dark);
+      }
+
+      .mockup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--on-dark-soft);
+      }
+
+      .mockup-screen {
+        background: var(--surface-dark-soft);
+        border-radius: var(--r-lg);
+        padding: 20px 18px;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .mockup-screen h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: var(--on-dark);
+      }
+
+      .meter-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--on-dark-soft);
+        margin-bottom: 8px;
+      }
+
+      .bar {
+        height: 10px;
+        border-radius: var(--r-pill);
+        background: var(--surface-dark-elevated);
+        overflow: hidden;
+      }
+
+      .bar span {
+        display: block;
+        height: 100%;
+        border-radius: var(--r-pill);
+        background: var(--primary);
+      }
+
+      .bar.week span {
+        width: 18%;
+        background: var(--accent-amber);
+      }
+
+      .bar:not(.week) span {
+        width: 42%;
+      }
+
+      .mockup-foot {
+        margin-top: auto;
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--on-dark-soft);
+      }
+
+      /* Installer band */
+      .band {
+        padding: 96px 0;
+      }
+
+      .band-soft {
+        background: var(--surface-soft);
+      }
+
+      .section-head {
+        max-width: 640px;
+        margin-bottom: 48px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(28px, 3.5vw, 48px);
+        font-weight: 400;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .section-head p {
+        margin: 16px 0 0;
+        font-size: 16px;
+        color: var(--body);
+      }
+
+      .install-panel {
+        background: var(--canvas);
+        border: 1px solid var(--hairline);
+        border-radius: var(--r-lg);
+        padding: 32px;
       }
 
       .install-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 24px;
+        flex-wrap: wrap;
       }
 
-      .install-row h2,
-      .steps h2 {
+      .install-row h3 {
         margin: 0;
         font-size: 18px;
-        line-height: 1.25;
+        font-weight: 500;
+        color: var(--ink);
       }
 
       .install-row p {
-        margin: 6px 0 0;
-        color: var(--muted);
+        margin: 8px 0 0;
         font-size: 14px;
-      }
-
-      .primary {
-        appearance: none;
-        min-height: 46px;
-        min-width: 154px;
-        border: 0;
-        border-radius: 8px;
-        background: var(--accent);
-        color: #06120e;
-        font: inherit;
-        font-size: 15px;
-        font-weight: 760;
-        padding: 0 18px;
-        cursor: pointer;
-      }
-
-      .primary:focus-visible {
-        outline: 3px solid rgba(16, 163, 127, 0.35);
-        outline-offset: 3px;
+        color: var(--muted);
       }
 
       .unsupported,
       .not-allowed {
         display: block;
-        margin-top: 14px;
-        border-radius: 8px;
+        margin-top: 16px;
+        border-radius: var(--r-md);
         padding: 12px 14px;
         font-size: 14px;
         line-height: 1.45;
       }
 
       .unsupported {
-        background: rgba(230, 107, 91, 0.12);
-        color: #ffb9af;
-        border: 1px solid rgba(230, 107, 91, 0.38);
+        background: rgba(198, 69, 69, 0.08);
+        color: #8b3030;
+        border: 1px solid rgba(198, 69, 69, 0.25);
       }
 
       .not-allowed {
-        background: rgba(217, 164, 65, 0.12);
-        color: #f8dba4;
-        border: 1px solid rgba(217, 164, 65, 0.4);
+        background: rgba(212, 160, 23, 0.1);
+        color: #6b5208;
+        border: 1px solid rgba(212, 160, 23, 0.3);
       }
 
-      .meta {
+      /* Feature grid */
+      .feature-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        margin-top: 18px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
       }
 
-      .meta div {
-        min-height: 68px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 12px;
-        background: var(--surface-2);
+      .feature-card {
+        background: var(--surface-card);
+        border-radius: var(--r-lg);
+        padding: 32px;
       }
 
-      .meta span {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
+      .feature-card .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--r-md);
+        background: var(--canvas);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        margin-bottom: 20px;
       }
 
-      .meta strong {
-        display: block;
-        margin-top: 5px;
-        font-size: 15px;
-        line-height: 1.25;
+      .feature-card h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--ink);
       }
 
-      .steps {
-        margin-top: 18px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 18px;
-        background: var(--surface);
-      }
-
-      ol {
-        margin: 14px 0 0;
-        padding-left: 20px;
-        color: var(--muted);
+      .feature-card p {
+        margin: 12px 0 0;
+        font-size: 14px;
+        color: var(--body);
         line-height: 1.55;
       }
 
-      li + li {
-        margin-top: 6px;
+      .feature-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 15px;
+        color: var(--body-strong);
       }
 
-      code {
-        color: var(--text);
-        background: #0b0c0a;
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        padding: 2px 5px;
-        font-size: 0.92em;
+      /* Code window */
+      .code-window {
+        background: var(--surface-dark);
+        border-radius: var(--r-lg);
+        padding: 24px;
+        color: var(--on-dark);
       }
 
-      .device {
-        position: sticky;
-        top: 24px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #0b0c0a;
-        padding: 16px;
-        box-shadow: 0 18px 48px var(--shadow);
+      .code-window h3 {
+        margin: 0 0 16px;
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--on-dark);
       }
 
-      .screen {
-        aspect-ratio: 3 / 4;
-        border-radius: 8px;
-        border: 1px solid #363a32;
-        background: #151714;
-        padding: 18px 16px;
+      .code-block {
+        background: var(--surface-dark-soft);
+        border-radius: var(--r-md);
+        padding: 20px;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .code-block .line {
         display: flex;
-        flex-direction: column;
         gap: 16px;
       }
 
-      .screen-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: var(--muted);
-        font-size: 12px;
+      .code-block .ln {
+        color: var(--muted-soft);
+        user-select: none;
+        min-width: 1.5em;
+        text-align: right;
       }
 
-      .meter {
-        margin-top: auto;
+      .code-block .cmd {
+        color: var(--on-dark);
+      }
+
+      .code-block .comment {
+        color: var(--on-dark-soft);
+      }
+
+      .code-block .str {
+        color: var(--accent-teal);
+      }
+
+      /* Steps */
+      .steps-grid {
         display: grid;
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
       }
 
-      .meter h3 {
-        margin: 0;
-        font-size: 28px;
+      .step-card {
+        background: var(--canvas);
+        border: 1px solid var(--hairline);
+        border-radius: var(--r-lg);
+        padding: 32px;
       }
 
-      .bar {
-        height: 14px;
-        border-radius: 999px;
-        background: #30342e;
-        overflow: hidden;
-      }
-
-      .bar span {
-        display: block;
-        width: 42%;
-        height: 100%;
-        background: var(--accent);
-      }
-
-      .bar.week span {
-        width: 18%;
-        background: var(--amber);
-      }
-
-      .screen-foot {
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.45;
-      }
-
-      footer {
-        margin-top: 24px;
-        color: var(--muted);
+      .step-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: var(--r-pill);
+        background: var(--surface-card);
         font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 16px;
       }
 
-      a {
-        color: #8ce6c8;
+      .step-card h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--ink);
       }
 
-      @media (max-width: 840px) {
-        main {
-          padding-top: 22px;
+      .step-card p {
+        margin: 10px 0 0;
+        font-size: 14px;
+        color: var(--body);
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.92em;
+        background: var(--surface-soft);
+        border: 1px solid var(--hairline);
+        border-radius: var(--r-sm);
+        padding: 2px 6px;
+        color: var(--body-strong);
+      }
+
+      /* CTA band */
+      .cta-coral {
+        background: var(--primary);
+        border-radius: var(--r-lg);
+        padding: 64px;
+        color: var(--on-primary);
+        text-align: center;
+      }
+
+      .cta-coral h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(24px, 3vw, 36px);
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .cta-coral p {
+        margin: 16px auto 0;
+        max-width: 480px;
+        font-size: 16px;
+        opacity: 0.92;
+      }
+
+      .cta-coral .hero-actions {
+        justify-content: center;
+        margin-top: 28px;
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--surface-dark);
+        color: var(--on-dark-soft);
+        padding: 64px 0;
+        margin-top: 0;
+      }
+
+      .footer-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 40px;
+        color: var(--on-dark);
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+      }
+
+      .footer-col h4 {
+        margin: 0 0 16px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--on-dark);
+        letter-spacing: 0.04em;
+      }
+
+      .footer-col ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .footer-col li + li {
+        margin-top: 10px;
+      }
+
+      .footer-col a {
+        color: var(--on-dark-soft);
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .footer-col a:hover {
+        color: var(--on-dark);
+        text-decoration: underline;
+      }
+
+      .footer-bottom {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--surface-dark-elevated);
+        font-size: 13px;
+        color: var(--muted-soft);
+      }
+
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        inset: var(--nav-h) 0 0 0;
+        background: var(--canvas);
+        padding: 24px;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 99;
+      }
+
+      .mobile-nav.open {
+        display: flex;
+      }
+
+      .mobile-nav a {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 500;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        text-decoration: none;
+      }
+
+      .mobile-nav a:hover {
+        background: var(--surface-soft);
+      }
+
+      @media (max-width: 1024px) {
+        .feature-grid,
+        .steps-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
 
-        .shell {
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-links,
+        .nav-actions .btn-text {
+          display: none;
+        }
+
+        .nav-toggle {
+          display: grid;
+          place-items: center;
+        }
+
+        .hero {
+          padding: 64px 0;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        .band {
+          padding: 64px 0;
+        }
+
+        .feature-grid,
+        .steps-grid {
           grid-template-columns: 1fr;
         }
 
-        .device {
-          position: static;
-          max-width: 330px;
-          margin: 0 auto;
+        .footer-grid {
+          grid-template-columns: 1fr;
         }
 
-        h1 {
-          font-size: 34px;
+        .cta-coral {
+          padding: 40px 24px;
         }
-      }
 
-      @media (max-width: 560px) {
-        .topline,
         .install-row {
-          align-items: flex-start;
           flex-direction: column;
+          align-items: flex-start;
         }
 
-        .badge {
-          white-space: normal;
-        }
-
-        .meta {
-          grid-template-columns: 1fr;
-        }
-
-        .primary {
+        .install-row .btn-primary {
           width: 100%;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <div class="topline">
-        <div class="brand">
-          <div class="mark">C</div>
-          <div>
-            <strong>Codexmeter</strong>
-            <span>CYD ESP32-2432S028R</span>
+    <header class="top-nav">
+      <div class="container top-nav-inner">
+        <a class="wordmark" href="#">
+          <span class="spike" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2v20M12 12L4 4M12 12l8-8M12 12L4 20M12 12l8 8"
+                stroke="#141413"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          Codexmeter
+        </a>
+        <nav class="nav-links" aria-label="주 메뉴">
+          <a href="#install">설치</a>
+          <a href="#specs">사양</a>
+          <a href="#setup">설정</a>
+          <a href="README.md">문서</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="btn-text" href="manifest.json">manifest</a>
+          <a class="btn-primary" href="#install">펌웨어 설치</a>
+        </div>
+        <button
+          type="button"
+          class="nav-toggle"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          id="nav-toggle"
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
+      <a href="#install">설치</a>
+      <a href="#specs">사양</a>
+      <a href="#setup">설정</a>
+      <a href="manifest.json">manifest.json</a>
+    </nav>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="badge-coral">Web Serial</span>
+          <h1>CYD 보드에 Codexmeter를 바로 설치하세요</h1>
+          <p class="hero-lede">
+            USB로 ESP32-2432S028R을 연결한 뒤, 이 페이지에서 공장 이미지를
+            플래시합니다. Chrome 또는 Edge 데스크톱에서 동작합니다.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#install">지금 설치</a>
+            <a class="btn-secondary" href="#setup">설치 후 설정</a>
           </div>
         </div>
-        <div class="badge">ESP32 Web Serial installer</div>
-      </div>
-
-      <div class="shell">
-        <section>
-          <h1>Codexmeter firmware installer</h1>
-          <p class="lede">
-            Connect the CYD board over USB, hold BOOT if your USB bridge needs
-            it, then install the bundled Codexmeter firmware from this page.
-          </p>
-
-          <div class="installer">
-            <div class="install-row">
-              <div>
-                <h2>Flash firmware</h2>
-                <p>Chrome or Edge on desktop is required.</p>
-              </div>
-              <esp-web-install-button manifest="manifest.json">
-                <button slot="activate" class="primary">Install</button>
-                <span slot="unsupported" class="unsupported">
-                  This browser does not support Web Serial. Use Chrome or Edge
-                  on desktop.
-                </span>
-                <span slot="not-allowed" class="not-allowed">
-                  Web Serial needs HTTPS or localhost. Serve this folder over
-                  HTTPS or run a local web server.
-                </span>
-              </esp-web-install-button>
-            </div>
-
-            <div class="meta" aria-label="Firmware details">
-              <div>
-                <span>Board</span>
-                <strong>ESP32-2432S028R</strong>
-              </div>
-              <div>
-                <span>Image</span>
-                <strong>Factory binary</strong>
-              </div>
-              <div>
-                <span>Version</span>
-                <strong>0.1.0</strong>
-              </div>
-            </div>
+        <aside class="mockup-dark hero-illustration" aria-label="Codexmeter 미리보기">
+          <div class="mockup-header">
+            <span>Codexmeter</span>
+            <span style="color: var(--accent-teal)">● BLE</span>
           </div>
-
-          <div class="steps">
-            <h2>After flashing</h2>
-            <ol>
-              <li>Pair Bluetooth device <code>Codex Meter</code>.</li>
-              <li>Run <code>codex login</code> if needed.</li>
-              <li>Run <code>./install-codex-mac.sh</code> to start the usage daemon.</li>
-            </ol>
-          </div>
-
-          <footer>
-            Firmware manifest:
-            <a href="manifest.json">manifest.json</a>
-          </footer>
-        </section>
-
-        <aside class="device" aria-label="Codexmeter preview">
-          <div class="screen">
-            <div class="screen-title">
-              <span>CODEXMETER</span>
-              <span>BLE</span>
+          <div class="mockup-screen">
+            <h3>Usage</h3>
+            <div>
+              <div class="meter-row"><span>5h</span><span>42%</span></div>
+              <div class="bar"><span></span></div>
             </div>
-            <div class="meter">
-              <h3>Usage</h3>
-              <div>
-                <div class="screen-title">
-                  <span>5h</span>
-                  <span>42%</span>
-                </div>
-                <div class="bar"><span></span></div>
-              </div>
-              <div>
-                <div class="screen-title">
-                  <span>Weekly</span>
-                  <span>18%</span>
-                </div>
-                <div class="bar week"><span></span></div>
-              </div>
+            <div>
+              <div class="meter-row"><span>Weekly</span><span>18%</span></div>
+              <div class="bar week"><span></span></div>
             </div>
-            <div class="screen-foot">
-              Bundled image targets the common CYD ILI9341 + XPT2046 layout.
-            </div>
+            <p class="mockup-foot">
+              ILI9341 + XPT2046 레이아웃용 번들 펌웨어
+            </p>
           </div>
         </aside>
       </div>
-    </main>
+    </section>
+
+    <section class="band band-soft" id="install">
+      <div class="container">
+        <div class="section-head">
+          <h2>브라우저에서 펌웨어 플래시</h2>
+          <p>
+            ESP Web Tools로 공장 바이너리를 업로드합니다. BOOT 버튼이 필요한
+            브리지라면 연결 전에 눌러 두세요.
+          </p>
+        </div>
+        <div class="install-panel">
+          <div class="install-row">
+            <div>
+              <h3>Flash firmware</h3>
+              <p>Chrome 또는 Edge · 데스크톱 · HTTPS 또는 localhost</p>
+            </div>
+            <esp-web-install-button manifest="manifest.json">
+              <button slot="activate" class="btn-primary">Install</button>
+              <span slot="unsupported" class="unsupported">
+                이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
+                또는 Edge를 사용하세요.
+              </span>
+              <span slot="not-allowed" class="not-allowed">
+                Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
+                로컬 서버로 제공하세요.
+              </span>
+            </esp-web-install-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="specs">
+      <div class="container">
+        <div class="section-head">
+          <h2>번들에 포함된 내용</h2>
+          <p>manifest에 정의된 공장 이미지 한 파일로 전체 스택을 기록합니다.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="icon" aria-hidden="true">◫</div>
+            <h3>보드</h3>
+            <p>일반적인 저가 CYD 터치 디스플레이 키트</p>
+            <strong>ESP32-2432S028R</strong>
+          </article>
+          <article class="feature-card">
+            <div class="icon" aria-hidden="true">⬡</div>
+            <h3>이미지</h3>
+            <p>부트로더 · 파티션 · 앱이 포함된 factory 바이너리</p>
+            <strong>offset 0x0</strong>
+          </article>
+          <article class="feature-card">
+            <div class="icon" aria-hidden="true">◎</div>
+            <h3>버전</h3>
+            <p>manifest와 동기화된 릴리스 태그</p>
+            <strong>0.1.0</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-soft" id="setup">
+      <div class="container">
+        <div class="section-head">
+          <h2>플래시 후 설정</h2>
+          <p>데몬이 사용량을 BLE로 내면 화면에 표시됩니다.</p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card">
+            <span class="step-num">1</span>
+            <h3>Bluetooth 페어링</h3>
+            <p>기기 이름 <code>Codex Meter</code>로 연결합니다.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">2</span>
+            <h3>로그인</h3>
+            <p>필요 시 터미널에서 <code>codex login</code>을 실행합니다.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">3</span>
+            <h3>데몬 시작</h3>
+            <p><code>./install-codex-mac.sh</code>로 usage daemon을 띄웁니다.</p>
+          </article>
+        </div>
+        <div class="code-window" style="margin-top: 32px">
+          <h3>로컬에서 이 페이지 테스트</h3>
+          <div class="code-block">
+            <div class="line">
+              <span class="ln">1</span
+              ><span class="cmd"
+                >python3 -m http.server 8787 --directory web-flasher</span
+              >
+            </div>
+            <div class="line">
+              <span class="ln">2</span
+              ><span class="comment"># → http://localhost:8787/</span>
+            </div>
+            <div class="line">
+              <span class="ln">3</span
+              ><span class="cmd"
+                >./tools/update_web_flasher.sh <span class="comment"
+                  ># 펌웨어 재빌드 후</span
+                ></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="container">
+        <div class="cta-coral">
+          <h2>준비되셨나요?</h2>
+          <p>USB 케이블을 연결하고 Install을 누르면 몇 분 안에 완료됩니다.</p>
+          <div class="hero-actions">
+            <a class="btn-on-coral btn-secondary" href="#install">Install</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <span class="spike" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2v20M12 12L4 4M12 12l8-8M12 12L4 20M12 12l8 8"
+                stroke="#faf9f5"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          Codexmeter
+        </div>
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4>제품</h4>
+            <ul>
+              <li><a href="#install">웹 플래셔</a></li>
+              <li><a href="manifest.json">manifest.json</a></li>
+              <li><a href="#specs">보드 사양</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>설정</h4>
+            <ul>
+              <li><a href="#setup">BLE 페어링</a></li>
+              <li><a href="#setup">데몬 설치</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>리소스</h4>
+            <ul>
+              <li><a href="README.md">README</a></li>
+              <li>
+                <a
+                  href="https://github.com/espressif/esp-web-tools"
+                  rel="noopener noreferrer"
+                  >ESP Web Tools</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>법적 고지</h4>
+            <ul>
+              <li><span>오픈소스 펌웨어 도구</span></li>
+              <li><span>Chrome · Edge Web Serial</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="footer-bottom">
+          디자인 시스템: getdesign claude · UI 토큰은
+          <a href="DESIGN.md" style="color: var(--on-dark-soft)">DESIGN.md</a> 참고
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const toggle = document.getElementById("nav-toggle");
+      const mobileNav = document.getElementById("mobile-nav");
+      if (toggle && mobileNav) {
+        toggle.addEventListener("click", () => {
+          const open = mobileNav.classList.toggle("open");
+          toggle.setAttribute("aria-expanded", String(open));
+        });
+        mobileNav.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileNav.classList.remove("open");
+            toggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+    </script>
   </body>
 </html>

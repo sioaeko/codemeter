@@ -2,6 +2,9 @@
 
 Static ESP Web Tools installer for the CYD / ESP32-2432S028R build.
 
+The page UI follows the [Claude design system](DESIGN.md) from `npx getdesign add claude`
+(Cormorant Garamond + Inter, cream canvas, coral CTAs, dark product mockups).
+
 ## Local Test
 
 ```bash
