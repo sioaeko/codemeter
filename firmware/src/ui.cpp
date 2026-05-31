@@ -512,23 +512,9 @@ static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
     return lbl;
 }
 
-static lv_obj_t* make_settings_touch_area(lv_obj_t* parent, int x, int y, int w, int h) {
-    lv_obj_t* area = lv_obj_create(parent);
-    lv_obj_set_pos(area, x, y);
-    lv_obj_set_size(area, w, h);
-    lv_obj_set_style_bg_opa(area, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(area, 0, 0);
-    lv_obj_set_style_pad_all(area, 0, 0);
-    lv_obj_clear_flag(area, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_flag(area, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_clear_flag(area, LV_OBJ_FLAG_EVENT_BUBBLE);
-    lv_obj_add_event_cb(area, settings_button_click_cb, LV_EVENT_CLICKED, NULL);
-    return area;
-}
-
 static lv_obj_t* make_settings_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
-    lv_obj_set_size(btn, (L.scr_h <= 340) ? 56 : 72, (L.scr_h <= 340) ? 34 : 42);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 78 : 90, (L.scr_h <= 340) ? 46 : 52);
     lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(btn, 0, 0);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -551,7 +537,7 @@ static lv_obj_t* make_settings_button(lv_obj_t* parent) {
 
 static lv_obj_t* make_back_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
-    lv_obj_set_size(btn, (L.scr_h <= 340) ? 64 : 78, (L.scr_h <= 340) ? 34 : 42);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 82 : 96, (L.scr_h <= 340) ? 46 : 52);
     lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(btn, 0, 0);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -563,9 +549,9 @@ static lv_obj_t* make_back_button(lv_obj_t* parent) {
     lv_obj_t* label = lv_label_create(btn);
     lv_label_set_text(label, "BACK");
     lv_obj_set_style_text_font(label, L.usage_reset_font, 0);
-    lv_obj_set_style_text_color(label, COL_DIM, 0);
+    lv_obj_set_style_text_color(label, COL_ACCENT, 0);
     lv_obj_center(label);
-    register_dim(label);
+    register_accent(label);
 
     lv_obj_align(btn, LV_ALIGN_TOP_LEFT, L.margin, L.title_y - 2);
     return btn;
@@ -617,8 +603,6 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_set_style_border_width(usage_container, 0, 0);
     lv_obj_set_style_pad_all(usage_container, 0, 0);
     lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_flag(usage_container, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(usage_container, global_click_cb, LV_EVENT_CLICKED, NULL);
 
     lbl_title = lv_label_create(usage_container);
     lv_label_set_text(lbl_title, metric_label());
@@ -642,7 +626,6 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_align(lbl_anim, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
     register_accent(lbl_anim);
 
-    make_settings_touch_area(usage_container, 0, 0, L.scr_w, L.scr_h);
     make_settings_button(usage_container);
 }
 
@@ -656,8 +639,6 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_border_width(ble_container, 0, 0);
     lv_obj_set_style_pad_all(ble_container, 0, 0);
     lv_obj_clear_flag(ble_container, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_flag(ble_container, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(ble_container, global_click_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* lbl_ble_title = lv_label_create(ble_container);
     lv_label_set_text(lbl_ble_title, "Bluetooth");
@@ -736,8 +717,6 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
     register_dim(lbl_credit2);
 
-    make_settings_touch_area(ble_container, 0, 0, L.scr_w, L.content_y - 4);
-    make_settings_touch_area(ble_container, 0, L.scr_h - 54, L.scr_w, 54);
     make_settings_button(ble_container);
 
     lv_obj_add_flag(ble_container, LV_OBJ_FLAG_HIDDEN);
