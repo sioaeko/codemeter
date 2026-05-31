@@ -56,7 +56,7 @@
 #define TOUCH_RAW_Y_MIN      240
 #define TOUCH_RAW_Y_MAX      3800
 #define TOUCH_INVERT_X       0
-#define TOUCH_INVERT_Y       0
+#define TOUCH_INVERT_Y       1
 #define TOUCH_SWAP_XY        0
 
 // ---- Buttons ----

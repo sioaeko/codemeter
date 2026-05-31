@@ -139,6 +139,11 @@ void splash_init(lv_obj_t *parent) {
 
     canvas = lv_canvas_create(splash_container);
     lv_canvas_set_buffer(canvas, canvas_buf, canvas_w, canvas_h, LV_COLOR_FORMAT_RGB565);
+    lv_obj_set_style_bg_color(canvas, lv_color_hex(0x000000), 0);
+    lv_obj_set_style_bg_opa(canvas, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_width(canvas, 0, 0);
+    lv_obj_set_style_radius(canvas, 0, 0);
+    lv_obj_set_style_pad_all(canvas, 0, 0);
     lv_obj_center(canvas);
 
     // Placeholder label (visible only when no animations are loaded)

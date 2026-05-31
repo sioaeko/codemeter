@@ -194,6 +194,7 @@ static lv_color_t col_bg(void) {
 }
 
 static lv_color_t col_panel(void) {
+    if (theme_is_light() && L.scr_h <= 340) return lv_color_hex(0xf6eddf);
     return theme_is_light() ? lv_color_hex(0xfffbf2) : lv_color_hex(0x1f1f1e);
 }
 
@@ -254,11 +255,9 @@ static lv_obj_t* lbl_ble_mac;
 // ---- Settings screen widgets ----
 static lv_obj_t* settings_container;
 static lv_obj_t* lbl_metric_value;
-static lv_obj_t* lbl_metric_hint;
 static lv_obj_t* lbl_theme_value;
-static lv_obj_t* lbl_theme_hint;
 static lv_obj_t* lbl_accent_value;
-static lv_obj_t* lbl_accent_hint;
+static lv_obj_t* lbl_settings_note;
 
 // ---- Battery indicator (shared, on top) ----
 static lv_obj_t* battery_img;
@@ -401,26 +400,9 @@ static void refresh_settings_labels(void) {
     const char* label = metric_label();
     if (lbl_title) lv_label_set_text(lbl_title, label);
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
-    if (lbl_metric_hint) {
-        lv_label_set_text(lbl_metric_hint,
-                          settings_display_metric() == DISPLAY_METRIC_REMAINING
-                              ? "Showing quota left"
-                              : "Showing quota used");
-    }
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
-    if (lbl_theme_hint) {
-        lv_label_set_text(lbl_theme_hint,
-                          settings_display_theme() == DISPLAY_THEME_LIGHT
-                              ? "Warm Claude-style UI"
-                              : "Black low-glow UI");
-    }
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
-    if (lbl_accent_hint) {
-        lv_label_set_text(lbl_accent_hint,
-                          settings_accent_theme() == ACCENT_THEME_CLAUDE
-                              ? "Orange primary type"
-                              : "Green Codex accent");
-    }
+    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "Tap row  BOOT exits");
 }
 
 static void format_reset_time(int mins, char* buf, size_t len) {
@@ -452,14 +434,18 @@ static void settings_accent_click_cb(lv_event_t* e);
 static void settings_button_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
 
+static int panel_radius(void) {
+    return (L.scr_h <= 340) ? 0 : 8;
+}
+
 static lv_obj_t* make_panel(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_t* panel = lv_obj_create(parent);
     lv_obj_set_pos(panel, x, y);
     lv_obj_set_size(panel, w, h);
     lv_obj_set_style_bg_color(panel, COL_PANEL, 0);
     lv_obj_set_style_bg_opa(panel, LV_OPA_COVER, 0);
-    lv_obj_set_style_radius(panel, 8, 0);
-    lv_obj_set_style_border_width(panel, 1, 0);
+    lv_obj_set_style_radius(panel, panel_radius(), 0);
+    lv_obj_set_style_border_width(panel, (L.scr_h <= 340) ? 0 : 1, 0);
     lv_obj_set_style_border_color(panel, COL_BAR_BG, 0);
     lv_obj_set_style_border_opa(panel, LV_OPA_COVER, 0);
     lv_obj_set_style_pad_left(panel, L.panel_pad, 0);
@@ -523,11 +509,25 @@ static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
 }
 
 static lv_obj_t* make_settings_button(lv_obj_t* parent) {
-    lv_obj_t* btn = make_pill(parent, "SET");
+    lv_obj_t* btn = lv_obj_create(parent);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 56 : 72, (L.scr_h <= 340) ? 34 : 42);
+    lv_obj_set_style_bg_opa(btn, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(btn, 0, 0);
+    lv_obj_set_style_pad_all(btn, 0, 0);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_flag(btn, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_clear_flag(btn, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_event_cb(btn, settings_button_click_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin, L.title_y + 2);
+
+    lv_obj_t* label = lv_label_create(btn);
+    lv_label_set_text(label, "SET");
+    lv_obj_set_style_text_font(label, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(label, COL_DIM, 0);
+    lv_obj_center(label);
+    register_dim(label);
+
+    int battery_offset = board_caps().has_battery ? 54 : 0;
+    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin - battery_offset, L.title_y - 2);
     return btn;
 }
 
@@ -659,7 +659,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_size(reset_zone, L.content_w, L.bt_reset_zone_h);
     lv_obj_set_style_bg_color(reset_zone, COL_PANEL, 0);
     lv_obj_set_style_bg_opa(reset_zone, LV_OPA_COVER, 0);
-    lv_obj_set_style_radius(reset_zone, 8, 0);
+    lv_obj_set_style_radius(reset_zone, panel_radius(), 0);
     lv_obj_set_style_border_width(reset_zone, 0, 0);
     lv_obj_set_style_pad_column(reset_zone, 14, 0);
     lv_obj_set_flex_flow(reset_zone, LV_FLEX_FLOW_ROW);
@@ -701,9 +701,9 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 // ======== Settings Screen ========
 
 static int settings_card_h(void) {
-    if (L.scr_h <= 260) return 48;
-    if (L.scr_h <= 340) return 62;
-    return 78;
+    if (L.scr_h <= 260) return 42;
+    if (L.scr_h <= 340) return 48;
+    return 70;
 }
 
 static int settings_card_gap(void) {
@@ -711,7 +711,7 @@ static int settings_card_gap(void) {
 }
 
 static lv_obj_t* make_settings_card(lv_obj_t* parent, int index, const char* name,
-                                    lv_obj_t** out_value, lv_obj_t** out_hint,
+                                    lv_obj_t** out_value,
                                     lv_event_cb_t cb) {
     int h = settings_card_h();
     int y = L.content_y + index * (h + settings_card_gap());
@@ -724,26 +724,20 @@ static lv_obj_t* make_settings_card(lv_obj_t* parent, int index, const char* nam
     lv_label_set_text(lbl_name, name);
     lv_obj_set_style_text_font(lbl_name, L.usage_reset_font, 0);
     lv_obj_set_style_text_color(lbl_name, COL_DIM, 0);
-    lv_obj_set_pos(lbl_name, 0, 0);
+    lv_obj_set_width(lbl_name, (L.content_w - (2 * L.panel_pad)) / 2);
+    lv_obj_align(lbl_name, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_label_set_long_mode(lbl_name, LV_LABEL_LONG_CLIP);
     register_dim(lbl_name);
 
     *out_value = lv_label_create(panel);
     lv_label_set_text(*out_value, "---");
     lv_obj_set_style_text_font(*out_value, L.usage_pill_font, 0);
     lv_obj_set_style_text_color(*out_value, COL_TEXT, 0);
-    lv_obj_set_pos(*out_value, 0, (L.scr_h <= 260) ? 18 : 22);
-    lv_obj_set_width(*out_value, L.content_w - (2 * L.panel_pad));
+    lv_obj_set_width(*out_value, (L.content_w - (2 * L.panel_pad)) / 2);
+    lv_obj_set_style_text_align(*out_value, LV_TEXT_ALIGN_RIGHT, 0);
+    lv_obj_align(*out_value, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_label_set_long_mode(*out_value, LV_LABEL_LONG_CLIP);
     register_primary(*out_value);
-
-    *out_hint = lv_label_create(panel);
-    lv_label_set_text(*out_hint, "");
-    lv_obj_set_style_text_font(*out_hint, L.usage_reset_font, 0);
-    lv_obj_set_style_text_color(*out_hint, COL_DIM, 0);
-    lv_obj_align(*out_hint, LV_ALIGN_BOTTOM_LEFT, 0, 0);
-    lv_obj_set_width(*out_hint, L.content_w - (2 * L.panel_pad));
-    lv_label_set_long_mode(*out_hint, LV_LABEL_LONG_CLIP);
-    register_dim(*out_hint);
 
     return panel;
 }
@@ -765,22 +759,22 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_obj_align(title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
     register_primary(title);
 
-    make_settings_card(settings_container, 0, "Display",
-                       &lbl_metric_value, &lbl_metric_hint,
+    make_settings_card(settings_container, 0, "Display", &lbl_metric_value,
                        settings_metric_click_cb);
-    make_settings_card(settings_container, 1, "Theme",
-                       &lbl_theme_value, &lbl_theme_hint,
+    make_settings_card(settings_container, 1, "Theme", &lbl_theme_value,
                        settings_theme_click_cb);
-    make_settings_card(settings_container, 2, "Accent",
-                       &lbl_accent_value, &lbl_accent_hint,
+    make_settings_card(settings_container, 2, "Accent", &lbl_accent_value,
                        settings_accent_click_cb);
 
-    lv_obj_t* toggle_hint = lv_label_create(settings_container);
-    lv_label_set_text(toggle_hint, "Tap cards  BOOT cycles");
-    lv_obj_set_style_text_font(toggle_hint, L.usage_reset_font, 0);
-    lv_obj_set_style_text_color(toggle_hint, COL_DIM, 0);
-    lv_obj_align(toggle_hint, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
-    register_dim(toggle_hint);
+    lbl_settings_note = lv_label_create(settings_container);
+    lv_label_set_text(lbl_settings_note, "Tap row  BOOT exits");
+    lv_obj_set_style_text_font(lbl_settings_note, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(lbl_settings_note, COL_DIM, 0);
+    lv_obj_set_width(lbl_settings_note, L.scr_w - 2 * L.margin);
+    lv_obj_set_style_text_align(lbl_settings_note, LV_TEXT_ALIGN_CENTER, 0);
+    lv_label_set_long_mode(lbl_settings_note, LV_LABEL_LONG_CLIP);
+    lv_obj_align(lbl_settings_note, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
+    register_dim(lbl_settings_note);
 
     refresh_settings_labels();
     lv_obj_add_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
@@ -958,6 +952,12 @@ void ui_show_screen(screen_t screen) {
     lv_obj_add_flag(ble_container, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
     splash_hide();
+
+    lv_obj_t* scr = lv_screen_active();
+    if (scr) {
+        lv_obj_set_style_bg_color(scr, screen == SCREEN_SPLASH ? lv_color_hex(0x000000) : COL_BG, 0);
+        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+    }
 
     switch (screen) {
     case SCREEN_SPLASH:     splash_show(); break;
