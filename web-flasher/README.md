@@ -26,16 +26,26 @@ https://sioaeko.github.io/codexmeter-cyd/web-flasher/
 GitHub Pages is published from the repo root. Open `/web-flasher/` for the
 installer page.
 
-Use Chrome, Edge, or another browser with Web Serial support.
+Use Chrome, Edge, or another browser with Web Serial support. The page offers
+both portrait (`240x320`) and landscape (`320x240`) firmware.
 
 ## Update Firmware
 
-After rebuilding the CYD firmware, refresh the binary used by the web flasher:
+After rebuilding both CYD firmware variants, refresh the binaries used by the
+web flasher:
 
 ```bash
+pio run -d firmware -e cyd_2432s028r
+pio run -d firmware -e cyd_2432s028r_landscape
 ./tools/update_web_flasher.sh
 ```
 
-The manifest flashes `firmware/codexmeter-cyd_2432s028r.factory.bin` at offset
-`0x0`. That factory image is the combined PlatformIO output containing
-bootloader, partition table, boot app, and application firmware.
+The manifests flash these factory images at offset `0x0`:
+
+```text
+firmware/codexmeter-cyd_2432s028r.factory.bin
+firmware/codexmeter-cyd_2432s028r_landscape.factory.bin
+```
+
+Each factory image is the combined PlatformIO output containing bootloader,
+partition table, boot app, and application firmware.

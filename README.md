@@ -21,6 +21,8 @@ Codex + CYD 보드용으로 개조한 fork입니다.
 - BLE 장치명 `Codex Meter`
 - Codexmeter 전용 BLE UUID 사용
 - 240x320 세로 화면용 compact UI
+- 320x240 가로 화면용 firmware env와 웹 플래셔 옵션
+- CYD 색감 보정을 위한 LCD inversion / red-blue swap 훅
 - Codex 사용량 daemon 추가
 - macOS LaunchAgent installer 추가
 - GitHub Pages용 ESP Web Tools flasher 추가
@@ -33,8 +35,11 @@ Codex + CYD 보드용으로 개조한 fork입니다.
 
 [https://sioaeko.github.io/codexmeter-cyd/web-flasher/](https://sioaeko.github.io/codexmeter-cyd/web-flasher/)
 
-CYD를 USB로 연결한 뒤 **Install**을 누르고 USB Serial 포트를 선택하세요.
+CYD를 USB로 연결한 뒤 원하는 방향의 버튼을 누르고 USB Serial 포트를 선택하세요.
 보드가 플래시 모드로 안 들어가면 `BOOT` 버튼을 누른 채 다시 시도하면 됩니다.
+
+- **Portrait**: 240x320 세로 화면
+- **Landscape**: 320x240 가로 화면
 
 ### 2. Bluetooth 페어링
 
@@ -77,16 +82,23 @@ py -3 -m venv daemon\.venv
 
 ## 개발 명령
 
-CYD 펌웨어 빌드:
+CYD 세로 펌웨어 빌드:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r
+```
+
+CYD 가로 펌웨어 빌드:
+
+```bash
+pio run -d firmware -e cyd_2432s028r_landscape
 ```
 
 macOS에서 CLI 플래시:
 
 ```bash
 ./flash-mac.sh cyd_2432s028r
+./flash-mac.sh cyd_2432s028r_landscape
 ```
 
 펌웨어를 새로 빌드한 뒤 웹 플래셔 바이너리 갱신:
@@ -95,16 +107,18 @@ macOS에서 CLI 플래시:
 ./tools/update_web_flasher.sh
 ```
 
-웹 플래셔가 사용하는 factory image:
+웹 플래셔가 사용하는 factory images:
 
 ```text
 web-flasher/firmware/codexmeter-cyd_2432s028r.factory.bin
+web-flasher/firmware/codexmeter-cyd_2432s028r_landscape.factory.bin
 ```
 
 ## 파일 구조
 
 - `firmware/src/boards/cyd_2432s028r/` - CYD 보드 포트
-- `firmware/platformio.ini` - PlatformIO env `cyd_2432s028r`
+- `firmware/platformio.ini` - PlatformIO env `cyd_2432s028r`,
+  `cyd_2432s028r_landscape`
 - `daemon/codex_usage_daemon.py` - Codex 사용량 BLE daemon
 - `install-codex-mac.sh` - macOS daemon 설치 스크립트
 - `web-flasher/` - GitHub Pages 웹 플래셔
@@ -118,8 +132,9 @@ web-flasher/firmware/codexmeter-cyd_2432s028r.factory.bin
 - Touch: IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
 - Button: BOOT/GPIO0 화면 전환
 
-화면은 현재 `240x320` 세로 방향입니다. 터치가 뒤집히거나 축이 바뀌면 아래 파일의
-`TOUCH_*` 값을 조정하세요.
+웹 플래셔에서 세로/가로 firmware를 고를 수 있습니다. 터치가 뒤집히거나 축이 바뀌면
+아래 파일의 `TOUCH_*` 값을 조정하세요. 색이 반전되거나 빨강/파랑이 바뀌면 같은 파일의
+`LCD_INVERT_COLORS` 또는 `LCD_SWAP_RED_BLUE` 값을 조정하면 됩니다.
 
 ```text
 firmware/src/boards/cyd_2432s028r/board.h

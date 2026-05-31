@@ -34,6 +34,7 @@ void display_hal_init(void) {
 void display_hal_begin(void) {
     if (!gfx) return;
     gfx->begin();
+    gfx->invertDisplay(LCD_INVERT_COLORS);
     gfx->fillScreen(0x0000);
     write_backlight(200);
 }
@@ -48,7 +49,23 @@ void display_hal_fill_screen(uint16_t color) {
 
 void display_hal_draw_bitmap(int32_t x, int32_t y, int32_t w, int32_t h,
                              const uint16_t* pixels) {
-    if (gfx) gfx->draw16bitRGBBitmap(x, y, (uint16_t*)pixels, w, h);
+    if (!gfx) return;
+
+#if LCD_SWAP_RED_BLUE
+    static uint16_t line_buf[LCD_WIDTH];
+    for (int32_t row = 0; row < h; row++) {
+        const uint16_t* src = pixels + (row * w);
+        for (int32_t col = 0; col < w && col < LCD_WIDTH; col++) {
+            uint16_t c = src[col];
+            line_buf[col] = (uint16_t)((c & 0x07E0) |
+                                       ((c & 0x001F) << 11) |
+                                       ((c & 0xF800) >> 11));
+        }
+        gfx->draw16bitRGBBitmap(x, y + row, line_buf, w, 1);
+    }
+#else
+    gfx->draw16bitRGBBitmap(x, y, (uint16_t*)pixels, w, h);
+#endif
 }
 
 void display_hal_tick(void) {}

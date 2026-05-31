@@ -1,5 +1,5 @@
 {
-  "name": "Codexmeter CYD",
+  "name": "Codexmeter CYD Landscape",
   "version": "0.2.0",
   "new_install_prompt_erase": true,
   "builds": [
@@ -7,7 +7,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "firmware/codexmeter-cyd_2432s028r.factory.bin",
+          "path": "firmware/codexmeter-cyd_2432s028r_landscape.factory.bin",
           "offset": 0
         }
       ]

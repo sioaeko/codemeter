@@ -14,6 +14,7 @@ LV_FONT_DECLARE(font_styrene_24);
 LV_FONT_DECLARE(font_styrene_20);
 LV_FONT_DECLARE(font_styrene_16);
 LV_FONT_DECLARE(font_styrene_14);
+LV_FONT_DECLARE(font_styrene_12);
 LV_FONT_DECLARE(font_mono_32);
 LV_FONT_DECLARE(font_mono_18);
 
@@ -89,6 +90,32 @@ static void compute_layout(const BoardCaps& c) {
         L.bt_device_font   = &font_styrene_28;
         L.bt_credit_1_font = &font_styrene_24;
         L.bt_credit_2_font = &font_styrene_20;
+    } else if (c.width >= 300 && c.height <= 260) {
+        // Tiny landscape layout — tuned for 320x240 CYD.
+        L.margin = 16;
+        L.title_y = 12;
+        L.title_x_offset = 0;
+        L.content_y = 52;
+        L.panel_pad = 10;
+        L.show_logo = false;
+        L.usage_panel_h = 72;
+        L.usage_panel_gap = 8;
+        L.usage_bar_y = 36;
+        L.usage_bar_h = 12;
+        L.usage_reset_y = 52;
+        L.spinner_bottom = 3;
+        L.title_font      = &font_tiempos_34;
+        L.usage_pct_font  = &font_styrene_24;
+        L.usage_pill_font = &font_styrene_14;
+        L.usage_reset_font = &font_styrene_14;
+        L.spinner_font    = &font_mono_18;
+        L.bt_info_panel_h = 92;
+        L.bt_reset_zone_h = 44;
+        L.bt_title_font    = &font_tiempos_34;
+        L.bt_status_font   = &font_styrene_20;
+        L.bt_device_font   = &font_styrene_14;
+        L.bt_credit_1_font = &font_styrene_14;
+        L.bt_credit_2_font = &font_styrene_12;
     } else if (c.width <= 260 && c.height <= 340) {
         // Tiny portrait layout — tuned for 240x320 CYD.
         L.margin = 20;

@@ -450,6 +450,32 @@
         color: var(--muted);
       }
 
+      .install-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .install-option {
+        border: 1px solid var(--hairline);
+        border-radius: var(--r-lg);
+        padding: 24px;
+        background: var(--canvas);
+      }
+
+      .install-option h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .install-option p {
+        margin: 8px 0 18px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
       .unsupported,
       .not-allowed {
         display: block;
@@ -789,8 +815,13 @@
           align-items: flex-start;
         }
 
-        .install-row .btn-primary {
+        .install-row .btn-primary,
+        .install-option .btn-primary {
           width: 100%;
+        }
+
+        .install-options {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -887,22 +918,37 @@
           </p>
         </div>
         <div class="install-panel">
-          <div class="install-row">
-            <div>
-              <h3>Flash firmware</h3>
-              <p>Chrome 또는 Edge · 데스크톱 · HTTPS 또는 localhost</p>
-            </div>
-            <esp-web-install-button manifest="manifest.json">
-              <button slot="activate" class="btn-primary">Install</button>
-              <span slot="unsupported" class="unsupported">
-                이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
-                또는 Edge를 사용하세요.
-              </span>
-              <span slot="not-allowed" class="not-allowed">
-                Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
-                로컬 서버로 제공하세요.
-              </span>
-            </esp-web-install-button>
+          <div class="install-options">
+            <article class="install-option">
+              <h3>Portrait</h3>
+              <p>240x320 세로 화면. 기존 배치와 같은 안정 버전입니다.</p>
+              <esp-web-install-button manifest="manifest.json">
+                <button slot="activate" class="btn-primary">Install Portrait</button>
+                <span slot="unsupported" class="unsupported">
+                  이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
+                  또는 Edge를 사용하세요.
+                </span>
+                <span slot="not-allowed" class="not-allowed">
+                  Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
+                  로컬 서버로 제공하세요.
+                </span>
+              </esp-web-install-button>
+            </article>
+            <article class="install-option">
+              <h3>Landscape</h3>
+              <p>320x240 가로 화면. 거치대를 눕혀 쓰는 CYD용입니다.</p>
+              <esp-web-install-button manifest="manifest-landscape.json">
+                <button slot="activate" class="btn-primary">Install Landscape</button>
+                <span slot="unsupported" class="unsupported">
+                  이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
+                  또는 Edge를 사용하세요.
+                </span>
+                <span slot="not-allowed" class="not-allowed">
+                  Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
+                  로컬 서버로 제공하세요.
+                </span>
+              </esp-web-install-button>
+            </article>
           </div>
         </div>
       </div>
@@ -912,7 +958,7 @@
       <div class="container">
         <div class="section-head">
           <h2>번들에 포함된 내용</h2>
-          <p>manifest에 정의된 공장 이미지 한 파일로 전체 스택을 기록합니다.</p>
+          <p>세로/가로 manifest가 각각 공장 이미지를 기록합니다.</p>
         </div>
         <div class="feature-grid">
           <article class="feature-card">
@@ -931,7 +977,7 @@
             <div class="icon" aria-hidden="true">◎</div>
             <h3>버전</h3>
             <p>manifest와 동기화된 릴리스 태그</p>
-            <strong>0.1.0</strong>
+            <strong>0.2.0</strong>
           </article>
         </div>
       </div>

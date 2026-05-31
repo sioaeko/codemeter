@@ -3,12 +3,34 @@
 // Sunton / "Cheap Yellow Display" ESP32-2432S028R.
 // 2.8" 240x320 ILI9341 SPI TFT + XPT2046 resistive touch, no PSRAM.
 
-#define BOARD_NAME           "CYD ESP32-2432S028R"
-
-// ---- Display geometry (portrait) ----
+#if defined(BOARD_CYD_2432S028R_LANDSCAPE)
+#define BOARD_NAME           "CYD ESP32-2432S028R Landscape"
+#define LCD_WIDTH            320
+#define LCD_HEIGHT           240
+#define LCD_ROTATION         1
+#define TOUCH_ROTATION       1
+#else
+#define BOARD_NAME           "CYD ESP32-2432S028R Portrait"
 #define LCD_WIDTH            240
 #define LCD_HEIGHT           320
 #define LCD_ROTATION         0
+#define TOUCH_ROTATION       0
+#endif
+
+// Native panel coordinates before display rotation is applied.
+#define LCD_NATIVE_WIDTH     240
+#define LCD_NATIVE_HEIGHT    320
+
+// Many CYD / ILI9341 variants need inversion for normal-looking colors.
+// If a specific board revision looks worse, override this in platformio.ini.
+#ifndef LCD_INVERT_COLORS
+#define LCD_INVERT_COLORS    1
+#endif
+
+// Secondary fallback for panels with red/blue swapped.
+#ifndef LCD_SWAP_RED_BLUE
+#define LCD_SWAP_RED_BLUE    0
+#endif
 
 // ---- TFT SPI pins (ILI9341) ----
 #define LCD_MISO             12

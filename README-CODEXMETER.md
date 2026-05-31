@@ -10,7 +10,8 @@ Display / ESP32-2432S028R board.
   touch controller.
 - Renamed the BLE peripheral to `Codex Meter` and moved the custom service to
   Codexmeter UUIDs.
-- Added a compact 240x320 UI layout.
+- Added compact 240x320 portrait and 320x240 landscape UI layouts.
+- Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
   polls `https://chatgpt.com/backend-api/wham/usage`, and pushes:
 
@@ -43,7 +44,8 @@ Test locally:
 python3 -m http.server 8787 --directory web-flasher
 ```
 
-Then open `http://localhost:8787/` in Chrome or Edge and click **Install**.
+Then open `http://localhost:8787/` in Chrome or Edge and choose **Portrait**
+or **Landscape**.
 
 To refresh the bundled web-flasher firmware after a new build:
 
@@ -55,12 +57,14 @@ To refresh the bundled web-flasher firmware after a new build:
 
 ```bash
 ./flash-mac.sh cyd_2432s028r
+./flash-mac.sh cyd_2432s028r_landscape
 ```
 
 Pass a serial device as the second argument if auto-detect picks the wrong port:
 
 ```bash
 ./flash-mac.sh cyd_2432s028r /dev/cu.usbserial-110
+./flash-mac.sh cyd_2432s028r_landscape /dev/cu.usbserial-110
 ```
 
 ## Install The Codex Daemon On macOS

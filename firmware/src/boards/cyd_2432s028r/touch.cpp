@@ -56,20 +56,39 @@ void touch_hal_read(uint16_t* x, uint16_t* y, bool* pressed) {
     uint16_t raw_x = 0;
     uint16_t raw_y = 0;
     if (read_raw(&raw_x, &raw_y)) {
-        int tx = map_clamped(raw_x, TOUCH_RAW_X_MIN, TOUCH_RAW_X_MAX, LCD_WIDTH - 1);
-        int ty = map_clamped(raw_y, TOUCH_RAW_Y_MIN, TOUCH_RAW_Y_MAX, LCD_HEIGHT - 1);
+        int px = map_clamped(raw_x, TOUCH_RAW_X_MIN, TOUCH_RAW_X_MAX, LCD_NATIVE_WIDTH - 1);
+        int py = map_clamped(raw_y, TOUCH_RAW_Y_MIN, TOUCH_RAW_Y_MAX, LCD_NATIVE_HEIGHT - 1);
 
 #if TOUCH_INVERT_X
-        tx = (LCD_WIDTH - 1) - tx;
+        px = (LCD_NATIVE_WIDTH - 1) - px;
 #endif
 #if TOUCH_INVERT_Y
-        ty = (LCD_HEIGHT - 1) - ty;
+        py = (LCD_NATIVE_HEIGHT - 1) - py;
 #endif
 #if TOUCH_SWAP_XY
-        int tmp = tx;
-        tx = ty;
-        ty = tmp;
+        int tmp = px;
+        px = py;
+        py = tmp;
 #endif
+
+        int tx = px;
+        int ty = py;
+
+#if TOUCH_ROTATION == 1
+        tx = py;
+        ty = (LCD_NATIVE_WIDTH - 1) - px;
+#elif TOUCH_ROTATION == 2
+        tx = (LCD_NATIVE_WIDTH - 1) - px;
+        ty = (LCD_NATIVE_HEIGHT - 1) - py;
+#elif TOUCH_ROTATION == 3
+        tx = (LCD_NATIVE_HEIGHT - 1) - py;
+        ty = px;
+#endif
+
+        if (tx < 0) tx = 0;
+        if (ty < 0) ty = 0;
+        if (tx >= LCD_WIDTH) tx = LCD_WIDTH - 1;
+        if (ty >= LCD_HEIGHT) ty = LCD_HEIGHT - 1;
 
         touch_x = (uint16_t)tx;
         touch_y = (uint16_t)ty;
