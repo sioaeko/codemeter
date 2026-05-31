@@ -281,6 +281,8 @@ static lv_obj_t* theme_primary_labels[MAX_THEME_OBJS];
 static uint8_t theme_primary_count = 0;
 static lv_obj_t* theme_dim_labels[MAX_THEME_OBJS];
 static uint8_t theme_dim_count = 0;
+static lv_obj_t* theme_accent_labels[MAX_THEME_OBJS];
+static uint8_t theme_accent_count = 0;
 
 static void register_obj(lv_obj_t** list, uint8_t* count, lv_obj_t* obj) {
     if (!obj || *count >= MAX_THEME_OBJS) return;
@@ -292,6 +294,7 @@ static void register_bar(lv_obj_t* obj)    { register_obj(theme_bars, &theme_bar
 static void register_pill(lv_obj_t* obj)   { register_obj(theme_pills, &theme_pill_count, obj); }
 static void register_primary(lv_obj_t* obj){ register_obj(theme_primary_labels, &theme_primary_count, obj); }
 static void register_dim(lv_obj_t* obj)    { register_obj(theme_dim_labels, &theme_dim_count, obj); }
+static void register_accent(lv_obj_t* obj) { register_obj(theme_accent_labels, &theme_accent_count, obj); }
 
 // Animation state
 static uint32_t anim_last_ms = 0;
@@ -509,6 +512,20 @@ static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
     return lbl;
 }
 
+static lv_obj_t* make_settings_touch_area(lv_obj_t* parent, int x, int y, int w, int h) {
+    lv_obj_t* area = lv_obj_create(parent);
+    lv_obj_set_pos(area, x, y);
+    lv_obj_set_size(area, w, h);
+    lv_obj_set_style_bg_opa(area, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(area, 0, 0);
+    lv_obj_set_style_pad_all(area, 0, 0);
+    lv_obj_clear_flag(area, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(area, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(area, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_event_cb(area, settings_button_click_cb, LV_EVENT_CLICKED, NULL);
+    return area;
+}
+
 static lv_obj_t* make_settings_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
     lv_obj_set_size(btn, (L.scr_h <= 340) ? 56 : 72, (L.scr_h <= 340) ? 34 : 42);
@@ -523,9 +540,9 @@ static lv_obj_t* make_settings_button(lv_obj_t* parent) {
     lv_obj_t* label = lv_label_create(btn);
     lv_label_set_text(label, "SET");
     lv_obj_set_style_text_font(label, L.usage_reset_font, 0);
-    lv_obj_set_style_text_color(label, COL_DIM, 0);
+    lv_obj_set_style_text_color(label, COL_ACCENT, 0);
     lv_obj_center(label);
-    register_dim(label);
+    register_accent(label);
 
     int battery_offset = board_caps().has_battery ? 54 : 0;
     lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin - battery_offset, L.title_y - 2);
@@ -600,6 +617,7 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_set_style_border_width(usage_container, 0, 0);
     lv_obj_set_style_pad_all(usage_container, 0, 0);
     lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(usage_container, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(usage_container, global_click_cb, LV_EVENT_CLICKED, NULL);
 
     lbl_title = lv_label_create(usage_container);
@@ -620,10 +638,11 @@ static void init_usage_screen(lv_obj_t* scr) {
     lbl_anim = lv_label_create(usage_container);
     lv_label_set_text(lbl_anim, "");
     lv_obj_set_style_text_font(lbl_anim, L.spinner_font, 0);
-    lv_obj_set_style_text_color(lbl_anim, COL_DIM, 0);
+    lv_obj_set_style_text_color(lbl_anim, COL_ACCENT, 0);
     lv_obj_align(lbl_anim, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
-    register_dim(lbl_anim);
+    register_accent(lbl_anim);
 
+    make_settings_touch_area(usage_container, 0, 0, L.scr_w, L.scr_h);
     make_settings_button(usage_container);
 }
 
@@ -637,6 +656,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_border_width(ble_container, 0, 0);
     lv_obj_set_style_pad_all(ble_container, 0, 0);
     lv_obj_clear_flag(ble_container, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(ble_container, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(ble_container, global_click_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* lbl_ble_title = lv_label_create(ble_container);
@@ -716,6 +736,8 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
     register_dim(lbl_credit2);
 
+    make_settings_touch_area(ble_container, 0, 0, L.scr_w, L.content_y - 4);
+    make_settings_touch_area(ble_container, 0, L.scr_h - 54, L.scr_w, 54);
     make_settings_button(ble_container);
 
     lv_obj_add_flag(ble_container, LV_OBJ_FLAG_HIDDEN);
@@ -836,6 +858,10 @@ static void apply_theme_styles(void) {
         lv_obj_set_style_text_color(theme_dim_labels[i], COL_DIM, 0);
     }
 
+    for (uint8_t i = 0; i < theme_accent_count; i++) {
+        lv_obj_set_style_text_color(theme_accent_labels[i], COL_ACCENT, 0);
+    }
+
     refresh_settings_labels();
     ui_update_ble_status(last_ui_ble_state, ble_get_device_name(), ble_get_mac_address());
     if (last_usage.valid) ui_update(&last_usage);
@@ -927,6 +953,14 @@ void ui_tick_anim(void) {
 
 static screen_t prev_non_splash_screen = SCREEN_USAGE;
 static screen_t prev_non_settings_screen = SCREEN_USAGE;
+
+static void show_settings_from_current(void) {
+    if (current_screen != SCREEN_SETTINGS && current_screen != SCREEN_SPLASH) {
+        prev_non_settings_screen = current_screen;
+    }
+    ui_show_screen(SCREEN_SETTINGS);
+}
+
 static void apply_battery_visibility(void) {
     if (!battery_img) return;
     if (!board_caps().has_battery || current_screen == SCREEN_SPLASH) {
@@ -938,8 +972,11 @@ static void apply_battery_visibility(void) {
 
 static void global_click_cb(lv_event_t* e) {
     (void)e;
-    if (current_screen == SCREEN_SPLASH) ui_show_screen(prev_non_splash_screen);
-    else                                  ui_show_screen(SCREEN_SPLASH);
+    if (current_screen == SCREEN_SPLASH) {
+        ui_show_screen(prev_non_splash_screen);
+        return;
+    }
+    show_settings_from_current();
 }
 
 static void ble_reset_click_cb(lv_event_t* e) {
@@ -968,10 +1005,7 @@ static void settings_accent_click_cb(lv_event_t* e) {
 
 static void settings_button_click_cb(lv_event_t* e) {
     (void)e;
-    if (current_screen != SCREEN_SETTINGS && current_screen != SCREEN_SPLASH) {
-        prev_non_settings_screen = current_screen;
-    }
-    ui_show_screen(SCREEN_SETTINGS);
+    show_settings_from_current();
 }
 
 static void settings_back_click_cb(lv_event_t* e) {

@@ -4,7 +4,7 @@
 static Preferences prefs;
 static bool prefs_ready = false;
 static display_metric_t current_metric = DISPLAY_METRIC_USED;
-static display_theme_t current_theme = DISPLAY_THEME_LIGHT;
+static display_theme_t current_theme = DISPLAY_THEME_DARK;
 static accent_theme_t current_accent = ACCENT_THEME_CLAUDE;
 
 void settings_init(void) {
@@ -15,8 +15,8 @@ void settings_init(void) {
                          ? DISPLAY_METRIC_REMAINING
                          : DISPLAY_METRIC_USED;
 
-    stored = prefs_ready ? prefs.getUChar("theme", DISPLAY_THEME_LIGHT)
-                         : DISPLAY_THEME_LIGHT;
+    stored = prefs_ready ? prefs.getUChar("theme", DISPLAY_THEME_DARK)
+                         : DISPLAY_THEME_DARK;
     current_theme = (stored == DISPLAY_THEME_DARK)
                         ? DISPLAY_THEME_DARK
                         : DISPLAY_THEME_LIGHT;
