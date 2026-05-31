@@ -194,16 +194,15 @@ static lv_color_t col_bg(void) {
 }
 
 static lv_color_t col_panel(void) {
-    if (theme_is_light() && L.scr_h <= 340) return lv_color_hex(0xf6eddf);
-    return theme_is_light() ? lv_color_hex(0xfffbf2) : lv_color_hex(0x1f1f1e);
+    return theme_is_light() ? lv_color_hex(0x1f1f1e) : lv_color_hex(0x1f1f1e);
 }
 
 static lv_color_t col_text(void) {
-    return theme_is_light() ? col_accent() : lv_color_hex(0xfaf9f5);
+    return lv_color_hex(0xfaf9f5);
 }
 
 static lv_color_t col_dim(void) {
-    return theme_is_light() ? lv_color_hex(0x8e745f) : lv_color_hex(0xb0aea5);
+    return theme_is_light() ? lv_color_hex(0xc7bfae) : lv_color_hex(0xb0aea5);
 }
 
 static lv_color_t col_green(void) {
@@ -220,7 +219,7 @@ static lv_color_t col_red(void) {
 }
 
 static lv_color_t col_bar_bg(void) {
-    return theme_is_light() ? lv_color_hex(0xe3d3bf) : lv_color_hex(0x2a2a28);
+    return lv_color_hex(0x2a2a28);
 }
 
 #define COL_BG        col_bg()
@@ -376,9 +375,8 @@ static float display_pct_from_used(float used_pct) {
 }
 
 static lv_color_t display_pct_color(float shown_pct) {
-    return (settings_display_metric() == DISPLAY_METRIC_REMAINING)
-               ? remaining_color(shown_pct)
-               : pct_color(shown_pct);
+    (void)shown_pct;
+    return COL_ACCENT;
 }
 
 static const char* metric_label(void) {
@@ -401,7 +399,7 @@ static const char* accent_label(void) {
 
 static void refresh_settings_labels(void) {
     const char* label = metric_label();
-    if (lbl_title) lv_label_set_text(lbl_title, label);
+    if (lbl_title) lv_label_set_text(lbl_title, "Usage");
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
@@ -439,7 +437,7 @@ static void settings_back_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
 
 static int panel_radius(void) {
-    return (L.scr_h <= 340) ? 0 : 8;
+    return 8;
 }
 
 static lv_obj_t* make_panel(lv_obj_t* parent, int x, int y, int w, int h) {
@@ -471,7 +469,7 @@ static lv_obj_t* make_bar(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_set_style_bg_color(bar, COL_BAR_BG, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
     lv_obj_set_style_radius(bar, 6, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(bar, COL_GREEN, LV_PART_INDICATOR);
+    lv_obj_set_style_bg_color(bar, COL_ACCENT, LV_PART_INDICATOR);
     lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);
     lv_obj_set_style_radius(bar, 6, LV_PART_INDICATOR);
     register_bar(bar);
@@ -609,7 +607,7 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_SCROLLABLE);
 
     lbl_title = lv_label_create(usage_container);
-    lv_label_set_text(lbl_title, metric_label());
+    lv_label_set_text(lbl_title, "Usage");
     lv_obj_set_style_text_font(lbl_title, L.title_font, 0);
     lv_obj_set_style_text_color(lbl_title, COL_TEXT, 0);
     lv_obj_align(lbl_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
@@ -824,7 +822,7 @@ static void apply_theme_styles(void) {
     for (uint8_t i = 0; i < theme_bar_count; i++) {
         lv_obj_t* obj = theme_bars[i];
         lv_obj_set_style_bg_color(obj, COL_BAR_BG, LV_PART_MAIN);
-        lv_obj_set_style_bg_color(obj, COL_GREEN, LV_PART_INDICATOR);
+        lv_obj_set_style_bg_color(obj, COL_ACCENT, LV_PART_INDICATOR);
     }
 
     for (uint8_t i = 0; i < theme_pill_count; i++) {
