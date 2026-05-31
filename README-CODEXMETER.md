@@ -11,6 +11,7 @@ Display / ESP32-2432S028R board.
 - Renamed the BLE peripheral to `Codex Meter` and moved the custom service to
   Codexmeter UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
+- Added an on-device display setting for `Used` vs `Remaining` quota mode.
 - Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
   polls `https://chatgpt.com/backend-api/wham/usage`, and pushes:
@@ -25,7 +26,10 @@ Default pinout is for the common ESP32-2432S028R:
 
 - TFT: ILI9341, SPI pins MISO 12, MOSI 13, SCLK 14, CS 15, DC 2, BL 21
 - Touch: XPT2046, SPI pins IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
-- Button: BOOT/GPIO0 cycles screens
+- Button: BOOT/GPIO0 cycles Usage/Bluetooth/Settings screens
+
+The Settings screen lets you switch the main meter between `Used` and
+`Remaining`. The selected mode is stored in ESP32 NVS and survives reboot.
 
 There are CYD board revisions with different routing. If display or touch is
 mirrored, start with `firmware/src/boards/cyd_2432s028r/board.h`.

@@ -501,7 +501,7 @@
       /* Feature grid */
       .feature-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
       }
 
@@ -891,7 +891,7 @@
             <span style="color: var(--accent-teal)">● BLE</span>
           </div>
           <div class="mockup-screen">
-            <h3>Usage</h3>
+            <h3>Used / Remaining</h3>
             <div>
               <div class="meter-row"><span>5h</span><span>42%</span></div>
               <div class="bar"><span></span></div>
@@ -901,7 +901,7 @@
               <div class="bar week"><span></span></div>
             </div>
             <p class="mockup-foot">
-              ILI9341 + XPT2046 레이아웃용 번들 펌웨어
+              보드 설정에서 사용량/남은량 표시 전환
             </p>
           </div>
         </aside>
@@ -977,7 +977,13 @@
             <div class="icon" aria-hidden="true">◎</div>
             <h3>버전</h3>
             <p>manifest와 동기화된 릴리스 태그</p>
-            <strong>0.2.0</strong>
+            <strong>0.3.0</strong>
+          </article>
+          <article class="feature-card">
+            <div class="icon" aria-hidden="true">%</div>
+            <h3>표시 기준</h3>
+            <p>보드 Settings 화면에서 Used / Remaining 전환</p>
+            <strong>NVS 저장</strong>
           </article>
         </div>
       </div>
