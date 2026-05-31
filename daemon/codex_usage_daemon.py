@@ -227,8 +227,7 @@ async def _get_cb_manager():
             CentralManagerDelegate,
         )
 
-        manager = CentralManagerDelegate()
-        await manager.wait_until_ready()
+        manager = CentralManagerDelegate.alloc().init()
         _cb_manager = manager
     return _cb_manager
 

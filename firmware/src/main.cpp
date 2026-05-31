@@ -305,6 +305,7 @@ void loop() {
     check_serial_cmd();
 
     if (ble_has_data()) {
+        bool first_usage_payload = !usage.valid;
         if (parse_json(ble_get_data(), &usage)) {
             int g_before = usage_rate_group();
             usage_rate_sample(usage.session_pct);
@@ -315,6 +316,9 @@ void loop() {
                 if (splash_is_active()) splash_pick_for_current_rate();
             }
             ui_update(&usage);
+            if (first_usage_payload && ui_get_current_screen() == SCREEN_SPLASH) {
+                ui_show_screen(SCREEN_USAGE);
+            }
             ble_send_ack();
         } else {
             ble_send_nack();
