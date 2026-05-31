@@ -543,7 +543,7 @@ static lv_obj_t* make_settings_button(lv_obj_t* parent) {
 
 static lv_obj_t* make_back_button(lv_obj_t* parent) {
     lv_obj_t* btn = lv_obj_create(parent);
-    lv_obj_set_size(btn, (L.scr_h <= 340) ? 76 : 92, (L.scr_h <= 340) ? 34 : 42);
+    lv_obj_set_size(btn, (L.scr_h <= 340) ? 68 : 92, (L.scr_h <= 340) ? 34 : 42);
     lv_obj_set_style_bg_color(btn, COL_BAR_BG, 0);
     lv_obj_set_style_bg_opa(btn, LV_OPA_COVER, 0);
     lv_obj_set_style_radius(btn, LV_RADIUS_CIRCLE, 0);
@@ -653,9 +653,12 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 
     lv_obj_t* lbl_ble_title = lv_label_create(ble_container);
     lv_label_set_text(lbl_ble_title, "Bluetooth");
-    lv_obj_set_style_text_font(lbl_ble_title, L.bt_title_font, 0);
+    const bool tiny_portrait = (L.scr_w <= 260 && L.scr_h <= 340);
+    lv_obj_set_style_text_font(lbl_ble_title, tiny_portrait ? &font_styrene_24 : L.bt_title_font, 0);
     lv_obj_set_style_text_color(lbl_ble_title, COL_TEXT, 0);
-    lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
+    lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID,
+                 tiny_portrait ? -10 : L.title_x_offset,
+                 tiny_portrait ? 20 : L.title_y);
     register_primary(lbl_ble_title);
 
     lv_obj_t* p_info = make_panel(ble_container, L.margin, L.content_y,
@@ -678,14 +681,14 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_label_set_text(lbl_ble_device, "Device: ---");
     lv_obj_set_style_text_font(lbl_ble_device, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_device, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 340) ? 52 : 64);
+    lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 260) ? 48 : ((L.scr_h <= 340) ? 52 : 64));
     register_dim(lbl_ble_device);
 
     lbl_ble_mac = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_mac, "Address: ---");
     lv_obj_set_style_text_font(lbl_ble_mac, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_mac, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 340) ? 76 : 100);
+    lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 260) ? 68 : ((L.scr_h <= 340) ? 76 : 100));
     register_dim(lbl_ble_mac);
 
     int reset_y = L.content_y + L.bt_info_panel_h + 16;
@@ -714,19 +717,21 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_color(reset_lbl, COL_DIM, 0);
     register_dim(reset_lbl);
 
-    lv_obj_t* lbl_credit = lv_label_create(ble_container);
-    lv_label_set_text(lbl_credit, "Codexmeter");
-    lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
-    lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
-    lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);
-    register_dim(lbl_credit);
+    if (L.scr_h > 260) {
+        lv_obj_t* lbl_credit = lv_label_create(ble_container);
+        lv_label_set_text(lbl_credit, "Codexmeter");
+        lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
+        lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
+        lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);
+        register_dim(lbl_credit);
 
-    lv_obj_t* lbl_credit2 = lv_label_create(ble_container);
-    lv_label_set_text(lbl_credit2, "Built from Clawdmeter");
-    lv_obj_set_style_text_font(lbl_credit2, L.bt_credit_2_font, 0);
-    lv_obj_set_style_text_color(lbl_credit2, COL_DIM, 0);
-    lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
-    register_dim(lbl_credit2);
+        lv_obj_t* lbl_credit2 = lv_label_create(ble_container);
+        lv_label_set_text(lbl_credit2, "Built from Clawdmeter");
+        lv_obj_set_style_text_font(lbl_credit2, L.bt_credit_2_font, 0);
+        lv_obj_set_style_text_color(lbl_credit2, COL_DIM, 0);
+        lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
+        register_dim(lbl_credit2);
+    }
 
     make_settings_button(ble_container);
 
@@ -788,9 +793,12 @@ static void init_settings_screen(lv_obj_t* scr) {
 
     lv_obj_t* title = lv_label_create(settings_container);
     lv_label_set_text(title, "Settings");
-    lv_obj_set_style_text_font(title, L.title_font, 0);
+    const bool tiny_portrait = (L.scr_w <= 260 && L.scr_h <= 340);
+    lv_obj_set_style_text_font(title, tiny_portrait ? &font_styrene_24 : L.title_font, 0);
     lv_obj_set_style_text_color(title, COL_TEXT, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
+    lv_obj_align(title, LV_ALIGN_TOP_MID,
+                 tiny_portrait ? 18 : L.title_x_offset,
+                 tiny_portrait ? 20 : L.title_y);
     register_primary(title);
     make_back_button(settings_container);
 
