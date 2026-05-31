@@ -256,6 +256,7 @@ static lv_obj_t* settings_container;
 static lv_obj_t* lbl_metric_value;
 static lv_obj_t* lbl_theme_value;
 static lv_obj_t* lbl_accent_value;
+static lv_obj_t* lbl_bluetooth_value;
 static lv_obj_t* lbl_settings_note;
 
 // ---- Battery indicator (shared, on top) ----
@@ -403,6 +404,7 @@ static void refresh_settings_labels(void) {
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
+    if (lbl_bluetooth_value) lv_label_set_text(lbl_bluetooth_value, "Open");
     if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
 }
 
@@ -432,6 +434,7 @@ static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
 static void settings_accent_click_cb(lv_event_t* e);
+static void settings_bluetooth_click_cb(lv_event_t* e);
 static void settings_button_click_cb(lv_event_t* e);
 static void settings_back_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
@@ -733,7 +736,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 // ======== Settings Screen ========
 
 static int settings_card_h(void) {
-    if (L.scr_h <= 260) return 42;
+    if (L.scr_h <= 260) return 36;
     if (L.scr_h <= 340) return 48;
     return 70;
 }
@@ -797,6 +800,8 @@ static void init_settings_screen(lv_obj_t* scr) {
                        settings_theme_click_cb);
     make_settings_card(settings_container, 2, "Accent", &lbl_accent_value,
                        settings_accent_click_cb);
+    make_settings_card(settings_container, 3, "Bluetooth", &lbl_bluetooth_value,
+                       settings_bluetooth_click_cb);
 
     lbl_settings_note = lv_label_create(settings_container);
     lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
@@ -994,6 +999,11 @@ static void settings_accent_click_cb(lv_event_t* e) {
     (void)e;
     settings_toggle_accent_theme();
     apply_theme_styles();
+}
+
+static void settings_bluetooth_click_cb(lv_event_t* e) {
+    (void)e;
+    ui_show_screen(SCREEN_BLUETOOTH);
 }
 
 static void settings_button_click_cb(lv_event_t* e) {
