@@ -669,6 +669,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 
     lv_obj_t* bt_img = lv_image_create(p_info);
     lv_image_set_src(bt_img, &icon_bt_dsc);
+    if (L.scr_h <= 340) lv_image_set_scale(bt_img, 192);
     lv_obj_set_pos(bt_img, 0, 0);
 
     lbl_ble_status = lv_label_create(p_info);
@@ -681,14 +682,14 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_label_set_text(lbl_ble_device, "Device: ---");
     lv_obj_set_style_text_font(lbl_ble_device, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_device, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 260) ? 48 : ((L.scr_h <= 340) ? 52 : 64));
+    lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 260) ? 52 : ((L.scr_h <= 340) ? 58 : 64));
     register_dim(lbl_ble_device);
 
     lbl_ble_mac = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_mac, "Address: ---");
     lv_obj_set_style_text_font(lbl_ble_mac, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_mac, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 260) ? 68 : ((L.scr_h <= 340) ? 76 : 100));
+    lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 260) ? 72 : ((L.scr_h <= 340) ? 82 : 100));
     register_dim(lbl_ble_mac);
 
     int reset_y = L.content_y + L.bt_info_panel_h + 16;

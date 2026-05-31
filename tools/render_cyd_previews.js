@@ -246,8 +246,9 @@ function renderBluetooth(L) {
   const infoY = L.contentY;
   const resetY = L.contentY + L.btInfoPanelH + 16;
   const tinyLandscape = L.h <= 260;
-  const deviceY = tinyLandscape ? 48 : (L.h <= 340 ? 52 : 64);
-  const macY = tinyLandscape ? 68 : (L.h <= 340 ? 76 : 100);
+  const btIconSize = L.h <= 340 ? 36 : 42;
+  const deviceY = tinyLandscape ? 52 : (L.h <= 340 ? 58 : 64);
+  const macY = tinyLandscape ? 72 : (L.h <= 340 ? 82 : 100);
   const resetLabelSize = L.btDeviceSize;
   return [
     ...openSvg(L.w, L.h),
@@ -259,7 +260,7 @@ function renderBluetooth(L) {
       className: L.bluetoothTitleSize < 30 ? "" : "title",
     }),
     rect(L.margin, infoY, contentW, L.btInfoPanelH, palette.panel, 8),
-    bluetoothIcon(L.margin + L.panelPad, infoY + L.panelPadY, 42),
+    bluetoothIcon(L.margin + L.panelPad, infoY + L.panelPadY, btIconSize),
     label("Connected", L.margin + L.panelPad + 56, infoY + L.panelPadY + 13, L.btStatusSize, palette.green, { weight: 700 }),
     label("Device: Codex Meter", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
     label("Address: F0:08:D1:2A:BC:34", L.margin + L.panelPad, infoY + macY, L.btDeviceSize, palette.dim),
