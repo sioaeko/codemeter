@@ -15,8 +15,9 @@ static int  cell      = 24;        // recomputed in splash_init()
 static int  canvas_w  = GRID * 24;
 static int  canvas_h  = GRID * 24;
 
-// Background fallback when palette is missing
-#define COL_EMPTY    0x0000  // true black (matches THEME_BG)
+// Animation frames use true black as their empty cell. Keep the full splash
+// screen true black too, otherwise small CYD canvases show a visible square.
+#define COL_EMPTY    0x0000
 
 LV_FONT_DECLARE(font_styrene_28);
 
@@ -130,7 +131,7 @@ void splash_init(lv_obj_t *parent) {
     splash_container = lv_obj_create(parent);
     lv_obj_set_size(splash_container, c.width, c.height);
     lv_obj_set_pos(splash_container, 0, 0);
-    lv_obj_set_style_bg_color(splash_container, THEME_BG, 0);
+    lv_obj_set_style_bg_color(splash_container, lv_color_hex(0x000000), 0);
     lv_obj_set_style_bg_opa(splash_container, LV_OPA_COVER, 0);
     lv_obj_set_style_border_width(splash_container, 0, 0);
     lv_obj_set_style_pad_all(splash_container, 0, 0);

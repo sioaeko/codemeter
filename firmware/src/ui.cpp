@@ -173,17 +173,64 @@ static void compute_layout(const BoardCaps& c) {
     L.content_w = L.scr_w - 2 * L.margin;
 }
 
-// Anthropic brand palette — design tokens live in theme.h
+// Base design tokens live in theme.h; runtime palette choices are persisted
+// in settings.cpp and resolved here.
 #include "theme.h"
-#define COL_BG        THEME_BG
-#define COL_PANEL     THEME_PANEL
-#define COL_TEXT      THEME_TEXT
-#define COL_DIM       THEME_DIM
-#define COL_ACCENT    THEME_ACCENT
-#define COL_GREEN     THEME_GREEN
-#define COL_AMBER     THEME_AMBER
-#define COL_RED       THEME_RED
-#define COL_BAR_BG    THEME_BAR_BG
+
+static bool theme_is_light(void) {
+    return settings_display_theme() == DISPLAY_THEME_LIGHT;
+}
+
+static bool accent_is_claude(void) {
+    return settings_accent_theme() == ACCENT_THEME_CLAUDE;
+}
+
+static lv_color_t col_accent(void) {
+    return accent_is_claude() ? lv_color_hex(0xd97757) : lv_color_hex(0x10a37f);
+}
+
+static lv_color_t col_bg(void) {
+    return theme_is_light() ? lv_color_hex(0xf3eadb) : lv_color_hex(0x000000);
+}
+
+static lv_color_t col_panel(void) {
+    return theme_is_light() ? lv_color_hex(0xfffbf2) : lv_color_hex(0x1f1f1e);
+}
+
+static lv_color_t col_text(void) {
+    return theme_is_light() ? col_accent() : lv_color_hex(0xfaf9f5);
+}
+
+static lv_color_t col_dim(void) {
+    return theme_is_light() ? lv_color_hex(0x8e745f) : lv_color_hex(0xb0aea5);
+}
+
+static lv_color_t col_green(void) {
+    if (accent_is_claude()) return theme_is_light() ? lv_color_hex(0x6f7f4e) : lv_color_hex(0x788c5d);
+    return lv_color_hex(0x10a37f);
+}
+
+static lv_color_t col_amber(void) {
+    return accent_is_claude() ? lv_color_hex(0xd97757) : lv_color_hex(0xd9a441);
+}
+
+static lv_color_t col_red(void) {
+    return theme_is_light() ? lv_color_hex(0xb84432) : lv_color_hex(0xc0392b);
+}
+
+static lv_color_t col_bar_bg(void) {
+    return theme_is_light() ? lv_color_hex(0xe3d3bf) : lv_color_hex(0x2a2a28);
+}
+
+#define COL_BG        col_bg()
+#define COL_PANEL     col_panel()
+#define COL_TEXT      col_text()
+#define COL_DIM       col_dim()
+#define COL_ACCENT    col_accent()
+#define COL_GREEN     col_green()
+#define COL_AMBER     col_amber()
+#define COL_RED       col_red()
+#define COL_BAR_BG    col_bar_bg()
 
 // ---- Usage screen widgets ----
 static lv_obj_t* usage_container;
@@ -208,6 +255,10 @@ static lv_obj_t* lbl_ble_mac;
 static lv_obj_t* settings_container;
 static lv_obj_t* lbl_metric_value;
 static lv_obj_t* lbl_metric_hint;
+static lv_obj_t* lbl_theme_value;
+static lv_obj_t* lbl_theme_hint;
+static lv_obj_t* lbl_accent_value;
+static lv_obj_t* lbl_accent_hint;
 
 // ---- Battery indicator (shared, on top) ----
 static lv_obj_t* battery_img;
@@ -218,6 +269,30 @@ static lv_image_dsc_t battery_dscs[5];  // empty, low, medium, full, charging
 static lv_image_dsc_t logo_dsc;
 static screen_t current_screen = SCREEN_USAGE;
 static UsageData last_usage = {};
+static ble_state_t last_ui_ble_state = BLE_STATE_INIT;
+
+#define MAX_THEME_OBJS 64
+static lv_obj_t* theme_panels[MAX_THEME_OBJS];
+static uint8_t theme_panel_count = 0;
+static lv_obj_t* theme_bars[MAX_THEME_OBJS];
+static uint8_t theme_bar_count = 0;
+static lv_obj_t* theme_pills[MAX_THEME_OBJS];
+static uint8_t theme_pill_count = 0;
+static lv_obj_t* theme_primary_labels[MAX_THEME_OBJS];
+static uint8_t theme_primary_count = 0;
+static lv_obj_t* theme_dim_labels[MAX_THEME_OBJS];
+static uint8_t theme_dim_count = 0;
+
+static void register_obj(lv_obj_t** list, uint8_t* count, lv_obj_t* obj) {
+    if (!obj || *count >= MAX_THEME_OBJS) return;
+    list[(*count)++] = obj;
+}
+
+static void register_panel(lv_obj_t* obj)  { register_obj(theme_panels, &theme_panel_count, obj); }
+static void register_bar(lv_obj_t* obj)    { register_obj(theme_bars, &theme_bar_count, obj); }
+static void register_pill(lv_obj_t* obj)   { register_obj(theme_pills, &theme_pill_count, obj); }
+static void register_primary(lv_obj_t* obj){ register_obj(theme_primary_labels, &theme_primary_count, obj); }
+static void register_dim(lv_obj_t* obj)    { register_obj(theme_dim_labels, &theme_dim_count, obj); }
 
 // Animation state
 static uint32_t anim_last_ms = 0;
@@ -310,7 +385,19 @@ static const char* metric_label(void) {
                : "Used";
 }
 
-static void refresh_metric_labels(void) {
+static const char* theme_label(void) {
+    return (settings_display_theme() == DISPLAY_THEME_LIGHT)
+               ? "Light"
+               : "Dark";
+}
+
+static const char* accent_label(void) {
+    return (settings_accent_theme() == ACCENT_THEME_CLAUDE)
+               ? "Claude"
+               : "Codex";
+}
+
+static void refresh_settings_labels(void) {
     const char* label = metric_label();
     if (lbl_title) lv_label_set_text(lbl_title, label);
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
@@ -319,6 +406,20 @@ static void refresh_metric_labels(void) {
                           settings_display_metric() == DISPLAY_METRIC_REMAINING
                               ? "Showing quota left"
                               : "Showing quota used");
+    }
+    if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
+    if (lbl_theme_hint) {
+        lv_label_set_text(lbl_theme_hint,
+                          settings_display_theme() == DISPLAY_THEME_LIGHT
+                              ? "Warm Claude-style UI"
+                              : "Black low-glow UI");
+    }
+    if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
+    if (lbl_accent_hint) {
+        lv_label_set_text(lbl_accent_hint,
+                          settings_accent_theme() == ACCENT_THEME_CLAUDE
+                              ? "Orange primary type"
+                              : "Green Codex accent");
     }
 }
 
@@ -346,6 +447,10 @@ static void format_reset_time(int mins, char* buf, size_t len) {
 static void global_click_cb(lv_event_t* e);
 static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
+static void settings_theme_click_cb(lv_event_t* e);
+static void settings_accent_click_cb(lv_event_t* e);
+static void settings_button_click_cb(lv_event_t* e);
+static void apply_theme_styles(void);
 
 static lv_obj_t* make_panel(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_t* panel = lv_obj_create(parent);
@@ -363,6 +468,7 @@ static lv_obj_t* make_panel(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_set_style_pad_bottom(panel, L.panel_pad_y, 0);
     lv_obj_clear_flag(panel, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_flag(panel, LV_OBJ_FLAG_EVENT_BUBBLE);
+    register_panel(panel);
     return panel;
 }
 
@@ -378,6 +484,7 @@ static lv_obj_t* make_bar(lv_obj_t* parent, int x, int y, int w, int h) {
     lv_obj_set_style_bg_color(bar, COL_GREEN, LV_PART_INDICATOR);
     lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);
     lv_obj_set_style_radius(bar, 6, LV_PART_INDICATOR);
+    register_bar(bar);
     return bar;
 }
 
@@ -411,7 +518,17 @@ static lv_obj_t* make_pill(lv_obj_t* parent, const char* text) {
     lv_obj_set_style_pad_right(lbl, L.panel_pad, 0);
     lv_obj_set_style_pad_top(lbl, 6, 0);
     lv_obj_set_style_pad_bottom(lbl, 6, 0);
+    register_pill(lbl);
     return lbl;
+}
+
+static lv_obj_t* make_settings_button(lv_obj_t* parent) {
+    lv_obj_t* btn = make_pill(parent, "SET");
+    lv_obj_add_flag(btn, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_event_cb(btn, settings_button_click_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -L.margin, L.title_y + 2);
+    return btn;
 }
 
 static void init_battery_icons(void) {
@@ -434,6 +551,7 @@ static void make_usage_panel(lv_obj_t* parent, int y, const char* pill_text,
     lv_obj_set_style_text_font(*out_pct, L.usage_pct_font, 0);
     lv_obj_set_style_text_color(*out_pct, COL_TEXT, 0);
     lv_obj_set_pos(*out_pct, 0, 0);
+    register_primary(*out_pct);
 
     *out_pill = make_pill(panel, pill_text);
     lv_obj_align(*out_pill, LV_ALIGN_TOP_RIGHT, 0, 1);
@@ -448,6 +566,7 @@ static void make_usage_panel(lv_obj_t* parent, int y, const char* pill_text,
     lv_obj_set_pos(*out_reset, 0, L.usage_reset_y);
     lv_obj_set_width(*out_reset, L.content_w - (2 * L.panel_pad));
     lv_label_set_long_mode(*out_reset, LV_LABEL_LONG_CLIP);
+    register_dim(*out_reset);
 }
 
 static void init_usage_screen(lv_obj_t* scr) {
@@ -465,6 +584,7 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_font(lbl_title, L.title_font, 0);
     lv_obj_set_style_text_color(lbl_title, COL_TEXT, 0);
     lv_obj_align(lbl_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
+    register_primary(lbl_title);
 
     make_usage_panel(usage_container, L.content_y, "5h",
                      &lbl_session_pct, &lbl_session_label,
@@ -479,6 +599,9 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_font(lbl_anim, L.spinner_font, 0);
     lv_obj_set_style_text_color(lbl_anim, COL_DIM, 0);
     lv_obj_align(lbl_anim, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
+    register_dim(lbl_anim);
+
+    make_settings_button(usage_container);
 }
 
 // ======== Bluetooth Screen ========
@@ -498,6 +621,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_font(lbl_ble_title, L.bt_title_font, 0);
     lv_obj_set_style_text_color(lbl_ble_title, COL_TEXT, 0);
     lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
+    register_primary(lbl_ble_title);
 
     lv_obj_t* p_info = make_panel(ble_container, L.margin, L.content_y,
                                   L.content_w, L.bt_info_panel_h);
@@ -520,12 +644,14 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_font(lbl_ble_device, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_device, COL_DIM, 0);
     lv_obj_set_pos(lbl_ble_device, 0, (L.scr_h <= 340) ? 52 : 64);
+    register_dim(lbl_ble_device);
 
     lbl_ble_mac = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_mac, "Address: ---");
     lv_obj_set_style_text_font(lbl_ble_mac, L.bt_device_font, 0);
     lv_obj_set_style_text_color(lbl_ble_mac, COL_DIM, 0);
     lv_obj_set_pos(lbl_ble_mac, 0, (L.scr_h <= 340) ? 76 : 100);
+    register_dim(lbl_ble_mac);
 
     int reset_y = L.content_y + L.bt_info_panel_h + 16;
     lv_obj_t* reset_zone = lv_obj_create(ble_container);
@@ -540,6 +666,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_set_flex_align(reset_zone, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_clear_flag(reset_zone, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_event_cb(reset_zone, ble_reset_click_cb, LV_EVENT_CLICKED, NULL);
+    register_panel(reset_zone);
 
     static lv_image_dsc_t icon_trash_dsc;
     init_icon_dsc(&icon_trash_dsc, ICON_TRASH2_W, ICON_TRASH2_H, icon_trash2_data);
@@ -550,23 +677,76 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_label_set_text(reset_lbl, "Reset Bluetooth");
     lv_obj_set_style_text_font(reset_lbl, L.bt_device_font, 0);
     lv_obj_set_style_text_color(reset_lbl, COL_DIM, 0);
+    register_dim(reset_lbl);
 
     lv_obj_t* lbl_credit = lv_label_create(ble_container);
     lv_label_set_text(lbl_credit, "Codexmeter");
     lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
     lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
     lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);
+    register_dim(lbl_credit);
 
     lv_obj_t* lbl_credit2 = lv_label_create(ble_container);
     lv_label_set_text(lbl_credit2, "Built from Clawdmeter");
     lv_obj_set_style_text_font(lbl_credit2, L.bt_credit_2_font, 0);
     lv_obj_set_style_text_color(lbl_credit2, COL_DIM, 0);
     lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
+    register_dim(lbl_credit2);
+
+    make_settings_button(ble_container);
 
     lv_obj_add_flag(ble_container, LV_OBJ_FLAG_HIDDEN);
 }
 
 // ======== Settings Screen ========
+
+static int settings_card_h(void) {
+    if (L.scr_h <= 260) return 48;
+    if (L.scr_h <= 340) return 62;
+    return 78;
+}
+
+static int settings_card_gap(void) {
+    return (L.scr_h <= 260) ? 6 : 8;
+}
+
+static lv_obj_t* make_settings_card(lv_obj_t* parent, int index, const char* name,
+                                    lv_obj_t** out_value, lv_obj_t** out_hint,
+                                    lv_event_cb_t cb) {
+    int h = settings_card_h();
+    int y = L.content_y + index * (h + settings_card_gap());
+    lv_obj_t* panel = make_panel(parent, L.margin, y, L.content_w, h);
+    lv_obj_clear_flag(panel, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_flag(panel, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(panel, cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t* lbl_name = lv_label_create(panel);
+    lv_label_set_text(lbl_name, name);
+    lv_obj_set_style_text_font(lbl_name, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(lbl_name, COL_DIM, 0);
+    lv_obj_set_pos(lbl_name, 0, 0);
+    register_dim(lbl_name);
+
+    *out_value = lv_label_create(panel);
+    lv_label_set_text(*out_value, "---");
+    lv_obj_set_style_text_font(*out_value, L.usage_pill_font, 0);
+    lv_obj_set_style_text_color(*out_value, COL_TEXT, 0);
+    lv_obj_set_pos(*out_value, 0, (L.scr_h <= 260) ? 18 : 22);
+    lv_obj_set_width(*out_value, L.content_w - (2 * L.panel_pad));
+    lv_label_set_long_mode(*out_value, LV_LABEL_LONG_CLIP);
+    register_primary(*out_value);
+
+    *out_hint = lv_label_create(panel);
+    lv_label_set_text(*out_hint, "");
+    lv_obj_set_style_text_font(*out_hint, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(*out_hint, COL_DIM, 0);
+    lv_obj_align(*out_hint, LV_ALIGN_BOTTOM_LEFT, 0, 0);
+    lv_obj_set_width(*out_hint, L.content_w - (2 * L.panel_pad));
+    lv_label_set_long_mode(*out_hint, LV_LABEL_LONG_CLIP);
+    register_dim(*out_hint);
+
+    return panel;
+}
 
 static void init_settings_screen(lv_obj_t* scr) {
     settings_container = lv_obj_create(scr);
@@ -583,44 +763,65 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_obj_set_style_text_font(title, L.title_font, 0);
     lv_obj_set_style_text_color(title, COL_TEXT, 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);
+    register_primary(title);
 
-    int panel_h = (L.scr_h <= 260) ? 120 : ((L.scr_h <= 340) ? 140 : 180);
-    lv_obj_t* metric_panel = make_panel(settings_container, L.margin, L.content_y,
-                                        L.content_w, panel_h);
-    lv_obj_clear_flag(metric_panel, LV_OBJ_FLAG_EVENT_BUBBLE);
-    lv_obj_add_flag(metric_panel, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(metric_panel, settings_metric_click_cb, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t* lbl_metric_name = lv_label_create(metric_panel);
-    lv_label_set_text(lbl_metric_name, "Display");
-    lv_obj_set_style_text_font(lbl_metric_name, L.usage_pill_font, 0);
-    lv_obj_set_style_text_color(lbl_metric_name, COL_DIM, 0);
-    lv_obj_set_pos(lbl_metric_name, 0, 0);
-
-    lbl_metric_value = lv_label_create(metric_panel);
-    lv_label_set_text(lbl_metric_value, metric_label());
-    lv_obj_set_style_text_font(lbl_metric_value, L.bt_status_font, 0);
-    lv_obj_set_style_text_color(lbl_metric_value, COL_TEXT, 0);
-    lv_obj_set_pos(lbl_metric_value, 0, (L.scr_h <= 260) ? 34 : 46);
-    lv_obj_set_width(lbl_metric_value, L.content_w - (2 * L.panel_pad));
-    lv_label_set_long_mode(lbl_metric_value, LV_LABEL_LONG_CLIP);
-
-    lbl_metric_hint = lv_label_create(metric_panel);
-    lv_label_set_text(lbl_metric_hint, "");
-    lv_obj_set_style_text_font(lbl_metric_hint, L.usage_reset_font, 0);
-    lv_obj_set_style_text_color(lbl_metric_hint, COL_DIM, 0);
-    lv_obj_align(lbl_metric_hint, LV_ALIGN_BOTTOM_LEFT, 0, 0);
-    lv_obj_set_width(lbl_metric_hint, L.content_w - (2 * L.panel_pad));
-    lv_label_set_long_mode(lbl_metric_hint, LV_LABEL_LONG_CLIP);
+    make_settings_card(settings_container, 0, "Display",
+                       &lbl_metric_value, &lbl_metric_hint,
+                       settings_metric_click_cb);
+    make_settings_card(settings_container, 1, "Theme",
+                       &lbl_theme_value, &lbl_theme_hint,
+                       settings_theme_click_cb);
+    make_settings_card(settings_container, 2, "Accent",
+                       &lbl_accent_value, &lbl_accent_hint,
+                       settings_accent_click_cb);
 
     lv_obj_t* toggle_hint = lv_label_create(settings_container);
-    lv_label_set_text(toggle_hint, "Tap display card to toggle");
+    lv_label_set_text(toggle_hint, "Tap cards  BOOT cycles");
     lv_obj_set_style_text_font(toggle_hint, L.usage_reset_font, 0);
     lv_obj_set_style_text_color(toggle_hint, COL_DIM, 0);
     lv_obj_align(toggle_hint, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
+    register_dim(toggle_hint);
 
-    refresh_metric_labels();
+    refresh_settings_labels();
     lv_obj_add_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
+}
+
+static void apply_theme_styles(void) {
+    lv_obj_t* scr = lv_screen_active();
+    if (scr) {
+        lv_obj_set_style_bg_color(scr, COL_BG, 0);
+        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+    }
+
+    for (uint8_t i = 0; i < theme_panel_count; i++) {
+        lv_obj_t* obj = theme_panels[i];
+        lv_obj_set_style_bg_color(obj, COL_PANEL, 0);
+        lv_obj_set_style_border_color(obj, COL_BAR_BG, 0);
+    }
+
+    for (uint8_t i = 0; i < theme_bar_count; i++) {
+        lv_obj_t* obj = theme_bars[i];
+        lv_obj_set_style_bg_color(obj, COL_BAR_BG, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(obj, COL_GREEN, LV_PART_INDICATOR);
+    }
+
+    for (uint8_t i = 0; i < theme_pill_count; i++) {
+        lv_obj_t* obj = theme_pills[i];
+        lv_obj_set_style_text_color(obj, COL_TEXT, 0);
+        lv_obj_set_style_bg_color(obj, COL_BAR_BG, 0);
+    }
+
+    for (uint8_t i = 0; i < theme_primary_count; i++) {
+        lv_obj_set_style_text_color(theme_primary_labels[i], COL_TEXT, 0);
+    }
+
+    for (uint8_t i = 0; i < theme_dim_count; i++) {
+        lv_obj_set_style_text_color(theme_dim_labels[i], COL_DIM, 0);
+    }
+
+    refresh_settings_labels();
+    ui_update_ble_status(last_ui_ble_state, ble_get_device_name(), ble_get_mac_address());
+    if (last_usage.valid) ui_update(&last_usage);
 }
 
 // ======== Public API ========
@@ -654,6 +855,7 @@ void ui_init(void) {
     battery_img = lv_image_create(scr);
     lv_image_set_src(battery_img, &battery_dscs[0]);
     lv_obj_set_pos(battery_img, L.scr_w - 48 - L.margin, L.title_y);
+    apply_theme_styles();
 }
 
 void ui_update(const UsageData* data) {
@@ -730,8 +932,25 @@ static void ble_reset_click_cb(lv_event_t* e) {
 static void settings_metric_click_cb(lv_event_t* e) {
     (void)e;
     settings_toggle_display_metric();
-    refresh_metric_labels();
+    refresh_settings_labels();
     if (last_usage.valid) ui_update(&last_usage);
+}
+
+static void settings_theme_click_cb(lv_event_t* e) {
+    (void)e;
+    settings_toggle_display_theme();
+    apply_theme_styles();
+}
+
+static void settings_accent_click_cb(lv_event_t* e) {
+    (void)e;
+    settings_toggle_accent_theme();
+    apply_theme_styles();
+}
+
+static void settings_button_click_cb(lv_event_t* e) {
+    (void)e;
+    ui_show_screen(SCREEN_SETTINGS);
 }
 
 void ui_show_screen(screen_t screen) {
@@ -779,6 +998,7 @@ screen_t ui_get_current_screen(void) {
 }
 
 void ui_update_ble_status(ble_state_t state, const char* name, const char* mac) {
+    last_ui_ble_state = state;
     switch (state) {
     case BLE_STATE_CONNECTED:
         lv_label_set_text(lbl_ble_status, "Connected");
