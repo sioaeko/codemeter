@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <title>Codexmeter CYD 펌웨어 설치</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -103,48 +102,9 @@
       .brand {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
         color: var(--ink);
         font-size: 18px;
         font-weight: 600;
-      }
-
-      .brand-mark {
-        width: 30px;
-        height: 30px;
-        flex: 0 0 auto;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--hairline-strong);
-        border-radius: var(--radius);
-        background: var(--surface);
-        color: var(--primary);
-      }
-
-      .brand-mark svg {
-        display: block;
-        width: 22px;
-        height: 22px;
-      }
-
-      .codexmeter-mark {
-        overflow: visible;
-      }
-
-      .codexmeter-mark path {
-        fill: none;
-        stroke: currentColor;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .codexmeter-mark .mark-loop {
-        stroke-width: 4.8;
-      }
-
-      .codexmeter-mark .mark-core {
-        fill: currentColor;
-        stroke: none;
       }
 
       .topbar-note {
@@ -172,43 +132,6 @@
         color: var(--primary);
         font-size: 13px;
         font-weight: 600;
-      }
-
-      .hero-logo {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 22px;
-        color: var(--ink);
-      }
-
-      .hero-logo .brand-mark {
-        width: 52px;
-        height: 52px;
-        color: var(--primary);
-      }
-
-      .hero-logo .brand-mark svg {
-        width: 38px;
-        height: 38px;
-      }
-
-      .hero-logo strong,
-      .hero-logo span {
-        display: block;
-      }
-
-      .hero-logo strong {
-        color: var(--ink);
-        font-size: 17px;
-        font-weight: 600;
-      }
-
-      .hero-logo span {
-        margin-top: 2px;
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 500;
       }
 
       h1 {
@@ -248,22 +171,17 @@
         padding: 8px 12px;
       }
 
-      .device-preview {
-        width: min(100%, 360px);
-        margin-top: 42px;
-        background: var(--surface-dark);
-        border: 1px solid #2e2b27;
-        border-radius: var(--radius);
-        color: var(--on-dark);
-        padding: 18px;
+      .firmware-preview {
+        width: min(100%, 380px);
+        margin: 42px 0 0;
       }
 
-      .device-top {
+      .preview-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 14px;
-        color: var(--on-dark-soft);
+        margin-bottom: 10px;
+        color: var(--muted);
         font-size: 12px;
         font-weight: 600;
       }
@@ -282,50 +200,34 @@
         background: var(--success);
       }
 
-      .device-screen {
-        min-height: 176px;
+      .preview-shell {
+        border: 1px solid #2e2b27;
         border-radius: var(--radius);
-        background: #f3eadb;
-        color: #d97757;
-        padding: 20px;
+        background: var(--surface-dark);
+        padding: 14px;
       }
 
-      .device-screen h2 {
-        margin: 0;
-        color: #d97757;
-        font-family: var(--font-display);
-        font-size: 38px;
-        font-weight: 400;
-        line-height: 1;
-        letter-spacing: 0;
+      .preview-screen {
+        display: grid;
+        place-items: center;
+        min-height: 230px;
       }
 
-      .device-meter {
-        margin-top: 28px;
-      }
-
-      .device-meter-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        color: #8e745f;
-        font-size: 12px;
-        font-weight: 600;
-      }
-
-      .device-bar {
-        height: 9px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: #e3d3bf;
-      }
-
-      .device-bar span {
+      .preview-screen img {
         display: block;
-        width: 42%;
-        height: 100%;
-        border-radius: inherit;
-        background: #d97757;
+        width: 100%;
+        height: auto;
+        border: 1px solid #383631;
+        border-radius: var(--radius);
+        background: #000000;
+      }
+
+      .firmware-preview[data-orientation="portrait"] .preview-screen img {
+        max-width: 240px;
+      }
+
+      .firmware-preview[data-orientation="landscape"] .preview-screen img {
+        max-width: 320px;
       }
 
       .flash-panel {
@@ -630,17 +532,6 @@
       <header class="topbar">
         <div class="container topbar-inner">
           <a class="brand" href="#install" aria-label="Codexmeter 설치로 이동">
-            <span class="brand-mark" aria-hidden="true">
-              <svg class="codexmeter-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" />
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(60 32 32)" />
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(120 32 32)" />
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(180 32 32)" />
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(240 32 32)" />
-                <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(300 32 32)" />
-                <circle class="mark-core" cx="32" cy="32" r="4" />
-              </svg>
-            </span>
             Codexmeter
           </a>
           <span class="topbar-note">Chrome / Edge 데스크톱</span>
@@ -651,23 +542,6 @@
         <section class="hero">
           <div class="container hero-grid">
             <div>
-              <div class="hero-logo" aria-hidden="true">
-                <span class="brand-mark">
-                  <svg class="codexmeter-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" />
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(60 32 32)" />
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(120 32 32)" />
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(180 32 32)" />
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(240 32 32)" />
-                    <path class="mark-loop" d="M32 8.5c7.7 0 14 6.3 14 14V32" transform="rotate(300 32 32)" />
-                    <circle class="mark-core" cx="32" cy="32" r="4" />
-                  </svg>
-                </span>
-                <div>
-                  <strong>Codexmeter</strong>
-                  <span>CYD firmware flasher</span>
-                </div>
-              </div>
               <p class="eyebrow">Web Serial firmware flasher</p>
               <h1>Codexmeter CYD 웹 플래셔</h1>
               <p class="lede">
@@ -680,22 +554,25 @@
                 <li>Chrome 또는 Edge</li>
               </ul>
 
-              <div class="device-preview" aria-label="Codexmeter 화면 미리보기">
-                <div class="device-top">
-                  <span>CODEXMETER</span>
+              <figure
+                class="firmware-preview"
+                data-orientation="portrait"
+                aria-label="Codexmeter 펌웨어 화면 미리보기"
+              >
+                <figcaption class="preview-top">
+                  <span>FIRMWARE PREVIEW</span>
                   <span class="status-dot">BLE</span>
-                </div>
-                <div class="device-screen">
-                  <h2>Used</h2>
-                  <div class="device-meter">
-                    <div class="device-meter-row">
-                      <span>Today</span>
-                      <span>42%</span>
-                    </div>
-                    <div class="device-bar"><span></span></div>
+                </figcaption>
+                <div class="preview-shell">
+                  <div class="preview-screen">
+                    <img
+                      data-preview-image
+                      src="previews/cyd_2432s028r/portrait_usage.svg"
+                      alt="Codexmeter portrait firmware preview"
+                    />
                   </div>
                 </div>
-              </div>
+              </figure>
             </div>
 
             <section class="flash-panel" id="install" aria-label="펌웨어 설치">
@@ -801,6 +678,19 @@
     <script>
       const buttons = document.querySelectorAll("[data-target]");
       const choices = document.querySelectorAll("[data-choice]");
+      const preview = document.querySelector("[data-orientation]");
+      const previewImage = document.querySelector("[data-preview-image]");
+
+      const previewSources = {
+        portrait: {
+          src: "previews/cyd_2432s028r/portrait_usage.svg",
+          alt: "Codexmeter portrait firmware preview",
+        },
+        landscape: {
+          src: "previews/cyd_2432s028r/landscape_usage.svg",
+          alt: "Codexmeter landscape firmware preview",
+        },
+      };
 
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -815,6 +705,12 @@
           choices.forEach((choice) => {
             choice.classList.toggle("is-active", choice.dataset.choice === target);
           });
+
+          if (preview && previewImage && previewSources[target]) {
+            preview.dataset.orientation = target;
+            previewImage.src = previewSources[target].src;
+            previewImage.alt = previewSources[target].alt;
+          }
         });
       });
     </script>

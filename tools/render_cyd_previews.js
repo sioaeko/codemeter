@@ -4,6 +4,7 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "screenshots", "cyd_2432s028r");
+const webOutDir = path.join(root, "web-flasher", "previews", "cyd_2432s028r");
 
 const palette = {
   bg: "#000000",
@@ -308,6 +309,7 @@ function renderContactSheet(files) {
 }
 
 fs.mkdirSync(outDir, { recursive: true });
+fs.mkdirSync(webOutDir, { recursive: true });
 
 const outputs = [];
 for (const [name, L] of Object.entries(layouts)) {
@@ -319,6 +321,7 @@ for (const [name, L] of Object.entries(layouts)) {
   for (const [screen, svg] of screens) {
     const fileName = `${name}_${screen}.svg`;
     fs.writeFileSync(path.join(outDir, fileName), svg);
+    fs.writeFileSync(path.join(webOutDir, fileName), svg);
     outputs.push({
       name: fileName,
       layout: name,
@@ -327,7 +330,9 @@ for (const [name, L] of Object.entries(layouts)) {
   }
 }
 
-fs.writeFileSync(path.join(outDir, "preview.svg"), renderContactSheet(outputs));
+const contactSheet = renderContactSheet(outputs);
+fs.writeFileSync(path.join(outDir, "preview.svg"), contactSheet);
+fs.writeFileSync(path.join(webOutDir, "preview.svg"), contactSheet);
 
 for (const output of outputs) {
   console.log(path.relative(root, path.join(outDir, output.name)));
