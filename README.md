@@ -126,8 +126,8 @@ node tools/render_cyd_previews.js
 웹 플래셔가 사용하는 factory images:
 
 ```text
-web-flasher/firmware/codexmeter-cyd_2432s028r.factory.bin
-web-flasher/firmware/codexmeter-cyd_2432s028r_landscape.factory.bin
+web-flasher/firmware/clawdmeter-cyd_2432s028r.factory.bin
+web-flasher/firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin
 ```
 
 ## 파일 구조

@@ -34,11 +34,11 @@ copy_image() {
 }
 
 if [ "$#" -eq 1 ]; then
-    dst="$ROOT/web-flasher/firmware/codexmeter-cyd_2432s028r.factory.bin"
+    dst="$ROOT/web-flasher/firmware/clawdmeter-cyd_2432s028r.factory.bin"
     mkdir -p "$(dirname "$dst")"
     cp "$1" "$dst"
     echo "Updated: $dst"
 else
-    copy_image cyd_2432s028r codexmeter-cyd_2432s028r.factory.bin
-    copy_image cyd_2432s028r_landscape codexmeter-cyd_2432s028r_landscape.factory.bin
+    copy_image cyd_2432s028r clawdmeter-cyd_2432s028r.factory.bin
+    copy_image cyd_2432s028r_landscape clawdmeter-cyd_2432s028r_landscape.factory.bin
 fi

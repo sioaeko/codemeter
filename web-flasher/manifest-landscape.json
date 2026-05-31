@@ -7,7 +7,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "firmware/codexmeter-cyd_2432s028r_landscape.factory.bin",
+          "path": "firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin",
           "offset": 0
         }
       ]

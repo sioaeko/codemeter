@@ -43,8 +43,8 @@ pio run -d firmware -e cyd_2432s028r_landscape
 The manifests flash these factory images at offset `0x0`:
 
 ```text
-firmware/codexmeter-cyd_2432s028r.factory.bin
-firmware/codexmeter-cyd_2432s028r_landscape.factory.bin
+firmware/clawdmeter-cyd_2432s028r.factory.bin
+firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin
 ```
 
 Each factory image is the combined PlatformIO output containing bootloader,
