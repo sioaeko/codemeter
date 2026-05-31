@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <title>Codexmeter — CYD 펌웨어 설치</title>
+    <title>Codexmeter CYD 펌웨어 설치</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <script
@@ -19,40 +19,28 @@
       :root {
         --primary: #cc785c;
         --primary-active: #a9583e;
-        --primary-disabled: #e6dfd8;
         --ink: #141413;
         --body: #3d3d3a;
-        --body-strong: #252523;
         --muted: #6c6a64;
-        --muted-soft: #8e8b82;
         --hairline: #e6dfd8;
-        --hairline-soft: #ebe6df;
+        --hairline-strong: #d8cec2;
         --canvas: #faf9f5;
-        --surface-soft: #f5f0e8;
-        --surface-card: #efe9de;
-        --surface-cream-strong: #e8e0d2;
+        --surface: #f5f0e8;
+        --surface-strong: #efe9de;
         --surface-dark: #181715;
-        --surface-dark-elevated: #252320;
-        --surface-dark-soft: #1f1e1b;
+        --surface-dark-soft: #24221f;
         --on-primary: #ffffff;
         --on-dark: #faf9f5;
-        --on-dark-soft: #a09d96;
-        --accent-teal: #5db8a6;
-        --accent-amber: #e8a55a;
-        --success: #5db872;
-        --r-xs: 4px;
-        --r-sm: 6px;
-        --r-md: 8px;
-        --r-lg: 12px;
-        --r-xl: 16px;
-        --r-pill: 9999px;
-        --font-display: "Cormorant Garamond", "Tiempos Headline", Garamond,
-          "Times New Roman", serif;
-        --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
-        --font-mono: "JetBrains Mono", ui-monospace, monospace;
-        --max-w: 1200px;
-        --nav-h: 64px;
+        --on-dark-soft: #b8b2a8;
+        --success: #5db8a6;
+        --warning-bg: #fbf0d1;
+        --warning-text: #6d5208;
+        --error-bg: #f8e3df;
+        --error-text: #8b3030;
+        --radius: 8px;
+        --font-display: "Cormorant Garamond", Garamond, "Times New Roman", serif;
+        --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
       }
 
       *,
@@ -72,1058 +60,681 @@
         color: var(--body);
         font-family: var(--font-body);
         font-size: 16px;
-        line-height: 1.55;
+        line-height: 1.5;
         -webkit-font-smoothing: antialiased;
       }
 
       a {
-        color: var(--primary);
+        color: inherit;
         text-decoration: none;
       }
 
-      a:hover {
-        text-decoration: underline;
+      button {
+        font: inherit;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       .container {
-        width: min(100%, var(--max-w));
+        width: min(100%, 1120px);
         margin: 0 auto;
-        padding-left: 24px;
-        padding-right: 24px;
+        padding: 0 24px;
       }
 
-      /* Spike mark */
-      .spike {
+      .topbar {
+        border-bottom: 1px solid var(--hairline);
+        background: rgba(250, 249, 245, 0.92);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .brand-mark {
         width: 22px;
         height: 22px;
-        flex-shrink: 0;
+        flex: 0 0 auto;
       }
 
-      .spike svg {
+      .brand-mark svg {
         display: block;
         width: 100%;
         height: 100%;
       }
 
-      /* Top nav */
-      .top-nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        height: var(--nav-h);
-        background: var(--canvas);
-        border-bottom: 1px solid var(--hairline-soft);
-      }
-
-      .top-nav-inner {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-      }
-
-      .wordmark {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--ink);
-        text-decoration: none;
-        font-size: 18px;
-        font-weight: 500;
-        letter-spacing: -0.02em;
-      }
-
-      .wordmark:hover {
-        text-decoration: none;
-      }
-
-      .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        flex: 1;
-        justify-content: center;
-      }
-
-      .nav-links a {
-        color: var(--ink);
+      .topbar-note {
+        color: var(--muted);
         font-size: 14px;
         font-weight: 500;
-        padding: 8px 14px;
-        border-radius: var(--r-md);
-        text-decoration: none;
       }
 
-      .nav-links a:hover {
-        background: var(--surface-soft);
-        text-decoration: none;
-      }
-
-      .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .btn-text {
-        appearance: none;
-        border: 0;
-        background: transparent;
-        color: var(--ink);
-        font: inherit;
-        font-size: 14px;
-        font-weight: 500;
-        padding: 8px 12px;
-        cursor: pointer;
-        text-decoration: none;
-        border-radius: var(--r-md);
-      }
-
-      .btn-text:hover {
-        background: var(--surface-soft);
-        text-decoration: none;
-      }
-
-      .btn-primary {
-        appearance: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 40px;
-        padding: 12px 20px;
-        border: 0;
-        border-radius: var(--r-md);
-        background: var(--primary);
-        color: var(--on-primary);
-        font-family: var(--font-body);
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background 0.15s ease;
-      }
-
-      .btn-primary:hover {
-        background: var(--primary-active);
-        text-decoration: none;
-      }
-
-      .btn-primary:active {
-        background: var(--primary-active);
-      }
-
-      .btn-primary:focus-visible {
-        outline: 3px solid rgba(204, 120, 92, 0.35);
-        outline-offset: 2px;
-      }
-
-      .btn-secondary {
-        appearance: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 40px;
-        padding: 12px 20px;
-        border: 1px solid var(--hairline);
-        border-radius: var(--r-md);
-        background: var(--canvas);
-        color: var(--ink);
-        font-family: var(--font-body);
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1;
-        cursor: pointer;
-        text-decoration: none;
-      }
-
-      .btn-secondary:hover {
-        background: var(--surface-soft);
-        text-decoration: none;
-      }
-
-      .btn-on-coral {
-        background: var(--canvas);
-        color: var(--ink);
-        border: 0;
-      }
-
-      .btn-on-coral:hover {
-        background: var(--surface-soft);
-      }
-
-      .nav-toggle {
-        display: none;
-        appearance: none;
-        border: 1px solid var(--hairline);
-        background: var(--canvas);
-        border-radius: var(--r-md);
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-        color: var(--ink);
-      }
-
-      /* Hero */
       .hero {
-        padding: 96px 0;
+        flex: 1;
+        display: grid;
+        align-items: center;
+        padding: 56px 0 40px;
       }
 
       .hero-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 48px;
+        grid-template-columns: minmax(0, 1fr) 440px;
+        gap: 56px;
         align-items: center;
       }
 
-      .hero-copy h1 {
-        margin: 0;
-        font-family: var(--font-display);
-        font-size: clamp(36px, 5vw, 64px);
-        font-weight: 400;
-        line-height: 1.05;
-        letter-spacing: -0.03em;
-        color: var(--ink);
-      }
-
-      .hero-lede {
-        margin: 24px 0 0;
-        max-width: 520px;
-        font-size: 18px;
-        line-height: 1.5;
-        color: var(--body);
-      }
-
-      .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 12px;
-        margin-top: 32px;
-      }
-
-      .badge-coral {
-        display: inline-block;
-        margin-bottom: 20px;
-        padding: 4px 12px;
-        border-radius: var(--r-pill);
-        background: var(--primary);
-        color: var(--on-primary);
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .mockup-dark {
-        background: var(--surface-dark);
-        border-radius: var(--r-xl);
-        padding: 24px;
-        color: var(--on-dark);
-      }
-
-      .mockup-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--on-dark-soft);
-      }
-
-      .mockup-screen {
-        background: var(--surface-dark-soft);
-        border-radius: var(--r-lg);
-        padding: 20px 18px;
-        min-height: 280px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .mockup-screen h3 {
-        margin: 0;
-        font-family: var(--font-display);
-        font-size: 28px;
-        font-weight: 400;
-        letter-spacing: -0.02em;
-        color: var(--on-dark);
-      }
-
-      .meter-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: var(--on-dark-soft);
-        margin-bottom: 8px;
-      }
-
-      .bar {
-        height: 10px;
-        border-radius: var(--r-pill);
-        background: var(--surface-dark-elevated);
-        overflow: hidden;
-      }
-
-      .bar span {
-        display: block;
-        height: 100%;
-        border-radius: var(--r-pill);
-        background: var(--primary);
-      }
-
-      .bar.week span {
-        width: 18%;
-        background: var(--accent-amber);
-      }
-
-      .bar:not(.week) span {
-        width: 42%;
-      }
-
-      .mockup-foot {
-        margin-top: auto;
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--primary);
         font-size: 13px;
-        line-height: 1.45;
-        color: var(--on-dark-soft);
+        font-weight: 600;
       }
 
-      /* Installer band */
-      .band {
-        padding: 96px 0;
-      }
-
-      .band-soft {
-        background: var(--surface-soft);
-      }
-
-      .section-head {
-        max-width: 640px;
-        margin-bottom: 48px;
-      }
-
-      .section-head h2 {
+      h1 {
         margin: 0;
-        font-family: var(--font-display);
-        font-size: clamp(28px, 3.5vw, 48px);
-        font-weight: 400;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
+        max-width: 650px;
         color: var(--ink);
+        font-family: var(--font-display);
+        font-size: 62px;
+        font-weight: 400;
+        line-height: 1.04;
+        letter-spacing: 0;
       }
 
-      .section-head p {
-        margin: 16px 0 0;
-        font-size: 16px;
+      .lede {
+        max-width: 560px;
+        margin: 22px 0 0;
         color: var(--body);
+        font-size: 18px;
       }
 
-      .install-panel {
-        background: var(--canvas);
+      .quick-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 28px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .quick-list li {
         border: 1px solid var(--hairline);
-        border-radius: var(--r-lg);
-        padding: 32px;
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--body);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 12px;
       }
 
-      .install-row {
+      .device-preview {
+        width: min(100%, 360px);
+        margin-top: 42px;
+        background: var(--surface-dark);
+        border: 1px solid #2e2b27;
+        border-radius: var(--radius);
+        color: var(--on-dark);
+        padding: 18px;
+      }
+
+      .device-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 24px;
-        flex-wrap: wrap;
+        margin-bottom: 14px;
+        color: var(--on-dark-soft);
+        font-size: 12px;
+        font-weight: 600;
       }
 
-      .install-row h3 {
+      .status-dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .status-dot::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--success);
+      }
+
+      .device-screen {
+        min-height: 176px;
+        border-radius: var(--radius);
+        background: #f3eadb;
+        color: #d97757;
+        padding: 20px;
+      }
+
+      .device-screen h2 {
         margin: 0;
-        font-size: 18px;
-        font-weight: 500;
+        color: #d97757;
+        font-family: var(--font-display);
+        font-size: 38px;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .device-meter {
+        margin-top: 28px;
+      }
+
+      .device-meter-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: #8e745f;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .device-bar {
+        height: 9px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e3d3bf;
+      }
+
+      .device-bar span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: #d97757;
+      }
+
+      .flash-panel {
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: #fffdfa;
+        padding: 28px;
+      }
+
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .panel-head h2 {
+        margin: 0;
         color: var(--ink);
+        font-size: 22px;
+        font-weight: 600;
       }
 
-      .install-row p {
+      .panel-head p {
         margin: 8px 0 0;
-        font-size: 14px;
         color: var(--muted);
+        font-size: 14px;
       }
 
-      .install-options {
+      .version-pill {
+        flex: 0 0 auto;
+        border: 1px solid var(--hairline);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 10px;
+      }
+
+      .segment {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      .install-option {
+        gap: 6px;
+        margin: 24px 0;
         border: 1px solid var(--hairline);
-        border-radius: var(--r-lg);
-        padding: 24px;
-        background: var(--canvas);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 6px;
       }
 
-      .install-option h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 500;
-        color: var(--ink);
-      }
-
-      .install-option p {
-        margin: 8px 0 18px;
-        font-size: 14px;
+      .segment button {
+        appearance: none;
+        min-height: 54px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
         color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .segment button span {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .segment button.is-active {
+        background: var(--canvas);
+        color: var(--ink);
+        box-shadow: 0 1px 4px rgba(20, 20, 19, 0.08);
+      }
+
+      .install-choice {
+        display: none;
+      }
+
+      .install-choice.is-active {
+        display: block;
+      }
+
+      .choice-copy {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .choice-copy strong {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .choice-copy span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .install-button {
+        appearance: none;
+        width: 100%;
+        min-height: 52px;
+        border: 0;
+        border-radius: var(--radius);
+        background: var(--primary);
+        color: var(--on-primary);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .install-button:hover {
+        background: var(--primary-active);
+      }
+
+      .install-button:focus-visible,
+      .segment button:focus-visible {
+        outline: 3px solid rgba(204, 120, 92, 0.32);
+        outline-offset: 2px;
       }
 
       .unsupported,
       .not-allowed {
         display: block;
-        margin-top: 16px;
-        border-radius: var(--r-md);
+        margin-top: 14px;
+        border-radius: var(--radius);
         padding: 12px 14px;
         font-size: 14px;
         line-height: 1.45;
       }
 
       .unsupported {
-        background: rgba(198, 69, 69, 0.08);
-        color: #8b3030;
-        border: 1px solid rgba(198, 69, 69, 0.25);
+        background: var(--error-bg);
+        color: var(--error-text);
+        border: 1px solid #efc1ba;
       }
 
       .not-allowed {
-        background: rgba(212, 160, 23, 0.1);
-        color: #6b5208;
-        border: 1px solid rgba(212, 160, 23, 0.3);
+        background: var(--warning-bg);
+        color: var(--warning-text);
+        border: 1px solid #ecd486;
       }
 
-      /* Feature grid */
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
+      .panel-note {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 13px;
       }
 
-      .feature-card {
-        background: var(--surface-card);
-        border-radius: var(--r-lg);
-        padding: 32px;
+      .steps {
+        border-top: 1px solid var(--hairline);
+        padding: 28px 0 36px;
       }
 
-      .feature-card .icon {
-        width: 40px;
-        height: 40px;
-        border-radius: var(--r-md);
-        background: var(--canvas);
-        display: grid;
-        place-items: center;
-        font-size: 18px;
-        margin-bottom: 20px;
-      }
-
-      .feature-card h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 500;
-        color: var(--ink);
-      }
-
-      .feature-card p {
-        margin: 12px 0 0;
-        font-size: 14px;
-        color: var(--body);
-        line-height: 1.55;
-      }
-
-      .feature-card strong {
-        display: block;
-        margin-top: 8px;
-        font-size: 15px;
-        color: var(--body-strong);
-      }
-
-      /* Code window */
-      .code-window {
-        background: var(--surface-dark);
-        border-radius: var(--r-lg);
-        padding: 24px;
-        color: var(--on-dark);
-      }
-
-      .code-window h3 {
-        margin: 0 0 16px;
-        font-size: 18px;
-        font-weight: 500;
-        color: var(--on-dark);
-      }
-
-      .code-block {
-        background: var(--surface-dark-soft);
-        border-radius: var(--r-md);
-        padding: 20px;
-        overflow-x: auto;
-        font-family: var(--font-mono);
-        font-size: 14px;
-        line-height: 1.6;
-      }
-
-      .code-block .line {
-        display: flex;
-        gap: 16px;
-      }
-
-      .code-block .ln {
-        color: var(--muted-soft);
-        user-select: none;
-        min-width: 1.5em;
-        text-align: right;
-      }
-
-      .code-block .cmd {
-        color: var(--on-dark);
-      }
-
-      .code-block .comment {
-        color: var(--on-dark-soft);
-      }
-
-      .code-block .str {
-        color: var(--accent-teal);
-      }
-
-      /* Steps */
       .steps-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
       }
 
-      .step-card {
-        background: var(--canvas);
-        border: 1px solid var(--hairline);
-        border-radius: var(--r-lg);
-        padding: 32px;
+      .step {
+        min-height: 92px;
+        border-left: 2px solid var(--primary);
+        padding-left: 16px;
       }
 
-      .step-num {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: var(--r-pill);
-        background: var(--surface-card);
-        font-size: 13px;
+      .step span {
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .step h3 {
+        margin: 7px 0 0;
+        color: var(--ink);
+        font-size: 15px;
         font-weight: 600;
-        color: var(--ink);
-        margin-bottom: 16px;
       }
 
-      .step-card h3 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 500;
-        color: var(--ink);
+      .step p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
       }
 
-      .step-card p {
-        margin: 10px 0 0;
-        font-size: 14px;
-        color: var(--body);
-      }
-
-      code {
-        font-family: var(--font-mono);
-        font-size: 0.92em;
-        background: var(--surface-soft);
-        border: 1px solid var(--hairline);
-        border-radius: var(--r-sm);
-        padding: 2px 6px;
-        color: var(--body-strong);
-      }
-
-      /* CTA band */
-      .cta-coral {
-        background: var(--primary);
-        border-radius: var(--r-lg);
-        padding: 64px;
-        color: var(--on-primary);
-        text-align: center;
-      }
-
-      .cta-coral h2 {
-        margin: 0;
-        font-family: var(--font-display);
-        font-size: clamp(24px, 3vw, 36px);
-        font-weight: 400;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-      }
-
-      .cta-coral p {
-        margin: 16px auto 0;
-        max-width: 480px;
-        font-size: 16px;
-        opacity: 0.92;
-      }
-
-      .cta-coral .hero-actions {
-        justify-content: center;
-        margin-top: 28px;
-      }
-
-      /* Footer */
       .footer {
-        background: var(--surface-dark);
-        color: var(--on-dark-soft);
-        padding: 64px 0;
-        margin-top: 0;
+        padding: 22px 0 30px;
+        color: var(--muted);
+        font-size: 13px;
       }
 
-      .footer-top {
+      .footer-inner {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 40px;
-        color: var(--on-dark);
-        font-size: 16px;
-        font-weight: 500;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--hairline);
+        padding-top: 20px;
       }
 
-      .footer-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 32px;
-      }
-
-      .footer-col h4 {
-        margin: 0 0 16px;
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--on-dark);
-        letter-spacing: 0.04em;
-      }
-
-      .footer-col ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .footer-col li + li {
-        margin-top: 10px;
-      }
-
-      .footer-col a {
-        color: var(--on-dark-soft);
-        font-size: 14px;
-        text-decoration: none;
-      }
-
-      .footer-col a:hover {
-        color: var(--on-dark);
-        text-decoration: underline;
-      }
-
-      .footer-bottom {
-        margin-top: 48px;
-        padding-top: 24px;
-        border-top: 1px solid var(--surface-dark-elevated);
-        font-size: 13px;
-        color: var(--muted-soft);
-      }
-
-      .mobile-nav {
-        display: none;
-        position: fixed;
-        inset: var(--nav-h) 0 0 0;
-        background: var(--canvas);
-        padding: 24px;
-        flex-direction: column;
-        gap: 8px;
-        z-index: 99;
-      }
-
-      .mobile-nav.open {
+      .footer-links {
         display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
       }
 
-      .mobile-nav a {
-        color: var(--ink);
-        font-size: 16px;
+      .footer a {
+        color: var(--primary);
         font-weight: 500;
-        padding: 12px 14px;
-        border-radius: var(--r-md);
-        text-decoration: none;
       }
 
-      .mobile-nav a:hover {
-        background: var(--surface-soft);
-      }
-
-      @media (max-width: 1024px) {
-        .feature-grid,
-        .steps-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .footer-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (max-width: 768px) {
-        .nav-links,
-        .nav-actions .btn-text {
-          display: none;
-        }
-
-        .nav-toggle {
-          display: grid;
-          place-items: center;
-        }
-
+      @media (max-width: 920px) {
         .hero {
-          padding: 64px 0;
+          padding-top: 42px;
         }
 
         .hero-grid {
           grid-template-columns: 1fr;
-          gap: 40px;
+          gap: 34px;
         }
 
-        .band {
-          padding: 64px 0;
+        h1 {
+          max-width: 720px;
+          font-size: 48px;
         }
 
-        .feature-grid,
+        .device-preview {
+          width: 100%;
+          max-width: 430px;
+        }
+
+        .flash-panel {
+          max-width: 560px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding: 0 18px;
+        }
+
+        .topbar-inner {
+          height: 62px;
+        }
+
+        .topbar-note {
+          display: none;
+        }
+
+        .hero {
+          padding: 34px 0 28px;
+        }
+
+        h1 {
+          font-size: 38px;
+        }
+
+        .lede {
+          font-size: 16px;
+        }
+
+        .device-preview {
+          margin-top: 30px;
+        }
+
+        .flash-panel {
+          padding: 22px;
+        }
+
+        .panel-head {
+          display: block;
+        }
+
+        .version-pill {
+          display: inline-block;
+          margin-top: 14px;
+        }
+
         .steps-grid {
           grid-template-columns: 1fr;
         }
 
-        .footer-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .cta-coral {
-          padding: 40px 24px;
-        }
-
-        .install-row {
-          flex-direction: column;
+        .footer-inner {
           align-items: flex-start;
-        }
-
-        .install-row .btn-primary,
-        .install-option .btn-primary {
-          width: 100%;
-        }
-
-        .install-options {
-          grid-template-columns: 1fr;
+          flex-direction: column;
         }
       }
     </style>
   </head>
   <body>
-    <header class="top-nav">
-      <div class="container top-nav-inner">
-        <a class="wordmark" href="#">
-          <span class="spike" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2v20M12 12L4 4M12 12l8-8M12 12L4 20M12 12l8 8"
-                stroke="#141413"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </span>
-          Codexmeter
-        </a>
-        <nav class="nav-links" aria-label="주 메뉴">
-          <a href="#install">설치</a>
-          <a href="#specs">사양</a>
-          <a href="#setup">설정</a>
-          <a href="README.md">문서</a>
-        </nav>
-        <div class="nav-actions">
-          <a class="btn-text" href="manifest.json">manifest</a>
-          <a class="btn-primary" href="#install">펌웨어 설치</a>
+    <div class="page">
+      <header class="topbar">
+        <div class="container topbar-inner">
+          <a class="brand" href="#install" aria-label="Codexmeter 설치로 이동">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2v20M12 12L4 4M12 12l8-8M12 12L4 20M12 12l8 8"
+                  stroke="#141413"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            Codexmeter
+          </a>
+          <span class="topbar-note">Chrome / Edge 데스크톱</span>
         </div>
-        <button
-          type="button"
-          class="nav-toggle"
-          aria-label="메뉴 열기"
-          aria-expanded="false"
-          id="nav-toggle"
-        >
-          ☰
-        </button>
-      </div>
-    </header>
+      </header>
 
-    <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
-      <a href="#install">설치</a>
-      <a href="#specs">사양</a>
-      <a href="#setup">설정</a>
-      <a href="manifest.json">manifest.json</a>
-    </nav>
-
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <span class="badge-coral">Web Serial</span>
-          <h1>CYD 보드에 Codexmeter를 바로 설치하세요</h1>
-          <p class="hero-lede">
-            USB로 ESP32-2432S028R을 연결한 뒤, 이 페이지에서 공장 이미지를
-            플래시합니다. Chrome 또는 Edge 데스크톱에서 동작합니다.
-          </p>
-          <div class="hero-actions">
-            <a class="btn-primary" href="#install">지금 설치</a>
-            <a class="btn-secondary" href="#setup">설치 후 설정</a>
-          </div>
-        </div>
-        <aside class="mockup-dark hero-illustration" aria-label="Codexmeter 미리보기">
-          <div class="mockup-header">
-            <span>Codexmeter</span>
-            <span style="color: var(--accent-teal)">● BLE</span>
-          </div>
-          <div class="mockup-screen">
-            <h3>Used / Remaining</h3>
+      <main>
+        <section class="hero">
+          <div class="container hero-grid">
             <div>
-              <div class="meter-row"><span>5h</span><span>42%</span></div>
-              <div class="bar"><span></span></div>
-            </div>
-            <div>
-              <div class="meter-row"><span>Weekly</span><span>18%</span></div>
-              <div class="bar week"><span></span></div>
-            </div>
-            <p class="mockup-foot">
-              보드 설정에서 사용량/남은량 표시 전환
-            </p>
-          </div>
-        </aside>
-      </div>
-    </section>
+              <p class="eyebrow">Web Serial firmware flasher</p>
+              <h1>Codexmeter CYD 웹 플래셔</h1>
+              <p class="lede">
+                ESP32-2432S028R 보드를 USB로 연결하고 화면 방향만 고르면 바로
+                설치됩니다.
+              </p>
+              <ul class="quick-list" aria-label="설치 조건">
+                <li>ESP32-2432S028R</li>
+                <li>USB 데이터 케이블</li>
+                <li>Chrome 또는 Edge</li>
+              </ul>
 
-    <section class="band band-soft" id="install">
-      <div class="container">
-        <div class="section-head">
-          <h2>브라우저에서 펌웨어 플래시</h2>
-          <p>
-            ESP Web Tools로 공장 바이너리를 업로드합니다. BOOT 버튼이 필요한
-            브리지라면 연결 전에 눌러 두세요.
-          </p>
-        </div>
-        <div class="install-panel">
-          <div class="install-options">
-            <article class="install-option">
-              <h3>Portrait</h3>
-              <p>240x320 세로 화면. 기존 배치와 같은 안정 버전입니다.</p>
-              <esp-web-install-button manifest="manifest.json">
-                <button slot="activate" class="btn-primary">Install Portrait</button>
-                <span slot="unsupported" class="unsupported">
-                  이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
-                  또는 Edge를 사용하세요.
-                </span>
-                <span slot="not-allowed" class="not-allowed">
-                  Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
-                  로컬 서버로 제공하세요.
-                </span>
-              </esp-web-install-button>
-            </article>
-            <article class="install-option">
-              <h3>Landscape</h3>
-              <p>320x240 가로 화면. 거치대를 눕혀 쓰는 CYD용입니다.</p>
-              <esp-web-install-button manifest="manifest-landscape.json">
-                <button slot="activate" class="btn-primary">Install Landscape</button>
-                <span slot="unsupported" class="unsupported">
-                  이 브라우저는 Web Serial을 지원하지 않습니다. 데스크톱 Chrome
-                  또는 Edge를 사용하세요.
-                </span>
-                <span slot="not-allowed" class="not-allowed">
-                  Web Serial은 HTTPS 또는 localhost가 필요합니다. 이 폴더를
-                  로컬 서버로 제공하세요.
-                </span>
-              </esp-web-install-button>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="specs">
-      <div class="container">
-        <div class="section-head">
-          <h2>번들에 포함된 내용</h2>
-          <p>세로/가로 manifest가 각각 공장 이미지를 기록합니다.</p>
-        </div>
-        <div class="feature-grid">
-          <article class="feature-card">
-            <div class="icon" aria-hidden="true">◫</div>
-            <h3>보드</h3>
-            <p>일반적인 저가 CYD 터치 디스플레이 키트</p>
-            <strong>ESP32-2432S028R</strong>
-          </article>
-          <article class="feature-card">
-            <div class="icon" aria-hidden="true">⬡</div>
-            <h3>이미지</h3>
-            <p>부트로더 · 파티션 · 앱이 포함된 factory 바이너리</p>
-            <strong>offset 0x0</strong>
-          </article>
-          <article class="feature-card">
-            <div class="icon" aria-hidden="true">◎</div>
-            <h3>버전</h3>
-            <p>manifest와 동기화된 릴리스 태그</p>
-            <strong>0.3.0</strong>
-          </article>
-          <article class="feature-card">
-            <div class="icon" aria-hidden="true">%</div>
-            <h3>표시 기준</h3>
-            <p>보드 Settings 화면에서 Used / Remaining 전환</p>
-            <strong>NVS 저장</strong>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="band band-soft" id="setup">
-      <div class="container">
-        <div class="section-head">
-          <h2>플래시 후 설정</h2>
-          <p>데몬이 사용량을 BLE로 내면 화면에 표시됩니다.</p>
-        </div>
-        <div class="steps-grid">
-          <article class="step-card">
-            <span class="step-num">1</span>
-            <h3>Bluetooth 페어링</h3>
-            <p>기기 이름 <code>Codex Meter</code>로 연결합니다.</p>
-          </article>
-          <article class="step-card">
-            <span class="step-num">2</span>
-            <h3>로그인</h3>
-            <p>필요 시 터미널에서 <code>codex login</code>을 실행합니다.</p>
-          </article>
-          <article class="step-card">
-            <span class="step-num">3</span>
-            <h3>데몬 시작</h3>
-            <p><code>./install-codex-mac.sh</code>로 usage daemon을 띄웁니다.</p>
-          </article>
-        </div>
-        <div class="code-window" style="margin-top: 32px">
-          <h3>로컬에서 이 페이지 테스트</h3>
-          <div class="code-block">
-            <div class="line">
-              <span class="ln">1</span
-              ><span class="cmd"
-                >python3 -m http.server 8787 --directory web-flasher</span
-              >
+              <div class="device-preview" aria-label="Codexmeter 화면 미리보기">
+                <div class="device-top">
+                  <span>CODEXMETER</span>
+                  <span class="status-dot">BLE</span>
+                </div>
+                <div class="device-screen">
+                  <h2>Used</h2>
+                  <div class="device-meter">
+                    <div class="device-meter-row">
+                      <span>Today</span>
+                      <span>42%</span>
+                    </div>
+                    <div class="device-bar"><span></span></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="line">
-              <span class="ln">2</span
-              ><span class="comment"># → http://localhost:8787/</span>
-            </div>
-            <div class="line">
-              <span class="ln">3</span
-              ><span class="cmd"
-                >./tools/update_web_flasher.sh <span class="comment"
-                  ># 펌웨어 재빌드 후</span
-                ></span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="band">
-      <div class="container">
-        <div class="cta-coral">
-          <h2>준비되셨나요?</h2>
-          <p>USB 케이블을 연결하고 Install을 누르면 몇 분 안에 완료됩니다.</p>
-          <div class="hero-actions">
-            <a class="btn-on-coral btn-secondary" href="#install">Install</a>
-          </div>
-        </div>
-      </div>
-    </section>
+            <section class="flash-panel" id="install" aria-label="펌웨어 설치">
+              <div class="panel-head">
+                <div>
+                  <h2>설치</h2>
+                  <p>보드 방향을 고른 뒤 Install을 누르세요.</p>
+                </div>
+                <span class="version-pill">v0.3.0</span>
+              </div>
 
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-top">
-          <span class="spike" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2v20M12 12L4 4M12 12l8-8M12 12L4 20M12 12l8 8"
-                stroke="#faf9f5"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </span>
-          Codexmeter
-        </div>
-        <div class="footer-grid">
-          <div class="footer-col">
-            <h4>제품</h4>
-            <ul>
-              <li><a href="#install">웹 플래셔</a></li>
-              <li><a href="manifest.json">manifest.json</a></li>
-              <li><a href="#specs">보드 사양</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>설정</h4>
-            <ul>
-              <li><a href="#setup">BLE 페어링</a></li>
-              <li><a href="#setup">데몬 설치</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>리소스</h4>
-            <ul>
-              <li><a href="README.md">README</a></li>
-              <li>
-                <a
-                  href="https://github.com/espressif/esp-web-tools"
-                  rel="noopener noreferrer"
-                  >ESP Web Tools</a
+              <div class="segment" role="group" aria-label="화면 방향 선택">
+                <button
+                  type="button"
+                  class="is-active"
+                  data-target="portrait"
+                  aria-pressed="true"
                 >
-              </li>
-            </ul>
+                  Portrait
+                  <span>240 x 320</span>
+                </button>
+                <button type="button" data-target="landscape" aria-pressed="false">
+                  Landscape
+                  <span>320 x 240</span>
+                </button>
+              </div>
+
+              <div class="install-choice is-active" data-choice="portrait">
+                <div class="choice-copy">
+                  <strong>세로 화면</strong>
+                  <span>기본 배치</span>
+                </div>
+                <esp-web-install-button manifest="manifest.json">
+                  <button slot="activate" class="install-button">Install Portrait</button>
+                  <span slot="unsupported" class="unsupported">
+                    Web Serial을 지원하지 않는 브라우저입니다. 데스크톱 Chrome
+                    또는 Edge를 사용하세요.
+                  </span>
+                  <span slot="not-allowed" class="not-allowed">
+                    Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                  </span>
+                </esp-web-install-button>
+              </div>
+
+              <div class="install-choice" data-choice="landscape">
+                <div class="choice-copy">
+                  <strong>가로 화면</strong>
+                  <span>눕힌 거치용</span>
+                </div>
+                <esp-web-install-button manifest="manifest-landscape.json">
+                  <button slot="activate" class="install-button">Install Landscape</button>
+                  <span slot="unsupported" class="unsupported">
+                    Web Serial을 지원하지 않는 브라우저입니다. 데스크톱 Chrome
+                    또는 Edge를 사용하세요.
+                  </span>
+                  <span slot="not-allowed" class="not-allowed">
+                    Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                  </span>
+                </esp-web-install-button>
+              </div>
+
+              <p class="panel-note">
+                설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를
+                누른 채 다시 연결해보세요.
+              </p>
+            </section>
           </div>
-          <div class="footer-col">
-            <h4>법적 고지</h4>
-            <ul>
-              <li><span>오픈소스 펌웨어 도구</span></li>
-              <li><span>Chrome · Edge Web Serial</span></li>
-            </ul>
+        </section>
+
+        <section class="steps" aria-label="설치 흐름">
+          <div class="container steps-grid">
+            <article class="step">
+              <span>01</span>
+              <h3>USB 연결</h3>
+              <p>CYD 보드를 데이터 케이블로 연결합니다.</p>
+            </article>
+            <article class="step">
+              <span>02</span>
+              <h3>방향 선택</h3>
+              <p>세로 또는 가로 펌웨어를 고릅니다.</p>
+            </article>
+            <article class="step">
+              <span>03</span>
+              <h3>Install</h3>
+              <p>브라우저가 선택한 시리얼 포트에 플래시합니다.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container footer-inner">
+          <span>Codexmeter CYD</span>
+          <div class="footer-links">
+            <a href="manifest.json">portrait manifest</a>
+            <a href="manifest-landscape.json">landscape manifest</a>
+            <a href="README.md">README</a>
           </div>
         </div>
-        <p class="footer-bottom">
-          디자인 시스템: getdesign claude · UI 토큰은
-          <a href="DESIGN.md" style="color: var(--on-dark-soft)">DESIGN.md</a> 참고
-        </p>
-      </div>
-    </footer>
+      </footer>
+    </div>
 
     <script>
-      const toggle = document.getElementById("nav-toggle");
-      const mobileNav = document.getElementById("mobile-nav");
-      if (toggle && mobileNav) {
-        toggle.addEventListener("click", () => {
-          const open = mobileNav.classList.toggle("open");
-          toggle.setAttribute("aria-expanded", String(open));
-        });
-        mobileNav.querySelectorAll("a").forEach((link) => {
-          link.addEventListener("click", () => {
-            mobileNav.classList.remove("open");
-            toggle.setAttribute("aria-expanded", "false");
+      const buttons = document.querySelectorAll("[data-target]");
+      const choices = document.querySelectorAll("[data-choice]");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = button.dataset.target;
+
+          buttons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", String(active));
+          });
+
+          choices.forEach((choice) => {
+            choice.classList.toggle("is-active", choice.dataset.choice === target);
           });
         });
-      }
+      });
     </script>
   </body>
 </html>
