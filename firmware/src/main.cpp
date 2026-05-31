@@ -242,7 +242,7 @@ void loop() {
     // ---- Physical buttons ----
     //   PRIMARY   → HID Space  (Claude Code voice-mode PTT)
     //   SECONDARY → HID Shift+Tab  (mode toggle; only if the board has one)
-    //   PWR       → cycle screens; on splash, cycle animations
+    //   PWR       → cycle screens; touch the splash to cycle animations
     // First press from sleep is consumed as a wake-only event by
     // idle_consume_wake_press(); the normal action fires from the second
     // press. Activity bookkeeping happens inside idle_consume_wake_press
@@ -280,8 +280,7 @@ void loop() {
 
         if (power_hal_pwr_pressed()) {
             if (!idle_consume_wake_press()) {
-                if (ui_get_current_screen() == SCREEN_SPLASH) splash_next();
-                else                                          ui_cycle_screen();
+                ui_cycle_screen();
             }
         }
     }

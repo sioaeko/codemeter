@@ -954,7 +954,7 @@ static void apply_battery_visibility(void) {
 static void global_click_cb(lv_event_t* e) {
     (void)e;
     if (current_screen == SCREEN_SPLASH) {
-        ui_show_screen(prev_non_splash_screen);
+        splash_next();
         return;
     }
     show_settings_from_current();
@@ -1029,7 +1029,8 @@ void ui_cycle_screen(void) {
     switch (current_screen) {
     case SCREEN_USAGE:     next = SCREEN_BLUETOOTH; break;
     case SCREEN_BLUETOOTH: next = SCREEN_SETTINGS;  break;
-    case SCREEN_SETTINGS:  next = SCREEN_USAGE;     break;
+    case SCREEN_SETTINGS:  next = SCREEN_SPLASH;    break;
+    case SCREEN_SPLASH:    next = SCREEN_USAGE;     break;
     default:               next = SCREEN_USAGE;     break;
     }
     ui_show_screen(next);
