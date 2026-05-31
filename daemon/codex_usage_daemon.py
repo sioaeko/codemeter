@@ -205,7 +205,11 @@ def save_address(addr: str) -> None:
 
 async def scan_for_device() -> str | None:
     log(f"Scanning for '{DEVICE_NAME}' ({SCAN_TIMEOUT}s)...")
-    devices = await BleakScanner.discover(timeout=SCAN_TIMEOUT)
+    try:
+        devices = await BleakScanner.discover(timeout=SCAN_TIMEOUT)
+    except BleakError as e:
+        log(f"Bluetooth scan unavailable: {e}")
+        return None
     for device in devices:
         if device.name == DEVICE_NAME:
             log(f"Found: {device.address}")
@@ -270,7 +274,11 @@ async def discover_target(skip_addr: str | None = None):
         if dev is not None:
             return dev
         log(f"Not held by OS; scanning for '{DEVICE_NAME}' ({SCAN_TIMEOUT}s)...")
-        devices = await BleakScanner.discover(timeout=SCAN_TIMEOUT)
+        try:
+            devices = await BleakScanner.discover(timeout=SCAN_TIMEOUT)
+        except BleakError as e:
+            log(f"Bluetooth scan unavailable: {e}")
+            return None
         for device in devices:
             if device.name == DEVICE_NAME:
                 save_address(device.address)
