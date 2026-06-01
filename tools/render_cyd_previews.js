@@ -301,11 +301,15 @@ function renderContactSheet(files) {
     const dx = x + (itemW - screenW) / 2;
     const dy = y + labelH;
     parts.push(label(file.title, x + itemW / 2, y + 12, 14, palette.dim, { anchor: "middle" }));
-    parts.push(`<image href="${file.name}" x="${dx}" y="${dy}" width="${screenW * scale}" height="${screenH * scale}"/>`);
+    parts.push(embedSvg(file.svg, dx, dy));
     parts.push(outline(dx - 1, dy - 1, screenW + 2, screenH + 2, "#383631", 10));
   });
   parts.push(`</svg>`);
   return parts.join("\n");
+}
+
+function embedSvg(svg, x, y) {
+  return svg.replace("<svg ", `<svg x="${x}" y="${y}" `);
 }
 
 fs.mkdirSync(outDir, { recursive: true });
@@ -326,6 +330,7 @@ for (const [name, L] of Object.entries(layouts)) {
       name: fileName,
       layout: name,
       title: `${name} ${screen}`,
+      svg,
     });
   }
 }
