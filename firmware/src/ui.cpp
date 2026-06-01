@@ -2,7 +2,7 @@
 #include "splash.h"
 #include <lvgl.h>
 #include "logo.h"
-#include "logo_tiny.h"
+#include "logo_badge_tiny.h"
 #include "icons.h"
 #include "icons_small.h"
 #include "hal/board_caps.h"
@@ -270,7 +270,7 @@ static lv_image_dsc_t battery_dscs[5];  // empty, low, medium, full, charging
 
 // ---- Shared ----
 static lv_image_dsc_t logo_dsc;
-static lv_image_dsc_t logo_tiny_dsc;
+static lv_image_dsc_t logo_badge_tiny_dsc;
 static screen_t current_screen = SCREEN_USAGE;
 static UsageData last_usage = {};
 static ble_state_t last_ui_ble_state = BLE_STATE_INIT;
@@ -889,7 +889,7 @@ void ui_init(void) {
     lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
     init_icon_dsc_rgb565a8(&logo_dsc, LOGO_WIDTH, LOGO_HEIGHT, logo_data);
-    init_icon_dsc_rgb565a8(&logo_tiny_dsc, LOGO_TINY_WIDTH, LOGO_TINY_HEIGHT, logo_tiny_data);
+    init_icon_dsc_rgb565a8(&logo_badge_tiny_dsc, LOGO_BADGE_TINY_WIDTH, LOGO_BADGE_TINY_HEIGHT, logo_badge_tiny_data);
     init_battery_icons();
 
     init_usage_screen(scr);
@@ -904,9 +904,9 @@ void ui_init(void) {
     if (L.show_logo) {
         logo_img = lv_image_create(scr);
         if (L.scr_h <= 340) {
-            lv_image_set_src(logo_img, &logo_tiny_dsc);
+            lv_image_set_src(logo_img, &logo_badge_tiny_dsc);
             lv_image_set_scale(logo_img, LV_SCALE_NONE);
-            lv_obj_set_pos(logo_img, 6, 4);
+            lv_obj_set_pos(logo_img, L.margin, L.content_y - LOGO_BADGE_TINY_HEIGHT);
         } else {
             lv_image_set_src(logo_img, &logo_dsc);
             lv_image_set_scale(logo_img, LV_SCALE_NONE);

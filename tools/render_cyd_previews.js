@@ -143,8 +143,14 @@ function label(text, x, y, size, color, opts = {}) {
   return `<text ${attrs.join(" ")}>${esc(text)}</text>`;
 }
 
-function logo() {
-  return `<image href="${logoHref}" x="6" y="4" width="40" height="40"/>`;
+function logoBadge(L) {
+  const w = 40;
+  const h = 29;
+  return [
+    `<svg x="${L.margin}" y="${L.contentY - h}" width="${w}" height="${h}" viewBox="0 0 80 58" overflow="hidden">`,
+    `<image href="${logoHref}" x="0" y="0" width="80" height="80"/>`,
+    `</svg>`,
+  ].join("");
 }
 
 function topButton(L, text, side) {
@@ -197,7 +203,7 @@ function renderUsage(L) {
   const y2 = L.contentY + L.usagePanelH + L.usagePanelGap;
   return [
     ...openSvg(L.w, L.h),
-    logo(),
+    logoBadge(L),
     title(L, "Usage"),
     usagePanel(L, y1, 37, "5h", "Reset 2h 15m", 0.37),
     usagePanel(L, y2, 12, "Weekly", "Reset 6d 23h", 0.12),
@@ -327,7 +333,7 @@ function renderBluetooth(L) {
   const resetLabelSize = L.btDeviceSize;
   return [
     ...openSvg(L.w, L.h),
-    logo(),
+    logoBadge(L),
     title(L, "Bluetooth", {
       size: L.bluetoothTitleSize,
       dx: L.bluetoothTitleDx,
