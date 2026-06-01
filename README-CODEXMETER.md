@@ -8,7 +8,7 @@ Display / ESP32-2432S028R board.
 - Added PlatformIO env `cyd_2432s028r`.
 - Added a CYD HAL port for the 240x320 ILI9341 SPI display and XPT2046 SPI
   touch controller.
-- Renamed the BLE peripheral to `Codex Meter` and moved the custom service to
+- Renamed the BLE peripheral to `clawdmeter` and moved the custom service to
   Codexmeter UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
 - Added an on-device display setting for `Used` vs `Remaining` quota mode.

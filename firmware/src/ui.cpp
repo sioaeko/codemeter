@@ -720,7 +720,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 
     if (L.scr_h > 260) {
         lv_obj_t* lbl_credit = lv_label_create(ble_container);
-        lv_label_set_text(lbl_credit, "Codexmeter");
+        lv_label_set_text(lbl_credit, "Clawdmeter-CYD");
         lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
         lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
         lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);

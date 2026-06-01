@@ -21,7 +21,7 @@ import httpx
 from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 
-DEVICE_NAME = "Codex Meter"
+DEVICE_NAME = "clawdmeter"
 SERVICE_UUID = "434f4445-582d-4d65-7465-720000000001"
 RX_CHAR_UUID = "434f4445-582d-4d65-7465-720000000002"
 REQ_CHAR_UUID = "434f4445-582d-4d65-7465-720000000004"
@@ -368,7 +368,7 @@ async def prime_scan() -> None:
     if target:
         log(f"Bluetooth scan OK: {getattr(target, 'address', target)}")
     else:
-        log("Bluetooth scan OK; Codex Meter not found yet")
+        log(f"Bluetooth scan OK; {DEVICE_NAME} not found yet")
 
 
 if __name__ == "__main__":

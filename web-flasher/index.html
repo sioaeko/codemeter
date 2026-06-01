@@ -230,6 +230,34 @@
         max-width: 320px;
       }
 
+      .preview-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        margin-top: 10px;
+        border: 1px solid #2e2b27;
+        border-radius: var(--radius);
+        background: var(--surface-dark);
+        padding: 6px;
+      }
+
+      .preview-tabs button {
+        appearance: none;
+        min-height: 34px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--on-dark-soft);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .preview-tabs button.is-active {
+        background: var(--surface-dark-soft);
+        color: var(--on-dark);
+      }
+
       .flash-panel {
         border: 1px solid var(--hairline);
         border-radius: var(--radius);
@@ -354,7 +382,8 @@
       }
 
       .install-button:focus-visible,
-      .segment button:focus-visible {
+      .segment button:focus-visible,
+      .preview-tabs button:focus-visible {
         outline: 3px solid rgba(204, 120, 92, 0.32);
         outline-offset: 2px;
       }
@@ -572,6 +601,30 @@
                     />
                   </div>
                 </div>
+                <div class="preview-tabs" role="group" aria-label="프리뷰 화면 선택">
+                  <button
+                    type="button"
+                    class="is-active"
+                    data-preview-screen="usage"
+                    aria-pressed="true"
+                  >
+                    Usage
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="settings"
+                    aria-pressed="false"
+                  >
+                    Settings
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="bluetooth"
+                    aria-pressed="false"
+                  >
+                    Bluetooth
+                  </button>
+                </div>
               </figure>
             </div>
 
@@ -674,27 +727,36 @@
     </div>
 
     <script>
-      const buttons = document.querySelectorAll("[data-target]");
+      const orientationButtons = document.querySelectorAll("[data-target]");
       const choices = document.querySelectorAll("[data-choice]");
+      const screenButtons = document.querySelectorAll("[data-preview-screen]");
       const preview = document.querySelector("[data-orientation]");
       const previewImage = document.querySelector("[data-preview-image]");
 
       const previewSources = {
-        portrait: {
-          src: "previews/cyd_2432s028r/portrait_usage.svg",
-          alt: "Clawdmeter-CYD portrait firmware preview",
-        },
-        landscape: {
-          src: "previews/cyd_2432s028r/landscape_usage.svg",
-          alt: "Clawdmeter-CYD landscape firmware preview",
-        },
+        portrait: ["usage", "settings", "bluetooth"],
+        landscape: ["usage", "settings", "bluetooth"],
       };
 
-      buttons.forEach((button) => {
+      const previewState = {
+        orientation: "portrait",
+        screen: "usage",
+      };
+
+      function updatePreview() {
+        if (!preview || !previewImage) return;
+        const { orientation, screen } = previewState;
+        if (!previewSources[orientation]?.includes(screen)) return;
+        preview.dataset.orientation = orientation;
+        previewImage.src = `previews/cyd_2432s028r/${orientation}_${screen}.svg`;
+        previewImage.alt = `Clawdmeter-CYD ${orientation} ${screen} firmware preview`;
+      }
+
+      orientationButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const target = button.dataset.target;
 
-          buttons.forEach((item) => {
+          orientationButtons.forEach((item) => {
             const active = item === button;
             item.classList.toggle("is-active", active);
             item.setAttribute("aria-pressed", String(active));
@@ -704,11 +766,23 @@
             choice.classList.toggle("is-active", choice.dataset.choice === target);
           });
 
-          if (preview && previewImage && previewSources[target]) {
-            preview.dataset.orientation = target;
-            previewImage.src = previewSources[target].src;
-            previewImage.alt = previewSources[target].alt;
-          }
+          previewState.orientation = target;
+          updatePreview();
+        });
+      });
+
+      screenButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = button.dataset.previewScreen;
+
+          screenButtons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", String(active));
+          });
+
+          previewState.screen = target;
+          updatePreview();
         });
       });
     </script>
