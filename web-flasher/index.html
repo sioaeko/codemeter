@@ -410,29 +410,36 @@
         font-size: inherit;
       }
 
-      .case-links {
-        display: flex;
-        flex: 0 0 auto;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-
-      .case-stack {
+      .case-inline {
         display: flex;
         flex: 0 1 auto;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0 5px;
         max-width: min(100%, 280px);
-      }
-
-      .case-note {
+        margin: 0;
         color: var(--muted);
         font-size: 12px;
         font-weight: 500;
-        line-height: 1.45;
+        line-height: 1.55;
         text-align: right;
+      }
+
+      .case-inline span {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      .case-inline a {
+        color: var(--primary-active);
+        font-size: inherit;
+        font-weight: 650;
+        text-decoration: none;
+      }
+
+      .case-inline a:hover {
+        color: var(--primary);
       }
 
       .install-button {
@@ -458,6 +465,7 @@
       .install-button:focus-visible,
       .buy-link:focus-visible,
       .case-link:focus-visible,
+      .case-inline a:focus-visible,
       .segment button:focus-visible,
       .preview-tabs button:focus-visible {
         outline: 3px solid rgba(204, 120, 92, 0.32);
@@ -634,14 +642,9 @@
           gap: 10px;
         }
 
-        .case-links,
-        .case-stack {
-          align-items: flex-start;
+        .case-inline {
           justify-content: flex-start;
           max-width: 100%;
-        }
-
-        .case-note {
           text-align: left;
         }
 
@@ -831,30 +834,28 @@
                     <strong data-i18n="landscapeTitle">가로 화면</strong>
                     <span data-i18n="landscapeCopy">눕힌 거치용</span>
                   </div>
-                  <div class="case-stack">
-                    <div class="case-links">
-                      <a
-                        class="case-link"
-                        href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span data-i18n="landscapeBackCase">가로형 뒷판 출력</span>
-                      </a>
-                      <a
-                        class="case-link"
-                        href="https://makerworld.com/ko/models/137937-desk-stand-for-xtouch-using-esp322432s028-usb-c#profileId-150115"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span data-i18n="landscapeUsbCover">C타입 전면 커버</span>
-                      </a>
-                    </div>
-                    <p class="case-note" data-i18n="landscapeCaseNote">
-                      가로형 C타입 모델은 기존 링크에서 뒷판만 출력하고, 전면
-                      커버는 C타입 모델용 커버를 출력하세요.
-                    </p>
-                  </div>
+                  <p class="case-inline">
+                    <span data-i18n="landscapeCaseLead">케이스:</span>
+                    <a
+                      href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-i18n="landscapeBackCase"
+                    >
+                      뒷판
+                    </a>
+                    <span data-i18n="landscapeCaseMiddle">
+                      은 기존 링크, 전면은
+                    </span>
+                    <a
+                      href="https://makerworld.com/ko/models/137937-desk-stand-for-xtouch-using-esp322432s028-usb-c#profileId-150115"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-i18n="landscapeUsbCover"
+                    >
+                      C타입 커버
+                    </a>
+                  </p>
                 </div>
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
@@ -939,10 +940,10 @@
           portraitCase: "세로형 케이스 출력",
           landscapeTitle: "가로 화면",
           landscapeCopy: "눕힌 거치용",
-          landscapeBackCase: "가로형 뒷판 출력",
-          landscapeUsbCover: "C타입 전면 커버",
-          landscapeCaseNote:
-            "가로형 C타입 모델은 기존 링크에서 뒷판만 출력하고, 전면 커버는 C타입 모델용 커버를 출력하세요.",
+          landscapeCaseLead: "케이스:",
+          landscapeBackCase: "뒷판은",
+          landscapeCaseMiddle: "기존 링크, 전면은",
+          landscapeUsbCover: "C타입 커버",
           unsupported: "Web Serial을 지원하는 브라우저에서 열어주세요.",
           notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
           panelNote:
@@ -977,10 +978,10 @@
           portraitCase: "Portrait case print",
           landscapeTitle: "Landscape",
           landscapeCopy: "Desk stand layout",
-          landscapeBackCase: "Landscape back plate",
-          landscapeUsbCover: "USB-C front cover",
-          landscapeCaseNote:
-            "For the landscape USB-C model, print only the back plate from the desk-stand link. Print the front cover from the USB-C cover link.",
+          landscapeCaseLead: "Case:",
+          landscapeBackCase: "back plate",
+          landscapeCaseMiddle: "from the stand link, front cover from",
+          landscapeUsbCover: "USB-C cover",
           unsupported: "Open this page in a browser that supports Web Serial.",
           notAllowed: "Web Serial only works on HTTPS or localhost.",
           panelNote:
