@@ -363,7 +363,11 @@ static float clamp_pct(float pct) {
 }
 
 static float display_pct_from_used(float used_pct) {
-    return clamp_pct(used_pct);
+    float used = clamp_pct(used_pct);
+    if (settings_display_metric() == DISPLAY_METRIC_USAGE) {
+        return clamp_pct(100.0f - used);
+    }
+    return used;
 }
 
 static lv_color_t display_pct_color(float shown_pct) {
@@ -889,8 +893,8 @@ void ui_init(void) {
         logo_img = lv_image_create(scr);
         lv_image_set_src(logo_img, &logo_dsc);
         if (L.scr_h <= 340) {
-            lv_image_set_scale(logo_img, 128);
-            lv_obj_set_pos(logo_img, 6, 4);
+            lv_image_set_scale(logo_img, 102);
+            lv_obj_set_pos(logo_img, 10, 8);
         } else {
             lv_image_set_scale(logo_img, LV_SCALE_NONE);
             lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);

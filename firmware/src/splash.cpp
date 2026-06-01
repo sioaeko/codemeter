@@ -45,8 +45,9 @@ static uint8_t group_size[GROUP_COUNT] = {0};
 static uint8_t group_rotation[GROUP_COUNT] = {0};
 
 static const char* GROUP_NAMES[GROUP_COUNT][GROUP_MAX] = {
-    // Group 0 — idle / sleepy
-    { "expression sleep", "idle breathe", "idle blink", "expression wink" },
+    // Group 0 — startup / idle. Keep "work coding" first so the boot splash
+    // matches the web flasher preview before enough usage-rate history exists.
+    { "work coding", "idle breathe", "idle blink", "expression wink" },
     // Group 1 — normal pace
     { "idle look around", "work think", "work coding", NULL },
     // Group 2 — active

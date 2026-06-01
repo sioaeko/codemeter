@@ -11,7 +11,7 @@ Cheap Yellow Display / ESP32-2432S028R board.
 - Kept the upstream-compatible BLE peripheral name `Claude Controller` and
   moved the custom service to Clawdmeter-CYD UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
-- Added an on-device display setting for `Used` vs `Remaining` quota mode.
+- Added an on-device display setting for `Used` vs `Usage` quota mode.
 - Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
   polls `https://chatgpt.com/backend-api/wham/usage`.
@@ -33,7 +33,8 @@ Default pinout is for the common ESP32-2432S028R:
 - Button: BOOT/GPIO0 cycles Usage/Bluetooth/Settings screens
 
 The Settings screen lets you switch the main meter between `Used` and
-`Remaining`. The selected mode is stored in ESP32 NVS and survives reboot.
+`Usage`. `Used` shows consumed quota, while `Usage` shows remaining available
+quota. The selected mode is stored in ESP32 NVS and survives reboot.
 
 There are CYD board revisions with different routing. If display or touch is
 mirrored, start with `firmware/src/boards/cyd_2432s028r/board.h`.

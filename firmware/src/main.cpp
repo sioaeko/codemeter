@@ -20,6 +20,10 @@
 #include "hal/imu_hal.h"
 
 static UsageData usage = {};
+static uint32_t boot_splash_started_ms = 0;
+static bool pending_first_usage_screen = false;
+
+#define BOOT_SPLASH_MIN_MS 3500
 
 // ---- LVGL draw buffers (partial render mode) ----
 // PSRAM-equipped boards (S3) can comfortably hold larger strips. PSRAM-free
@@ -219,6 +223,7 @@ void setup() {
     ui_update_ble_status(ble_get_state(), ble_get_device_name(), ble_get_mac_address());
     ui_update_battery(power_hal_battery_pct(), power_hal_is_charging());
     ui_show_screen(SCREEN_SPLASH);
+    boot_splash_started_ms = millis();
 
     Serial.printf("Dashboard ready (%s, %dx%d), waiting for data on BLE...\n",
         board_caps().name, W, H);
@@ -303,6 +308,15 @@ void loop() {
 
     check_serial_cmd();
 
+    if (pending_first_usage_screen) {
+        if (ui_get_current_screen() != SCREEN_SPLASH) {
+            pending_first_usage_screen = false;
+        } else if (millis() - boot_splash_started_ms >= BOOT_SPLASH_MIN_MS) {
+            pending_first_usage_screen = false;
+            ui_show_screen(SCREEN_USAGE);
+        }
+    }
+
     if (ble_has_data()) {
         bool first_usage_payload = !usage.valid;
         if (parse_json(ble_get_data(), &usage)) {
@@ -316,7 +330,11 @@ void loop() {
             }
             ui_update(&usage);
             if (first_usage_payload && ui_get_current_screen() == SCREEN_SPLASH) {
-                ui_show_screen(SCREEN_USAGE);
+                if (millis() - boot_splash_started_ms >= BOOT_SPLASH_MIN_MS) {
+                    ui_show_screen(SCREEN_USAGE);
+                } else {
+                    pending_first_usage_screen = true;
+                }
             }
             ble_send_ack();
         } else {
