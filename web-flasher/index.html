@@ -617,7 +617,12 @@
     <div class="page">
       <header class="topbar">
         <div class="container topbar-inner">
-          <a class="brand" href="#install" aria-label="Clawdmeter-CYD 설치로 이동">
+          <a
+            class="brand"
+            href="#install"
+            aria-label="Clawdmeter-CYD 설치로 이동"
+            data-i18n-aria-label="brandAria"
+          >
             Clawdmeter-CYD
           </a>
           <a
@@ -626,7 +631,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            CYD 구매하기
+            <span data-i18n="buyCyd">CYD 구매하기</span>
           </a>
         </div>
       </header>
@@ -635,22 +640,27 @@
         <section class="hero">
           <div class="container hero-grid">
             <div>
-              <p class="eyebrow">CYD firmware installer</p>
+              <p class="eyebrow" data-i18n="eyebrow">CYD firmware installer</p>
               <h1>Clawdmeter-CYD</h1>
-              <p class="lede">
+              <p class="lede" data-i18n="lede">
                 Clawdmeter 기반 CYD 펌웨어입니다. Claude Code와 Codex 사용량
                 표시를 모두 지원합니다.
               </p>
-              <ul class="quick-list" aria-label="설치 조건">
-                <li>CYD 보드</li>
-                <li>USB 데이터 케이블</li>
-                <li>Web Serial</li>
+              <ul
+                class="quick-list"
+                aria-label="설치 조건"
+                data-i18n-aria-label="requirementsAria"
+              >
+                <li data-i18n="reqBoard">CYD 보드</li>
+                <li data-i18n="reqCable">USB 데이터 케이블</li>
+                <li data-i18n="reqBrowser">Web Serial</li>
               </ul>
 
               <figure
                 class="firmware-preview"
                 data-orientation="portrait"
                 aria-label="Clawdmeter-CYD 펌웨어 화면 미리보기"
+                data-i18n-aria-label="previewAria"
               >
                 <figcaption class="preview-top">
                   <span>FIRMWARE PREVIEW</span>
@@ -662,10 +672,16 @@
                       data-preview-image
                       src="previews/cyd_2432s028r/portrait_usage.svg?v=0.3.2"
                       alt="Clawdmeter-CYD portrait firmware preview"
+                      data-i18n-alt="previewImageAlt"
                     />
                   </div>
                 </div>
-                <div class="preview-tabs" role="group" aria-label="프리뷰 화면 선택">
+                <div
+                  class="preview-tabs"
+                  role="group"
+                  aria-label="프리뷰 화면 선택"
+                  data-i18n-aria-label="previewTabsAria"
+                >
                   <button
                     type="button"
                     class="is-active"
@@ -692,16 +708,28 @@
               </figure>
             </div>
 
-            <section class="flash-panel" id="install" aria-label="펌웨어 설치">
+            <section
+              class="flash-panel"
+              id="install"
+              aria-label="펌웨어 설치"
+              data-i18n-aria-label="installAria"
+            >
               <div class="panel-head">
                 <div>
-                  <h2>설치</h2>
-                  <p>보드 방향을 고른 뒤 Install을 누르세요.</p>
+                  <h2 data-i18n="installTitle">설치</h2>
+                  <p data-i18n="installCopy">
+                    보드 방향을 고른 뒤 Install을 누르세요.
+                  </p>
                 </div>
                 <span class="version-pill">v0.3.2</span>
               </div>
 
-              <div class="segment" role="group" aria-label="화면 방향 선택">
+              <div
+                class="segment"
+                role="group"
+                aria-label="화면 방향 선택"
+                data-i18n-aria-label="orientationAria"
+              >
                 <button
                   type="button"
                   class="is-active"
@@ -720,8 +748,8 @@
               <div class="install-choice is-active" data-choice="portrait">
                 <div class="choice-copy">
                   <div class="choice-title">
-                    <strong>세로 화면</strong>
-                    <span>기본 배치</span>
+                    <strong data-i18n="portraitTitle">세로 화면</strong>
+                    <span data-i18n="portraitCopy">기본 배치</span>
                   </div>
                   <a
                     class="case-link"
@@ -729,16 +757,20 @@
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    세로형 케이스 출력
+                    <span data-i18n="portraitCase">세로형 케이스 출력</span>
                   </a>
                 </div>
                 <esp-web-install-button manifest="manifest.json">
                   <button slot="activate" class="install-button">Install Portrait</button>
                   <span slot="unsupported" class="unsupported">
-                    Web Serial을 지원하는 브라우저에서 열어주세요.
+                    <span data-i18n="unsupported">
+                      Web Serial을 지원하는 브라우저에서 열어주세요.
+                    </span>
                   </span>
                   <span slot="not-allowed" class="not-allowed">
-                    Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    <span data-i18n="notAllowed">
+                      Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    </span>
                   </span>
                 </esp-web-install-button>
               </div>
@@ -746,8 +778,8 @@
               <div class="install-choice" data-choice="landscape">
                 <div class="choice-copy">
                   <div class="choice-title">
-                    <strong>가로 화면</strong>
-                    <span>눕힌 거치용</span>
+                    <strong data-i18n="landscapeTitle">가로 화면</strong>
+                    <span data-i18n="landscapeCopy">눕힌 거치용</span>
                   </div>
                   <a
                     class="case-link"
@@ -755,21 +787,25 @@
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    가로형 케이스 출력
+                    <span data-i18n="landscapeCase">가로형 케이스 출력</span>
                   </a>
                 </div>
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
                   <span slot="unsupported" class="unsupported">
-                    Web Serial을 지원하는 브라우저에서 열어주세요.
+                    <span data-i18n="unsupported">
+                      Web Serial을 지원하는 브라우저에서 열어주세요.
+                    </span>
                   </span>
                   <span slot="not-allowed" class="not-allowed">
-                    Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    <span data-i18n="notAllowed">
+                      Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    </span>
                   </span>
                 </esp-web-install-button>
               </div>
 
-              <p class="panel-note">
+              <p class="panel-note" data-i18n="panelNote">
                 설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를
                 누른 채 다시 연결해보세요.
               </p>
@@ -777,22 +813,24 @@
           </div>
         </section>
 
-        <section class="steps" aria-label="설치 흐름">
+        <section class="steps" aria-label="설치 흐름" data-i18n-aria-label="stepsAria">
           <div class="container steps-grid">
             <article class="step">
               <span>01</span>
-              <h3>USB 연결</h3>
-              <p>CYD 보드를 데이터 케이블로 연결합니다.</p>
+              <h3 data-i18n="step1Title">USB 연결</h3>
+              <p data-i18n="step1Copy">CYD 보드를 데이터 케이블로 연결합니다.</p>
             </article>
             <article class="step">
               <span>02</span>
-              <h3>방향 선택</h3>
-              <p>세로 또는 가로 펌웨어를 고릅니다.</p>
+              <h3 data-i18n="step2Title">방향 선택</h3>
+              <p data-i18n="step2Copy">세로 또는 가로 펌웨어를 고릅니다.</p>
             </article>
             <article class="step">
               <span>03</span>
               <h3>Install</h3>
-              <p>브라우저가 선택한 시리얼 포트에 플래시합니다.</p>
+              <p data-i18n="step3Copy">
+                브라우저가 선택한 시리얼 포트에 플래시합니다.
+              </p>
             </article>
           </div>
         </section>
@@ -811,6 +849,107 @@
     </div>
 
     <script>
+      const i18n = {
+        ko: {
+          title: "Clawdmeter-CYD 설치",
+          brandAria: "Clawdmeter-CYD 설치로 이동",
+          buyCyd: "CYD 구매하기",
+          eyebrow: "CYD 펌웨어 설치",
+          lede:
+            "Clawdmeter 기반 CYD 펌웨어입니다. Claude Code와 Codex 사용량 표시를 모두 지원합니다.",
+          requirementsAria: "설치 조건",
+          reqBoard: "CYD 보드",
+          reqCable: "USB 데이터 케이블",
+          reqBrowser: "Web Serial",
+          previewAria: "Clawdmeter-CYD 펌웨어 화면 미리보기",
+          previewImageAlt: "Clawdmeter-CYD 펌웨어 화면 미리보기",
+          previewTabsAria: "프리뷰 화면 선택",
+          installAria: "펌웨어 설치",
+          installTitle: "설치",
+          installCopy: "보드 방향을 고른 뒤 Install을 누르세요.",
+          orientationAria: "화면 방향 선택",
+          portraitTitle: "세로 화면",
+          portraitCopy: "기본 배치",
+          portraitCase: "세로형 케이스 출력",
+          landscapeTitle: "가로 화면",
+          landscapeCopy: "눕힌 거치용",
+          landscapeCase: "가로형 케이스 출력",
+          unsupported: "Web Serial을 지원하는 브라우저에서 열어주세요.",
+          notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
+          panelNote:
+            "설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를 누른 채 다시 연결해보세요.",
+          stepsAria: "설치 흐름",
+          step1Title: "USB 연결",
+          step1Copy: "CYD 보드를 데이터 케이블로 연결합니다.",
+          step2Title: "방향 선택",
+          step2Copy: "세로 또는 가로 펌웨어를 고릅니다.",
+          step3Copy: "브라우저가 선택한 시리얼 포트에 플래시합니다.",
+        },
+        en: {
+          title: "Install Clawdmeter-CYD",
+          brandAria: "Go to the Clawdmeter-CYD installer",
+          buyCyd: "Buy CYD",
+          eyebrow: "CYD firmware installer",
+          lede:
+            "CYD firmware based on Clawdmeter, with Claude Code and Codex usage display support.",
+          requirementsAria: "Install requirements",
+          reqBoard: "CYD board",
+          reqCable: "USB data cable",
+          reqBrowser: "Web Serial browser",
+          previewAria: "Clawdmeter-CYD firmware preview",
+          previewImageAlt: "Clawdmeter-CYD firmware preview",
+          previewTabsAria: "Choose preview screen",
+          installAria: "Firmware installer",
+          installTitle: "Install",
+          installCopy: "Choose the board orientation, then press Install.",
+          orientationAria: "Choose screen orientation",
+          portraitTitle: "Portrait",
+          portraitCopy: "Default layout",
+          portraitCase: "Portrait case print",
+          landscapeTitle: "Landscape",
+          landscapeCopy: "Desk stand layout",
+          landscapeCase: "Landscape case print",
+          unsupported: "Open this page in a browser that supports Web Serial.",
+          notAllowed: "Web Serial only works on HTTPS or localhost.",
+          panelNote:
+            "Keep USB connected while flashing. If the port does not appear, reconnect while holding BOOT.",
+          stepsAria: "Install flow",
+          step1Title: "Connect USB",
+          step1Copy: "Connect the CYD board with a USB data cable.",
+          step2Title: "Choose layout",
+          step2Copy: "Pick portrait or landscape firmware.",
+          step3Copy: "The browser flashes the selected serial port.",
+        },
+      };
+
+      function resolveLocale() {
+        const requested = new URLSearchParams(window.location.search).get("lang");
+        if (requested === "ko" || requested === "en") return requested;
+        return (navigator.language || "").toLowerCase().startsWith("ko")
+          ? "ko"
+          : "en";
+      }
+
+      const activeLocale = resolveLocale();
+
+      function text(key) {
+        return i18n[activeLocale][key] || i18n.en[key] || key;
+      }
+
+      function applyTranslations() {
+        document.documentElement.lang = activeLocale;
+        document.title = text("title");
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = text(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+          node.setAttribute("aria-label", text(node.dataset.i18nAriaLabel));
+        });
+        document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+          node.setAttribute("alt", text(node.dataset.i18nAlt));
+        });
+      }
+
       const orientationButtons = document.querySelectorAll("[data-target]");
       const choices = document.querySelectorAll("[data-choice]");
       const screenButtons = document.querySelectorAll("[data-preview-screen]");
@@ -834,8 +973,11 @@
         if (!previewSources[orientation]?.includes(screen)) return;
         preview.dataset.orientation = orientation;
         previewImage.src = `previews/cyd_2432s028r/${orientation}_${screen}.svg?v=${assetVersion}`;
-        previewImage.alt = `Clawdmeter-CYD ${orientation} ${screen} firmware preview`;
+        previewImage.alt = text("previewImageAlt");
       }
+
+      applyTranslations();
+      updatePreview();
 
       orientationButtons.forEach((button) => {
         button.addEventListener("click", () => {
