@@ -144,7 +144,7 @@ function label(text, x, y, size, color, opts = {}) {
 }
 
 function logo() {
-  return `<image href="${logoHref}" x="10" y="8" width="32" height="32"/>`;
+  return `<image href="${logoHref}" x="12" y="8" width="28" height="28"/>`;
 }
 
 function topButton(L, text, side) {

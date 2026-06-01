@@ -262,6 +262,8 @@ static lv_obj_t* lbl_settings_note;
 // ---- Battery indicator (shared, on top) ----
 static lv_obj_t* battery_img;
 static lv_obj_t* logo_img;
+static lv_obj_t* img_ble_icon;
+static lv_obj_t* img_trash_icon;
 static lv_image_dsc_t battery_dscs[5];  // empty, low, medium, full, charging
 
 // ---- Shared ----
@@ -474,15 +476,6 @@ static lv_obj_t* make_bar(lv_obj_t* parent, int x, int y, int w, int h) {
     return bar;
 }
 
-static void init_icon_dsc(lv_image_dsc_t* dsc, int w, int h, const uint16_t* data) {
-    dsc->header.w = w;
-    dsc->header.h = h;
-    dsc->header.cf = LV_COLOR_FORMAT_RGB565;
-    dsc->header.stride = w * 2;
-    dsc->data = (const uint8_t*)data;
-    dsc->data_size = w * h * 2;
-}
-
 static void init_icon_dsc_rgb565a8(lv_image_dsc_t* dsc, int w, int h, const uint8_t* data) {
     dsc->header.w = w;
     dsc->header.h = h;
@@ -664,12 +657,12 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
                                   L.content_w, L.bt_info_panel_h);
 
     static lv_image_dsc_t icon_bt_dsc;
-    init_icon_dsc(&icon_bt_dsc, ICON_BLUETOOTH_W, ICON_BLUETOOTH_H, icon_bluetooth_data);
+    init_icon_dsc_rgb565a8(&icon_bt_dsc, ICON_BLUETOOTH_W, ICON_BLUETOOTH_H, icon_bluetooth_data);
 
-    lv_obj_t* bt_img = lv_image_create(p_info);
-    lv_image_set_src(bt_img, &icon_bt_dsc);
-    if (L.scr_h <= 340) lv_image_set_scale(bt_img, 192);
-    lv_obj_set_pos(bt_img, 0, 0);
+    img_ble_icon = lv_image_create(p_info);
+    lv_image_set_src(img_ble_icon, &icon_bt_dsc);
+    if (L.scr_h <= 340) lv_image_set_scale(img_ble_icon, 192);
+    lv_obj_set_pos(img_ble_icon, 0, 0);
 
     lbl_ble_status = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_status, "Initializing...");
@@ -707,9 +700,9 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     register_panel(reset_zone);
 
     static lv_image_dsc_t icon_trash_dsc;
-    init_icon_dsc(&icon_trash_dsc, ICON_TRASH2_W, ICON_TRASH2_H, icon_trash2_data);
-    lv_obj_t* trash_img = lv_image_create(reset_zone);
-    lv_image_set_src(trash_img, &icon_trash_dsc);
+    init_icon_dsc_rgb565a8(&icon_trash_dsc, ICON_TRASH2_W, ICON_TRASH2_H, icon_trash2_data);
+    img_trash_icon = lv_image_create(reset_zone);
+    lv_image_set_src(img_trash_icon, &icon_trash_dsc);
 
     lv_obj_t* reset_lbl = lv_label_create(reset_zone);
     lv_label_set_text(reset_lbl, "Reset Bluetooth");
@@ -862,6 +855,15 @@ static void apply_theme_styles(void) {
         lv_obj_set_style_text_color(theme_accent_labels[i], COL_ACCENT, 0);
     }
 
+    if (img_ble_icon) {
+        lv_obj_set_style_image_recolor(img_ble_icon, COL_DIM, 0);
+        lv_obj_set_style_image_recolor_opa(img_ble_icon, LV_OPA_COVER, 0);
+    }
+    if (img_trash_icon) {
+        lv_obj_set_style_image_recolor(img_trash_icon, COL_DIM, 0);
+        lv_obj_set_style_image_recolor_opa(img_trash_icon, LV_OPA_COVER, 0);
+    }
+
     refresh_settings_labels();
     ui_update_ble_status(last_ui_ble_state, ble_get_device_name(), ble_get_mac_address());
     if (last_usage.valid) ui_update(&last_usage);
@@ -893,8 +895,8 @@ void ui_init(void) {
         logo_img = lv_image_create(scr);
         lv_image_set_src(logo_img, &logo_dsc);
         if (L.scr_h <= 340) {
-            lv_image_set_scale(logo_img, 102);
-            lv_obj_set_pos(logo_img, 10, 8);
+            lv_image_set_scale(logo_img, 90);
+            lv_obj_set_pos(logo_img, 12, 8);
         } else {
             lv_image_set_scale(logo_img, LV_SCALE_NONE);
             lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
