@@ -1,10 +1,11 @@
 # Project context
 
-ESP32-S3 firmware for a desk-side Claude Code usage monitor. Each supported
-board lives in its own `firmware/src/boards/<name>/` folder and is selected
-via PlatformIO's `build_src_filter`. Adding a board means dropping in a new
-folder + a new `[env:...]` block — `main.cpp`, `ui.cpp`, and `splash.cpp`
-never see board-specific code. See [`docs/porting/adding-a-board.md`](docs/porting/adding-a-board.md).
+ESP32 firmware for a desk-side Claude Code and Codex usage monitor. Each
+supported board lives in its own `firmware/src/boards/<name>/` folder and is
+selected via PlatformIO's `build_src_filter`. Adding a board means dropping in
+a new folder + a new `[env:...]` block — `main.cpp`, `ui.cpp`, and `splash.cpp`
+never see board-specific code. See
+[`docs/porting/adding-a-board.md`](docs/porting/adding-a-board.md).
 
 Two reference ports today:
 
@@ -13,7 +14,9 @@ Two reference ports today:
 
 The shared code calls a small HAL (`firmware/src/hal/`) that each board implements: display, touch, input, power, IMU. Optional features are guarded by `BoardCaps` (runtime) and `BOARD_HAS_*` (compile-time) rather than `#ifdef BOARD_*`.
 
-Connects to a host daemon over BLE; daemon polls Anthropic API for usage data. This file is for future Claude Code sessions to bootstrap quickly. Read this first.
+Connects to a host daemon over BLE; daemons can poll Anthropic or Codex usage
+data. This file is for future Claude Code sessions to bootstrap quickly. Read
+this first.
 
 ## Hardware (critical pins)
 

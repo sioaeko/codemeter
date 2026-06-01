@@ -1,7 +1,7 @@
 # Clawdmeter-CYD Port
 
-This fork turns Clawdmeter into a Codex usage display for the Cheap Yellow
-Display / ESP32-2432S028R board.
+This fork turns Clawdmeter into a Claude Code and Codex usage display for the
+Cheap Yellow Display / ESP32-2432S028R board.
 
 ## What Changed
 
