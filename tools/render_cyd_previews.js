@@ -145,12 +145,8 @@ function label(text, x, y, size, color, opts = {}) {
 
 function logoBadge(L) {
   const w = 40;
-  const h = 29;
-  return [
-    `<svg x="${L.margin}" y="${L.contentY - h}" width="${w}" height="${h}" viewBox="0 0 80 58" overflow="hidden">`,
-    `<image href="${logoHref}" x="0" y="0" width="80" height="80"/>`,
-    `</svg>`,
-  ].join("");
+  const h = 40;
+  return `<image href="${logoHref}" x="${L.margin}" y="${L.titleY}" width="${w}" height="${h}"/>`;
 }
 
 function topButton(L, text, side) {
