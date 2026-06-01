@@ -405,6 +405,36 @@
         background: var(--surface-strong);
       }
 
+      .case-link span {
+        color: inherit;
+        font-size: inherit;
+      }
+
+      .case-links {
+        display: flex;
+        flex: 0 0 auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .case-stack {
+        display: flex;
+        flex: 0 1 auto;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        max-width: min(100%, 280px);
+      }
+
+      .case-note {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.45;
+        text-align: right;
+      }
+
       .install-button {
         appearance: none;
         width: 100%;
@@ -604,6 +634,17 @@
           gap: 10px;
         }
 
+        .case-links,
+        .case-stack {
+          align-items: flex-start;
+          justify-content: flex-start;
+          max-width: 100%;
+        }
+
+        .case-note {
+          text-align: left;
+        }
+
         .steps-grid {
           grid-template-columns: 1fr;
         }
@@ -790,14 +831,30 @@
                     <strong data-i18n="landscapeTitle">가로 화면</strong>
                     <span data-i18n="landscapeCopy">눕힌 거치용</span>
                   </div>
-                  <a
-                    class="case-link"
-                    href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span data-i18n="landscapeCase">가로형 케이스 출력</span>
-                  </a>
+                  <div class="case-stack">
+                    <div class="case-links">
+                      <a
+                        class="case-link"
+                        href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span data-i18n="landscapeBackCase">가로형 뒷판 출력</span>
+                      </a>
+                      <a
+                        class="case-link"
+                        href="https://makerworld.com/ko/models/137937-desk-stand-for-xtouch-using-esp322432s028-usb-c#profileId-150115"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span data-i18n="landscapeUsbCover">C타입 전면 커버</span>
+                      </a>
+                    </div>
+                    <p class="case-note" data-i18n="landscapeCaseNote">
+                      가로형 C타입 모델은 기존 링크에서 뒷판만 출력하고, 전면
+                      커버는 C타입 모델용 커버를 출력하세요.
+                    </p>
+                  </div>
                 </div>
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
@@ -882,7 +939,10 @@
           portraitCase: "세로형 케이스 출력",
           landscapeTitle: "가로 화면",
           landscapeCopy: "눕힌 거치용",
-          landscapeCase: "가로형 케이스 출력",
+          landscapeBackCase: "가로형 뒷판 출력",
+          landscapeUsbCover: "C타입 전면 커버",
+          landscapeCaseNote:
+            "가로형 C타입 모델은 기존 링크에서 뒷판만 출력하고, 전면 커버는 C타입 모델용 커버를 출력하세요.",
           unsupported: "Web Serial을 지원하는 브라우저에서 열어주세요.",
           notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
           panelNote:
@@ -917,7 +977,10 @@
           portraitCase: "Portrait case print",
           landscapeTitle: "Landscape",
           landscapeCopy: "Desk stand layout",
-          landscapeCase: "Landscape case print",
+          landscapeBackCase: "Landscape back plate",
+          landscapeUsbCover: "USB-C front cover",
+          landscapeCaseNote:
+            "For the landscape USB-C model, print only the back plate from the desk-stand link. Print the front cover from the USB-C cover link.",
           unsupported: "Open this page in a browser that supports Web Serial.",
           notAllowed: "Web Serial only works on HTTPS or localhost.",
           panelNote:
