@@ -2,7 +2,7 @@
 
 enum display_metric_t {
     DISPLAY_METRIC_USED = 0,
-    DISPLAY_METRIC_REMAINING = 1,
+    DISPLAY_METRIC_USAGE = 1,
 };
 
 enum display_theme_t {

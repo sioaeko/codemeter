@@ -356,12 +356,6 @@ static lv_color_t pct_color(float pct) {
     return COL_GREEN;
 }
 
-static lv_color_t remaining_color(float pct) {
-    if (pct <= 20.0f) return COL_RED;
-    if (pct <= 50.0f) return COL_AMBER;
-    return COL_GREEN;
-}
-
 static float clamp_pct(float pct) {
     if (pct < 0.0f) return 0.0f;
     if (pct > 100.0f) return 100.0f;
@@ -369,10 +363,7 @@ static float clamp_pct(float pct) {
 }
 
 static float display_pct_from_used(float used_pct) {
-    float used = clamp_pct(used_pct);
-    return (settings_display_metric() == DISPLAY_METRIC_REMAINING)
-               ? 100.0f - used
-               : used;
+    return clamp_pct(used_pct);
 }
 
 static lv_color_t display_pct_color(float shown_pct) {
@@ -381,8 +372,8 @@ static lv_color_t display_pct_color(float shown_pct) {
 }
 
 static const char* metric_label(void) {
-    return (settings_display_metric() == DISPLAY_METRIC_REMAINING)
-               ? "Remaining"
+    return (settings_display_metric() == DISPLAY_METRIC_USAGE)
+               ? "Usage"
                : "Used";
 }
 

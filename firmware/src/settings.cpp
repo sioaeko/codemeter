@@ -11,8 +11,8 @@ void settings_init(void) {
     prefs_ready = prefs.begin("codexmeter", false);
     uint8_t stored = prefs_ready ? prefs.getUChar("metric", DISPLAY_METRIC_USED)
                                  : DISPLAY_METRIC_USED;
-    current_metric = (stored == DISPLAY_METRIC_REMAINING)
-                         ? DISPLAY_METRIC_REMAINING
+    current_metric = (stored == DISPLAY_METRIC_USAGE)
+                         ? DISPLAY_METRIC_USAGE
                          : DISPLAY_METRIC_USED;
 
     stored = prefs_ready ? prefs.getUChar("theme", DISPLAY_THEME_DARK)
@@ -41,7 +41,7 @@ void settings_set_display_metric(display_metric_t metric) {
 
 display_metric_t settings_toggle_display_metric(void) {
     display_metric_t next = (current_metric == DISPLAY_METRIC_USED)
-                                ? DISPLAY_METRIC_REMAINING
+                                ? DISPLAY_METRIC_USAGE
                                 : DISPLAY_METRIC_USED;
     settings_set_display_metric(next);
     return next;
