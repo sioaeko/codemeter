@@ -513,6 +513,97 @@
         font-size: 13px;
       }
 
+      .daemon {
+        border-top: 1px solid var(--hairline);
+        padding: 34px 0;
+      }
+
+      .daemon-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        gap: 34px;
+        align-items: start;
+      }
+
+      .daemon-head h2 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 26px;
+        font-weight: 600;
+      }
+
+      .daemon-head p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .daemon-warning {
+        border: 1px solid #ecd486;
+        border-radius: var(--radius);
+        background: var(--warning-bg);
+        color: var(--warning-text) !important;
+        padding: 12px 14px;
+      }
+
+      .daemon-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .daemon-card {
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: #fffdfa;
+        padding: 18px;
+      }
+
+      .daemon-card h3 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 17px;
+        font-weight: 600;
+      }
+
+      .daemon-card p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .command-block {
+        margin: 14px 0 0;
+        border-radius: var(--radius);
+        background: var(--surface-dark);
+        color: var(--on-dark);
+        overflow-x: auto;
+        padding: 14px;
+      }
+
+      .command-block code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        white-space: pre;
+      }
+
+      .daemon-log {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .daemon-log code {
+        border: 1px solid var(--hairline);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--body);
+        padding: 2px 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+
       .steps {
         border-top: 1px solid var(--hairline);
         padding: 28px 0 36px;
@@ -606,6 +697,10 @@
         .flash-panel {
           max-width: 560px;
         }
+
+        .daemon-inner {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 640px) {
@@ -667,6 +762,10 @@
           justify-content: flex-start;
           max-width: 100%;
           text-align: left;
+        }
+
+        .daemon {
+          padding: 28px 0;
         }
 
         .steps-grid {
@@ -900,6 +999,57 @@
           </div>
         </section>
 
+        <section
+          class="daemon"
+          aria-label="데몬 설치"
+          data-i18n-aria-label="daemonAria"
+        >
+          <div class="container daemon-inner">
+            <div class="daemon-head">
+              <p class="eyebrow" data-i18n="daemonEyebrow">Mac daemon</p>
+              <h2 data-i18n="daemonTitle">데몬 설치</h2>
+              <p data-i18n="daemonCopy">
+                펌웨어 설치 후 Mac에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.
+              </p>
+              <p class="daemon-warning" data-i18n="daemonWarning">
+                Codex용과 Claude Code용 중 하나만 설치하세요. 둘을 동시에 켜면
+                같은 화면에 번갈아 값을 써서 표시가 흔들릴 수 있습니다.
+              </p>
+            </div>
+
+            <div class="daemon-grid">
+              <article class="daemon-card">
+                <h3 data-i18n="daemonCodexTitle">Codex 사용량</h3>
+                <p data-i18n="daemonCodexCopy">
+                  Codex CLI에 로그인한 뒤 installer를 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+cd clawdmeter-cyd
+codex login
+./install-codex-mac.sh</code></pre>
+                <p class="daemon-log">
+                  <span data-i18n="daemonLogLabel">로그</span>
+                  <code>tail -F ~/Library/Logs/codex-usage-daemon.out.log</code>
+                </p>
+              </article>
+
+              <article class="daemon-card">
+                <h3 data-i18n="daemonClaudeTitle">Claude Code 사용량</h3>
+                <p data-i18n="daemonClaudeCopy">
+                  Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+cd clawdmeter-cyd
+./install-mac.sh</code></pre>
+                <p class="daemon-log">
+                  <span data-i18n="daemonLogLabel">로그</span>
+                  <code>tail -F ~/Library/Logs/claude-usage-daemon.out.log</code>
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section class="steps" aria-label="설치 흐름" data-i18n-aria-label="stepsAria">
           <div class="container steps-grid">
             <article class="step">
@@ -967,6 +1117,19 @@
           notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
           panelNote:
             "설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를 누른 채 다시 연결해보세요.",
+          daemonAria: "데몬 설치",
+          daemonEyebrow: "Mac daemon",
+          daemonTitle: "데몬 설치",
+          daemonCopy:
+            "펌웨어 설치 후 Mac에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.",
+          daemonWarning:
+            "Codex용과 Claude Code용 중 하나만 설치하세요. 둘을 동시에 켜면 같은 화면에 번갈아 값을 써서 표시가 흔들릴 수 있습니다.",
+          daemonCodexTitle: "Codex 사용량",
+          daemonCodexCopy: "Codex CLI에 로그인한 뒤 installer를 실행합니다.",
+          daemonClaudeTitle: "Claude Code 사용량",
+          daemonClaudeCopy:
+            "Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.",
+          daemonLogLabel: "로그",
           stepsAria: "설치 흐름",
           step1Title: "USB 연결",
           step1Copy: "CYD 보드를 데이터 케이블로 연결합니다.",
@@ -1004,6 +1167,19 @@
           notAllowed: "Web Serial only works on HTTPS or localhost.",
           panelNote:
             "Keep USB connected while flashing. If the port does not appear, reconnect while holding BOOT.",
+          daemonAria: "Daemon install",
+          daemonEyebrow: "Mac daemon",
+          daemonTitle: "Install the daemon",
+          daemonCopy:
+            "After flashing, run one Mac daemon to send usage data over Bluetooth.",
+          daemonWarning:
+            "Install either the Codex daemon or the Claude Code daemon. Running both can make the display alternate between two values.",
+          daemonCodexTitle: "Codex usage",
+          daemonCodexCopy: "Sign in with the Codex CLI, then run the installer.",
+          daemonClaudeTitle: "Claude Code usage",
+          daemonClaudeCopy:
+            "Sign in with Claude Code first, then run the installer.",
+          daemonLogLabel: "Log",
           stepsAria: "Install flow",
           step1Title: "Connect USB",
           step1Copy: "Connect the CYD board with a USB data cable.",
