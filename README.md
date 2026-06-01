@@ -100,13 +100,25 @@ tail -F ~/Library/Logs/claude-usage-daemon.out.log
 ## Windows에서 쓰려면
 
 Windows도 웹 플래셔로 펌웨어 설치는 됩니다. 다만 자동 daemon 설치는 현재 macOS 중심입니다.
-Codex daemon 수동 실행은 아래처럼 가능합니다.
+daemon 수동 실행은 아래처럼 가능합니다.
+
+### Codex
 
 ```powershell
 codex login
 py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe -m pip install bleak httpx
 .\daemon\.venv\Scripts\python.exe .\daemon\codex_usage_daemon.py
+```
+
+### Claude Code
+
+Claude Code에 먼저 로그인한 뒤 PowerShell에서 실행합니다.
+
+```powershell
+py -3 -m venv daemon\.venv
+.\daemon\.venv\Scripts\python.exe -m pip install bleak httpx
+.\daemon\.venv\Scripts\python.exe .\daemon\claude_usage_daemon.py
 ```
 
 상시 표시용이면 Windows보다 Mac mini에 daemon을 켜두는 쪽을 추천합니다.
