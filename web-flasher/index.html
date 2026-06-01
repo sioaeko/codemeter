@@ -95,7 +95,7 @@
         height: 68px;
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: space-between;
         gap: 20px;
       }
 
@@ -107,6 +107,26 @@
         font-size: 24px;
         font-weight: 500;
         line-height: 1;
+      }
+
+      .buy-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border: 1px solid var(--hairline-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0 16px;
+        white-space: nowrap;
+      }
+
+      .buy-link:hover {
+        border-color: var(--primary);
+        color: var(--primary-active);
       }
 
       .hero {
@@ -378,6 +398,7 @@
       }
 
       .install-button:focus-visible,
+      .buy-link:focus-visible,
       .segment button:focus-visible,
       .preview-tabs button:focus-visible {
         outline: 3px solid rgba(204, 120, 92, 0.32);
@@ -506,6 +527,17 @@
 
         .topbar-inner {
           height: 62px;
+          gap: 12px;
+        }
+
+        .brand {
+          font-size: 21px;
+        }
+
+        .buy-link {
+          min-height: 34px;
+          padding: 0 12px;
+          font-size: 12px;
         }
 
         .hero {
@@ -554,6 +586,14 @@
         <div class="container topbar-inner">
           <a class="brand" href="#install" aria-label="Clawdmeter-CYD 설치로 이동">
             Clawdmeter-CYD
+          </a>
+          <a
+            class="buy-link"
+            href="https://www.aliexpress.com/item/1005006994102781.html?sku_id=12000038982645297"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CYD 구매하기
           </a>
         </div>
       </header>
