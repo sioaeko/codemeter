@@ -896,8 +896,8 @@ void ui_init(void) {
         logo_img = lv_image_create(scr);
         lv_image_set_src(logo_img, &logo_dsc);
         if (L.scr_h <= 340) {
-            lv_image_set_scale(logo_img, 90);
-            lv_obj_set_pos(logo_img, 12, 8);
+            lv_image_set_scale(logo_img, 128);
+            lv_obj_set_pos(logo_img, 6, 4);
         } else {
             lv_image_set_scale(logo_img, LV_SCALE_NONE);
             lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
