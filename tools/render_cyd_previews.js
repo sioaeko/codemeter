@@ -200,7 +200,7 @@ function renderUsage(L) {
   return [
     ...openSvg(L.w, L.h),
     logoBadge(L),
-    title(L, "Usage"),
+    title(L, "Used"),
     usagePanel(L, y1, 37, "5h", "Reset 2h 15m", 0.37),
     usagePanel(L, y2, 12, "Weekly", "Reset 6d 23h", 0.12),
     label("✻ Pondering...", L.w / 2, L.h - L.spinnerBottom - L.spinnerSize * 0.45, L.spinnerSize, palette.accent, {

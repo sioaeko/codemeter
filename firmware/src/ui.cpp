@@ -402,7 +402,7 @@ static const char* accent_label(void) {
 
 static void refresh_settings_labels(void) {
     const char* label = metric_label();
-    if (lbl_title) lv_label_set_text(lbl_title, "Usage");
+    if (lbl_title) lv_label_set_text(lbl_title, label);
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
@@ -614,7 +614,7 @@ static void init_usage_screen(lv_obj_t* scr) {
     lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_SCROLLABLE);
 
     lbl_title = lv_label_create(usage_container);
-    lv_label_set_text(lbl_title, "Usage");
+    lv_label_set_text(lbl_title, metric_label());
     lv_obj_set_style_text_font(lbl_title, L.title_font, 0);
     lv_obj_set_style_text_color(lbl_title, COL_TEXT, 0);
     lv_obj_align(lbl_title, LV_ALIGN_TOP_MID, L.title_x_offset, L.title_y);

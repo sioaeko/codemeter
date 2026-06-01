@@ -6,7 +6,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .mono{font-family:"SF Mono","Menlo",monospace}
 </style>
 <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAABJ0AAASdAHeZh94AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhFJREFUeJzt279qFFEYhvH3O85cgdoGQUiv2OYmxD+NrWJvEeINpIm9pBUEbbyItLp1AjZu615Bkp3PQgIBR/dkn8mMYd8fbDOchY8HzjKHnYnMlK2vTD3ATeeAkANCDgg5IOSAkANCDgg5IOSAkANCDgg5IOSAkANCTc2i47ePb5dlu6PQ3ese6L8QudBZc7R98HGxamlVwCbLVhfak+IRn+4GyJh1On8taZiAkpQZJWIztnymStvWrd2IINfJASEHhBwQckDIASEHhKrvA6ukFoo8UsbPS1fvKHJHinFPMSPNMmjAlOZxHvvb7z59vbh2/Obpw9KU99K4x8CxZhl8C99qu06ZefFp2q6b6vGbMWbxbyDkgJADQg4IOSDkgJADQnGy++zlqkUpbYXihaR7/16Xc2V8iMgfV/3u0Mgsfd/9mzjZfe6nzAFvYcgBIQeEHBByQMgBIQeEHBBqlDqsWDfN/xpT6f8/pVfUvO76fe/Jg2XXHEZoI57OytSsKd2r+/ufv61a6y0MOSDkgJADQg4IOSDkgJADQlUPF8Vpu4i2+6KM2aXLf55Oap+IusKdfqVBZynS/PRsufIVB6nyJNKn73TSdwdfu46YchZvYcgBIQeEHBByQMgBIQeEHBBa+zWHvtNJ3x187TpiylnWPonYb97CkANCDgg5IOSAkANCDgg5IOSAkANCDgg5IPQLu98JBIDeNyUAAAAASUVORK5CYII=" x="6" y="4" width="40" height="40"/>
-<text x="120" y="37.72" font-size="34" fill="#faf9f5" dominant-baseline="middle" text-anchor="middle" class="title">Usage</text>
+<text x="120" y="37.72" font-size="34" fill="#faf9f5" dominant-baseline="middle" text-anchor="middle" class="title">Used</text>
 <rect x="20" y="70" width="200" height="86" rx="8" fill="#1f1f1e"/>
 <text x="30" y="92.56" font-size="28" fill="#faf9f5" dominant-baseline="middle" text-anchor="start" font-weight="700">37%</text>
 <rect x="176" y="79" width="34" height="28" rx="14" fill="#2a2a28"/>
