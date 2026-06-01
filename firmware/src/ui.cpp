@@ -98,7 +98,7 @@ static void compute_layout(const BoardCaps& c) {
         L.margin = 16;
         L.title_y = 12;
         L.title_x_offset = 0;
-        L.content_y = 52;
+        L.content_y = 60;
         L.panel_pad = 10;
         L.panel_pad_y = 6;
         L.show_logo = true;
@@ -125,7 +125,7 @@ static void compute_layout(const BoardCaps& c) {
         L.margin = 20;
         L.title_y = 18;
         L.title_x_offset = 0;
-        L.content_y = 62;
+        L.content_y = 70;
         L.panel_pad = 10;
         L.panel_pad_y = 8;
         L.show_logo = true;
