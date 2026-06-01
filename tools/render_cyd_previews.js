@@ -336,7 +336,7 @@ function renderBluetooth(L) {
     }),
     rect(L.margin, infoY, contentW, L.btInfoPanelH, palette.panel, 8),
     bluetoothIcon(L.margin + L.panelPad, infoY + L.panelPadY, btIconSize),
-    label("Connected", L.margin + L.panelPad + 56, infoY + L.panelPadY + 13, L.btStatusSize, palette.green, { weight: 700 }),
+    label("Connected", L.margin + L.panelPad + 48, infoY + L.panelPadY + btIconSize / 2, L.btStatusSize, palette.green, { weight: 700 }),
     label("Device: Claude Controller", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
     label("Address: F0:08:D1:2A:BC:34", L.margin + L.panelPad, infoY + macY, L.btDeviceSize, palette.dim),
     rect(L.margin, resetY, contentW, L.btResetZoneH, palette.panel, 8),

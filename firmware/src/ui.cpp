@@ -4,6 +4,7 @@
 #include "logo.h"
 #include "logo_tiny.h"
 #include "icons.h"
+#include "icons_small.h"
 #include "hal/board_caps.h"
 #include "settings.h"
 
@@ -638,6 +639,8 @@ static void init_usage_screen(lv_obj_t* scr) {
 // ======== Bluetooth Screen ========
 
 static void init_bluetooth_screen(lv_obj_t* scr) {
+    const bool compact_display = (L.scr_h <= 340);
+
     ble_container = lv_obj_create(scr);
     lv_obj_set_size(ble_container, L.scr_w, L.scr_h);
     lv_obj_set_pos(ble_container, 0, 0);
@@ -660,18 +663,19 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
                                   L.content_w, L.bt_info_panel_h);
 
     static lv_image_dsc_t icon_bt_dsc;
+    static lv_image_dsc_t icon_bt_small_dsc;
     init_icon_dsc_rgb565a8(&icon_bt_dsc, ICON_BLUETOOTH_W, ICON_BLUETOOTH_H, icon_bluetooth_data);
+    init_icon_dsc_rgb565a8(&icon_bt_small_dsc, ICON_BLUETOOTH_SMALL_W, ICON_BLUETOOTH_SMALL_H, icon_bluetooth_small_data);
 
     img_ble_icon = lv_image_create(p_info);
-    lv_image_set_src(img_ble_icon, &icon_bt_dsc);
-    if (L.scr_h <= 340) lv_image_set_scale(img_ble_icon, 192);
+    lv_image_set_src(img_ble_icon, compact_display ? &icon_bt_small_dsc : &icon_bt_dsc);
     lv_obj_set_pos(img_ble_icon, 0, 0);
 
     lbl_ble_status = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_status, "Initializing...");
     lv_obj_set_style_text_font(lbl_ble_status, L.bt_status_font, 0);
     lv_obj_set_style_text_color(lbl_ble_status, COL_DIM, 0);
-    lv_obj_set_pos(lbl_ble_status, 56, 2);
+    lv_obj_set_pos(lbl_ble_status, compact_display ? 48 : 56, compact_display ? 7 : 2);
 
     lbl_ble_device = lv_label_create(p_info);
     lv_label_set_text(lbl_ble_device, "Device: ---");
@@ -703,9 +707,11 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     register_panel(reset_zone);
 
     static lv_image_dsc_t icon_trash_dsc;
+    static lv_image_dsc_t icon_trash_small_dsc;
     init_icon_dsc_rgb565a8(&icon_trash_dsc, ICON_TRASH2_W, ICON_TRASH2_H, icon_trash2_data);
+    init_icon_dsc_rgb565a8(&icon_trash_small_dsc, ICON_TRASH2_SMALL_W, ICON_TRASH2_SMALL_H, icon_trash2_small_data);
     img_trash_icon = lv_image_create(reset_zone);
-    lv_image_set_src(img_trash_icon, &icon_trash_dsc);
+    lv_image_set_src(img_trash_icon, compact_display ? &icon_trash_small_dsc : &icon_trash_dsc);
 
     lv_obj_t* reset_lbl = lv_label_create(reset_zone);
     lv_label_set_text(reset_lbl, "Reset Bluetooth");

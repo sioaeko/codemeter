@@ -56,7 +56,7 @@ firmware/src/
   splash.{h,cpp}            — 20×20 pixel-art engine. CELL = min(W,H)/20, centered.
   ble.{h,cpp}               — NimBLE peripheral: custom data service + HID keyboard
   data.h                    — UsageData struct
-  icons.h                   — icon arrays. Battery (5×) are RGB565A8 with alpha; rest are raw RGB565.
+  icons.h / icons_small.h   — icon arrays, including native CYD-sized Bluetooth/reset icons.
   logo.h / logo_tiny.h      — 80×80 logo + native 40×40 CYD logo
   font_*.c                  — pre-compiled LVGL 9 bitmap fonts (Tiempos 56/34, Styrene 48/28/24/20/16/14/12, Mono 32/18)
   splash_animations.h       — generated, do not hand-edit
