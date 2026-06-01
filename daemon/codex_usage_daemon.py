@@ -21,7 +21,7 @@ import httpx
 from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 
-DEVICE_NAME = "clawdmeter"
+DEVICE_NAME = "Claude Controller"
 SERVICE_UUID = "434f4445-582d-4d65-7465-720000000001"
 RX_CHAR_UUID = "434f4445-582d-4d65-7465-720000000002"
 REQ_CHAR_UUID = "434f4445-582d-4d65-7465-720000000004"

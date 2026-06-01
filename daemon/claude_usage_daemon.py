@@ -6,6 +6,8 @@ ESP32 "Claude Controller" peripheral over a custom GATT service. Uses
 bleak (CoreBluetooth backend on macOS).
 """
 
+from __future__ import annotations
+
 import asyncio
 import getpass
 import json
@@ -22,9 +24,9 @@ from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 
 DEVICE_NAME = "Claude Controller"
-SERVICE_UUID = "4c41555a-4465-7669-6365-000000000001"
-RX_CHAR_UUID = "4c41555a-4465-7669-6365-000000000002"
-REQ_CHAR_UUID = "4c41555a-4465-7669-6365-000000000004"
+SERVICE_UUID = "434f4445-582d-4d65-7465-720000000001"
+RX_CHAR_UUID = "434f4445-582d-4d65-7465-720000000002"
+REQ_CHAR_UUID = "434f4445-582d-4d65-7465-720000000004"
 
 POLL_INTERVAL = 60
 TICK = 5
@@ -188,7 +190,7 @@ async def _get_cb_manager():
 
 
 async def retrieve_connected_macos(skip_addr: str | None = None):
-    """Return a BLEDevice for a system-connected 'Claude Controller', or None.
+    """Return a BLEDevice for a system-connected Claude Controller, or None.
 
     Two-step lookup, strongest signal first:
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# macOS installer for Clawdmeter daemon (Python + bleak + launchd).
+# macOS installer for the Claude Code Clawdmeter-CYD daemon (Python + bleak + launchd).
 # Mirrors install.sh but uses LaunchAgents instead of systemd user units.
 set -e
 
@@ -13,7 +13,7 @@ LOG_DIR="$HOME/Library/Logs"
 LOG_OUT="$LOG_DIR/claude-usage-daemon.out.log"
 LOG_ERR="$LOG_DIR/claude-usage-daemon.err.log"
 
-echo "=== Clawdmeter macOS install ==="
+echo "=== Clawdmeter-CYD Claude Code macOS install ==="
 echo ""
 
 echo "[1/5] Checking prerequisites..."

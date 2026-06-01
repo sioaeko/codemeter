@@ -8,13 +8,17 @@ Display / ESP32-2432S028R board.
 - Added PlatformIO env `cyd_2432s028r`.
 - Added a CYD HAL port for the 240x320 ILI9341 SPI display and XPT2046 SPI
   touch controller.
-- Renamed the BLE peripheral to `clawdmeter` and moved the custom service to
-  Codexmeter UUIDs.
+- Kept the upstream-compatible BLE peripheral name `Claude Controller` and
+  moved the custom service to Clawdmeter-CYD UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
 - Added an on-device display setting for `Used` vs `Remaining` quota mode.
 - Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
-  polls `https://chatgpt.com/backend-api/wham/usage`, and pushes:
+  polls `https://chatgpt.com/backend-api/wham/usage`.
+- Kept the Claude Code daemon path, updated to the same BLE
+  service used by the CYD firmware.
+
+Both daemons push the same compact payload shape:
 
 ```json
 { "s": 6, "sr": 285, "w": 1, "wr": 10065, "st": "allowed", "ok": true }
@@ -71,7 +75,12 @@ Pass a serial device as the second argument if auto-detect picks the wrong port:
 ./flash-mac.sh cyd_2432s028r_landscape /dev/cu.usbserial-110
 ```
 
-## Install The Codex Daemon On macOS
+## Install A Daemon On macOS
+
+Run either the Codex daemon or the Claude Code daemon. Running both at once
+will make them race to update the same `Claude Controller` display.
+
+### Codex
 
 Sign in first:
 
@@ -89,6 +98,20 @@ Useful logs:
 
 ```bash
 tail -F ~/Library/Logs/codex-usage-daemon.out.log
+```
+
+### Claude Code
+
+Sign in to Claude Code first, then install:
+
+```bash
+./install-mac.sh
+```
+
+Useful logs:
+
+```bash
+tail -F ~/Library/Logs/claude-usage-daemon.out.log
 ```
 
 ## Notes
