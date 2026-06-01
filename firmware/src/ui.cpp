@@ -415,14 +415,6 @@ static void refresh_settings_labels(void) {
 static void format_reset_time(int mins, char* buf, size_t len) {
     if (mins < 0) {
         snprintf(buf, len, "---");
-    } else if (L.scr_h <= 340) {
-        if (mins < 60) {
-            snprintf(buf, len, "Reset %dm", mins);
-        } else if (mins < 1440) {
-            snprintf(buf, len, "Reset %dh %dm", mins / 60, mins % 60);
-        } else {
-            snprintf(buf, len, "Reset %dd %dh", mins / 1440, (mins % 1440) / 60);
-        }
     } else if (mins < 60) {
         snprintf(buf, len, "Resets in %dm", mins);
     } else if (mins < 1440) {
