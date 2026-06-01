@@ -111,7 +111,15 @@
         line-height: 1;
       }
 
-      .buy-link {
+      .topbar-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .buy-link,
+      .daemon-link {
+        appearance: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -120,13 +128,15 @@
         border-radius: 999px;
         background: var(--surface);
         color: var(--ink);
+        cursor: pointer;
         font-size: 13px;
         font-weight: 600;
         padding: 0 16px;
         white-space: nowrap;
       }
 
-      .buy-link:hover {
+      .buy-link:hover,
+      .daemon-link:hover {
         border-color: var(--primary);
         color: var(--primary-active);
       }
@@ -477,6 +487,8 @@
 
       .install-button:focus-visible,
       .buy-link:focus-visible,
+      .daemon-link:focus-visible,
+      .daemon-close:focus-visible,
       .case-link:focus-visible,
       .case-inline a:focus-visible,
       .segment button:focus-visible,
@@ -513,9 +525,52 @@
         font-size: 13px;
       }
 
-      .daemon {
-        border-top: 1px solid var(--hairline);
-        padding: 34px 0;
+      .daemon-modal[hidden] {
+        display: none;
+      }
+
+      .daemon-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .daemon-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 20, 19, 0.42);
+        backdrop-filter: blur(10px);
+      }
+
+      .daemon-panel {
+        position: relative;
+        width: min(100%, 980px);
+        max-height: min(86vh, 900px);
+        overflow: auto;
+        border: 1px solid var(--hairline-strong);
+        border-radius: var(--radius);
+        background: var(--canvas);
+        box-shadow: 0 24px 80px rgba(20, 20, 19, 0.24);
+        padding: 28px;
+      }
+
+      .daemon-close {
+        appearance: none;
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        min-height: 34px;
+        border: 1px solid var(--hairline-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0 14px;
       }
 
       .daemon-inner {
@@ -723,6 +778,12 @@
           font-size: 12px;
         }
 
+        .daemon-link {
+          min-height: 34px;
+          padding: 0 12px;
+          font-size: 12px;
+        }
+
         .hero {
           padding: 34px 0 28px;
         }
@@ -764,8 +825,18 @@
           text-align: left;
         }
 
-        .daemon {
-          padding: 28px 0;
+        .daemon-modal {
+          padding: 12px;
+        }
+
+        .daemon-panel {
+          max-height: calc(100vh - 24px);
+          padding: 22px;
+        }
+
+        .daemon-close {
+          position: static;
+          margin-bottom: 18px;
         }
 
         .steps-grid {
@@ -791,14 +862,25 @@
           >
             Clawdmeter-CYD
           </a>
-          <a
-            class="buy-link"
-            href="https://www.aliexpress.com/item/1005006994102781.html?sku_id=12000038982645297"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span data-i18n="buyCyd">CYD 구매하기</span>
-          </a>
+          <div class="topbar-actions">
+            <button
+              class="daemon-link"
+              type="button"
+              data-open-daemon
+              aria-haspopup="dialog"
+              aria-controls="daemon-dialog"
+            >
+              <span data-i18n="daemonNav">데몬 설치</span>
+            </button>
+            <a
+              class="buy-link"
+              href="https://www.aliexpress.com/item/1005006994102781.html?sku_id=12000038982645297"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span data-i18n="buyCyd">CYD 구매하기</span>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -999,15 +1081,29 @@
           </div>
         </section>
 
-        <section
-          class="daemon"
-          aria-label="데몬 설치"
-          data-i18n-aria-label="daemonAria"
-        >
-          <div class="container daemon-inner">
+        <div class="daemon-modal" data-daemon-modal hidden>
+          <div class="daemon-backdrop" data-close-daemon></div>
+          <section
+            class="daemon-panel"
+            id="daemon-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="daemon-title"
+            tabindex="-1"
+          >
+            <button
+              class="daemon-close"
+              type="button"
+              data-close-daemon
+              aria-label="데몬 설치 닫기"
+              data-i18n-aria-label="daemonCloseAria"
+            >
+              <span data-i18n="daemonClose">닫기</span>
+            </button>
+            <div class="daemon-inner">
             <div class="daemon-head">
               <p class="eyebrow" data-i18n="daemonEyebrow">Desktop daemon</p>
-              <h2 data-i18n="daemonTitle">데몬 설치</h2>
+              <h2 id="daemon-title" data-i18n="daemonTitle">데몬 설치</h2>
               <p data-i18n="daemonCopy">
                 펌웨어 설치 후 데스크톱에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.
               </p>
@@ -1080,8 +1176,9 @@ py -3 -m venv daemon\.venv
                 </p>
               </article>
             </div>
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
 
         <section class="steps" aria-label="설치 흐름" data-i18n-aria-label="stepsAria">
           <div class="container steps-grid">
@@ -1124,6 +1221,7 @@ py -3 -m venv daemon\.venv
           title: "Clawdmeter-CYD 설치",
           brandAria: "Clawdmeter-CYD 설치로 이동",
           buyCyd: "CYD 구매하기",
+          daemonNav: "데몬 설치",
           eyebrow: "CYD 펌웨어 설치",
           lede:
             "Clawdmeter 기반 CYD 펌웨어입니다. Claude Code와 Codex 사용량 표시를 모두 지원합니다.",
@@ -1151,6 +1249,8 @@ py -3 -m venv daemon\.venv
           panelNote:
             "설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를 누른 채 다시 연결해보세요.",
           daemonAria: "데몬 설치",
+          daemonClose: "닫기",
+          daemonCloseAria: "데몬 설치 닫기",
           daemonEyebrow: "Desktop daemon",
           daemonTitle: "데몬 설치",
           daemonCopy:
@@ -1180,6 +1280,7 @@ py -3 -m venv daemon\.venv
           title: "Install Clawdmeter-CYD",
           brandAria: "Go to the Clawdmeter-CYD installer",
           buyCyd: "Buy CYD",
+          daemonNav: "Daemon",
           eyebrow: "CYD firmware installer",
           lede:
             "CYD firmware based on Clawdmeter, with Claude Code and Codex usage display support.",
@@ -1207,6 +1308,8 @@ py -3 -m venv daemon\.venv
           panelNote:
             "Keep USB connected while flashing. If the port does not appear, reconnect while holding BOOT.",
           daemonAria: "Daemon install",
+          daemonClose: "Close",
+          daemonCloseAria: "Close daemon instructions",
           daemonEyebrow: "Desktop daemon",
           daemonTitle: "Install the daemon",
           daemonCopy:
@@ -1267,7 +1370,12 @@ py -3 -m venv daemon\.venv
       const screenButtons = document.querySelectorAll("[data-preview-screen]");
       const preview = document.querySelector("[data-orientation]");
       const previewImage = document.querySelector("[data-preview-image]");
+      const daemonModal = document.querySelector("[data-daemon-modal]");
+      const daemonPanel = document.querySelector(".daemon-panel");
+      const daemonOpeners = document.querySelectorAll("[data-open-daemon]");
+      const daemonClosers = document.querySelectorAll("[data-close-daemon]");
       const assetVersion = "0.3.17";
+      let lastDaemonTrigger = null;
 
       const previewSources = {
         portrait: ["splash", "usage", "settings", "bluetooth"],
@@ -1288,8 +1396,35 @@ py -3 -m venv daemon\.venv
         previewImage.alt = text("previewImageAlt");
       }
 
+      function openDaemonGuide(trigger) {
+        if (!daemonModal) return;
+        lastDaemonTrigger = trigger;
+        daemonModal.hidden = false;
+        document.body.style.overflow = "hidden";
+        daemonPanel?.focus();
+      }
+
+      function closeDaemonGuide() {
+        if (!daemonModal || daemonModal.hidden) return;
+        daemonModal.hidden = true;
+        document.body.style.overflow = "";
+        lastDaemonTrigger?.focus();
+      }
+
       applyTranslations();
       updatePreview();
+
+      daemonOpeners.forEach((button) => {
+        button.addEventListener("click", () => openDaemonGuide(button));
+      });
+
+      daemonClosers.forEach((button) => {
+        button.addEventListener("click", closeDaemonGuide);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeDaemonGuide();
+      });
 
       orientationButtons.forEach((button) => {
         button.addEventListener("click", () => {
