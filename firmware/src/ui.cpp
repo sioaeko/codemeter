@@ -274,6 +274,10 @@ static lv_image_dsc_t logo_badge_tiny_dsc;
 static screen_t current_screen = SCREEN_USAGE;
 static UsageData last_usage = {};
 static ble_state_t last_ui_ble_state = BLE_STATE_INIT;
+static uint32_t splash_started_ms = 0;
+static bool splash_hold_requested = false;
+
+#define SPLASH_AUTO_USAGE_MS 3500
 
 #define MAX_THEME_OBJS 64
 static lv_obj_t* theme_panels[MAX_THEME_OBJS];
@@ -950,6 +954,14 @@ void ui_update(const UsageData* data) {
 }
 
 void ui_tick_anim(void) {
+    if (current_screen == SCREEN_SPLASH) {
+        if (!splash_hold_requested &&
+            (uint32_t)(lv_tick_get() - splash_started_ms) >= SPLASH_AUTO_USAGE_MS) {
+            ui_show_screen(SCREEN_USAGE);
+        }
+        return;
+    }
+
     if (current_screen != SCREEN_USAGE) return;
 
     uint32_t now = lv_tick_get();
@@ -998,7 +1010,10 @@ static void global_click_cb(lv_event_t* e) {
         if (indev) {
             lv_point_t p;
             lv_indev_get_point(indev, &p);
-            if (splash_point_hits_art(p.x, p.y)) return;
+            if (splash_point_hits_art(p.x, p.y)) {
+                splash_hold_requested = true;
+                return;
+            }
         }
         ui_show_screen(SCREEN_USAGE);
         return;
@@ -1065,7 +1080,11 @@ void ui_show_screen(screen_t screen) {
     }
 
     switch (screen) {
-    case SCREEN_SPLASH:     splash_show(); break;
+    case SCREEN_SPLASH:
+        splash_started_ms = lv_tick_get();
+        splash_hold_requested = false;
+        splash_show();
+        break;
     case SCREEN_USAGE:      lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_HIDDEN); break;
     case SCREEN_BLUETOOTH:  lv_obj_clear_flag(ble_container, LV_OBJ_FLAG_HIDDEN); break;
     case SCREEN_SETTINGS:   lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_HIDDEN); break;
@@ -1101,6 +1120,10 @@ void ui_toggle_splash(void) {
 
 screen_t ui_get_current_screen(void) {
     return current_screen;
+}
+
+bool ui_splash_is_held(void) {
+    return current_screen == SCREEN_SPLASH && splash_hold_requested;
 }
 
 void ui_update_ble_status(ble_state_t state, const char* name, const char* mac) {

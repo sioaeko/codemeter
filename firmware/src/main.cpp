@@ -311,6 +311,8 @@ void loop() {
     if (pending_first_usage_screen) {
         if (ui_get_current_screen() != SCREEN_SPLASH) {
             pending_first_usage_screen = false;
+        } else if (ui_splash_is_held()) {
+            pending_first_usage_screen = false;
         } else if (millis() - boot_splash_started_ms >= BOOT_SPLASH_MIN_MS) {
             pending_first_usage_screen = false;
             ui_show_screen(SCREEN_USAGE);
@@ -330,7 +332,9 @@ void loop() {
             }
             ui_update(&usage);
             if (first_usage_payload && ui_get_current_screen() == SCREEN_SPLASH) {
-                if (millis() - boot_splash_started_ms >= BOOT_SPLASH_MIN_MS) {
+                if (ui_splash_is_held()) {
+                    pending_first_usage_screen = false;
+                } else if (millis() - boot_splash_started_ms >= BOOT_SPLASH_MIN_MS) {
                     ui_show_screen(SCREEN_USAGE);
                 } else {
                     pending_first_usage_screen = true;

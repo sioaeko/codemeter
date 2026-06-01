@@ -1,6 +1,6 @@
 {
   "name": "Clawdmeter-CYD landscape",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "new_install_prompt_erase": true,
   "builds": [
     {
