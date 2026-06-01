@@ -359,10 +359,16 @@
 
       .choice-copy {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
         gap: 16px;
         margin-bottom: 14px;
+      }
+
+      .choice-title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
       }
 
       .choice-copy strong {
@@ -379,10 +385,10 @@
 
       .case-link {
         display: inline-flex;
+        flex: 0 0 auto;
         align-items: center;
         justify-content: center;
         min-height: 36px;
-        margin: -2px 0 14px;
         border: 1px solid var(--hairline-strong);
         border-radius: 999px;
         background: var(--surface);
@@ -590,6 +596,12 @@
           margin-top: 14px;
         }
 
+        .choice-copy {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
         .steps-grid {
           grid-template-columns: 1fr;
         }
@@ -707,17 +719,19 @@
 
               <div class="install-choice is-active" data-choice="portrait">
                 <div class="choice-copy">
-                  <strong>세로 화면</strong>
-                  <span>기본 배치</span>
+                  <div class="choice-title">
+                    <strong>세로 화면</strong>
+                    <span>기본 배치</span>
+                  </div>
+                  <a
+                    class="case-link"
+                    href="https://makerworld.com/ko/models/1382304-aura-smart-weather-forecast-display#profileId-1430951"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    세로형 케이스 출력
+                  </a>
                 </div>
-                <a
-                  class="case-link"
-                  href="https://makerworld.com/ko/models/1382304-aura-smart-weather-forecast-display#profileId-1430951"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  세로형 케이스 출력
-                </a>
                 <esp-web-install-button manifest="manifest.json">
                   <button slot="activate" class="install-button">Install Portrait</button>
                   <span slot="unsupported" class="unsupported">
@@ -731,17 +745,19 @@
 
               <div class="install-choice" data-choice="landscape">
                 <div class="choice-copy">
-                  <strong>가로 화면</strong>
-                  <span>눕힌 거치용</span>
+                  <div class="choice-title">
+                    <strong>가로 화면</strong>
+                    <span>눕힌 거치용</span>
+                  </div>
+                  <a
+                    class="case-link"
+                    href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    가로형 케이스 출력
+                  </a>
                 </div>
-                <a
-                  class="case-link"
-                  href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  가로형 케이스 출력
-                </a>
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
                   <span slot="unsupported" class="unsupported">
