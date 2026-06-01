@@ -20,5 +20,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 <rect x="20" y="230" width="200" height="48" rx="8" fill="#1f1f1e"/>
 <text x="30" y="254" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Bluetooth</text>
 <text x="210" y="254" font-size="16" fill="#faf9f5" dominant-baseline="middle" text-anchor="end" font-weight="600">Open</text>
-<text x="120" y="304.3" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">BACK/BOOT exits</text>
+<text x="120" y="304.3" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">BACK exits</text>
 </svg>

@@ -30,7 +30,9 @@ Default pinout is for the common ESP32-2432S028R:
 
 - TFT: ILI9341, SPI pins MISO 12, MOSI 13, SCLK 14, CS 15, DC 2, BL 21
 - Touch: XPT2046, SPI pins IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
-- Button: BOOT/GPIO0 cycles Usage/Bluetooth/Settings screens
+- Touch: tap the top-left Claude icon on Usage/Bluetooth to show Splash;
+  tap Splash to return to Usage
+- Button: BOOT/GPIO0 also cycles Usage/Bluetooth/Settings/Splash screens
 
 The Settings screen lets you switch the main meter between `Used` and
 `Usage`. `Used` shows consumed quota, while `Usage` shows remaining available

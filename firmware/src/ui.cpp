@@ -402,7 +402,7 @@ static void refresh_settings_labels(void) {
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
     if (lbl_bluetooth_value) lv_label_set_text(lbl_bluetooth_value, "Open");
-    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
+    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BACK exits");
 }
 
 static void format_reset_time(int mins, char* buf, size_t len) {
@@ -427,6 +427,7 @@ static void format_reset_time(int mins, char* buf, size_t len) {
 
 // Forward decls — callbacks defined near ui_show_screen below
 static void global_click_cb(lv_event_t* e);
+static void logo_click_cb(lv_event_t* e);
 static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
@@ -805,7 +806,7 @@ static void init_settings_screen(lv_obj_t* scr) {
                        settings_bluetooth_click_cb);
 
     lbl_settings_note = lv_label_create(settings_container);
-    lv_label_set_text(lbl_settings_note, "BACK/BOOT exits");
+    lv_label_set_text(lbl_settings_note, "BACK exits");
     lv_obj_set_style_text_font(lbl_settings_note, L.usage_reset_font, 0);
     lv_obj_set_style_text_color(lbl_settings_note, COL_DIM, 0);
     lv_obj_set_width(lbl_settings_note, L.scr_w - 2 * L.margin);
@@ -901,6 +902,9 @@ void ui_init(void) {
             lv_image_set_scale(logo_img, LV_SCALE_NONE);
             lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
         }
+        lv_obj_add_flag(logo_img, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_set_ext_click_area(logo_img, (L.scr_h <= 340) ? 12 : 8);
+        lv_obj_add_event_cb(logo_img, logo_click_cb, LV_EVENT_CLICKED, NULL);
     }
 
     battery_img = lv_image_create(scr);
@@ -981,10 +985,17 @@ static void apply_battery_visibility(void) {
 static void global_click_cb(lv_event_t* e) {
     (void)e;
     if (current_screen == SCREEN_SPLASH) {
-        splash_next();
+        ui_show_screen(SCREEN_USAGE);
         return;
     }
     show_settings_from_current();
+}
+
+static void logo_click_cb(lv_event_t* e) {
+    (void)e;
+    if (current_screen == SCREEN_USAGE || current_screen == SCREEN_BLUETOOTH) {
+        ui_show_screen(SCREEN_SPLASH);
+    }
 }
 
 static void ble_reset_click_cb(lv_event_t* e) {

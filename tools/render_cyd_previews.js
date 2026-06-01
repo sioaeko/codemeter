@@ -299,7 +299,7 @@ function renderSettings(L) {
     settingsCard(L, 1, "Theme", "Dark"),
     settingsCard(L, 2, "Accent", "Claude"),
     settingsCard(L, 3, "Bluetooth", "Open"),
-    label("BACK/BOOT exits", L.w / 2, L.h - L.spinnerBottom - L.resetSize * 0.55, L.resetSize, palette.dim, {
+    label("BACK exits", L.w / 2, L.h - L.spinnerBottom - L.resetSize * 0.55, L.resetSize, palette.dim, {
       anchor: "middle",
     }),
     `</svg>`,

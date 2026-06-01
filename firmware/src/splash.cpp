@@ -137,6 +137,7 @@ void splash_init(lv_obj_t *parent) {
     lv_obj_set_style_border_width(splash_container, 0, 0);
     lv_obj_set_style_pad_all(splash_container, 0, 0);
     lv_obj_clear_flag(splash_container, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(splash_container, LV_OBJ_FLAG_CLICKABLE);
 
     canvas = lv_canvas_create(splash_container);
     lv_canvas_set_buffer(canvas, canvas_buf, canvas_w, canvas_h, LV_COLOR_FORMAT_RGB565);
