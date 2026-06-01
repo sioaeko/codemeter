@@ -52,7 +52,9 @@ const layouts = {
     bluetoothTitleSize: 24,
     bluetoothTitleDx: -10,
     bluetoothTitleY: 20,
-    backW: 68,
+    topButtonH: 28,
+    setW: 54,
+    backW: 58,
   },
   landscape: {
     w: 320,
@@ -86,7 +88,9 @@ const layouts = {
     bluetoothTitleSize: 34,
     bluetoothTitleDx: 0,
     bluetoothTitleY: 12,
-    backW: 68,
+    topButtonH: 28,
+    setW: 54,
+    backW: 58,
   },
 };
 
@@ -137,11 +141,13 @@ function logo() {
 }
 
 function topButton(L, text, side) {
-  const w = side === "left" ? L.backW : 64;
+  const w = side === "left" ? L.backW : L.setW;
+  const h = L.topButtonH;
   const x = side === "left" ? 6 : L.w - 6 - w;
+  const y = 7;
   return [
-    rect(x, 6, w, 34, palette.bar, 17),
-    label(text, x + w / 2, 23, L.resetSize, palette.accent, {
+    rect(x, y, w, h, palette.bar, h / 2),
+    label(text, x + w / 2, y + h / 2, L.resetSize, palette.accent, {
       anchor: "middle",
       weight: 700,
     }),
