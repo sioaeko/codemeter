@@ -250,7 +250,7 @@
 
       .preview-tabs {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 6px;
         margin-top: 10px;
         border: 1px solid #2e2b27;
@@ -672,7 +672,7 @@
                   <div class="preview-screen">
                     <img
                       data-preview-image
-                      src="previews/cyd_2432s028r/portrait_usage.svg?v=0.3.2"
+                      src="previews/cyd_2432s028r/portrait_splash.svg?v=0.3.2"
                       alt="Clawdmeter-CYD portrait firmware preview"
                       data-i18n-alt="previewImageAlt"
                     />
@@ -687,8 +687,15 @@
                   <button
                     type="button"
                     class="is-active"
-                    data-preview-screen="usage"
+                    data-preview-screen="splash"
                     aria-pressed="true"
+                  >
+                    Splash
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="usage"
+                    aria-pressed="false"
                   >
                     Usage
                   </button>
@@ -960,13 +967,13 @@
       const assetVersion = "0.3.2";
 
       const previewSources = {
-        portrait: ["usage", "settings", "bluetooth"],
-        landscape: ["usage", "settings", "bluetooth"],
+        portrait: ["splash", "usage", "settings", "bluetooth"],
+        landscape: ["splash", "usage", "settings", "bluetooth"],
       };
 
       const previewState = {
         orientation: "portrait",
-        screen: "usage",
+        screen: "splash",
       };
 
       function updatePreview() {

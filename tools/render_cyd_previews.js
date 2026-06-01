@@ -18,6 +18,9 @@ const palette = {
 
 const logoData = fs.readFileSync(path.join(root, "assets", "logo_80.png")).toString("base64");
 const logoHref = `data:image/png;base64,${logoData}`;
+const splashAnim = JSON.parse(
+  fs.readFileSync(path.join(root, "tools", "claudepix_data", "work_coding.json"), "utf8")
+);
 
 const layouts = {
   portrait: {
@@ -102,14 +105,18 @@ function esc(value) {
     .replaceAll('"', "&quot;");
 }
 
-function openSvg(w, h) {
+function openSvg(w, h, extraStyle = "") {
+  const styles = [
+    `text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}`,
+    `.title{font-family:Georgia,"Times New Roman",serif}`,
+    `.mono{font-family:"SF Mono","Menlo",monospace}`,
+  ];
+  if (extraStyle) styles.push(extraStyle);
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`,
     `<rect width="${w}" height="${h}" fill="${palette.bg}"/>`,
     `<style>`,
-    `text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}`,
-    `.title{font-family:Georgia,"Times New Roman",serif}`,
-    `.mono{font-family:"SF Mono","Menlo",monospace}`,
+    ...styles,
     `</style>`,
   ];
 }
@@ -203,6 +210,67 @@ function renderUsage(L) {
   ].join("\n");
 }
 
+function pct(value, total) {
+  return (value * 100 / total).toFixed(3);
+}
+
+function splashKeyframes(frames) {
+  const total = frames.reduce((sum, frame) => sum + frame.hold, 0);
+  let cursor = 0;
+  const rules = frames.map((frame, index) => {
+    const start = pct(cursor, total);
+    cursor += frame.hold;
+    const end = pct(cursor, total);
+    const before = pct(Math.max(0, cursor - frame.hold - 1), total);
+    const after = pct(Math.min(total, cursor + 1), total);
+    if (index === 0) {
+      return `@keyframes splash-frame-${index}{0%,${end}%{opacity:1} ${after}%,100%{opacity:0}}`;
+    }
+    if (index === frames.length - 1) {
+      return `@keyframes splash-frame-${index}{0%,${before}%{opacity:0} ${start}%,100%{opacity:1}}`;
+    }
+    return `@keyframes splash-frame-${index}{0%,${before}%{opacity:0} ${start}%,${end}%{opacity:1} ${after}%,100%{opacity:0}}`;
+  });
+  return [
+    `.splash-frame{opacity:0;animation-duration:${total}ms;animation-iteration-count:infinite;animation-timing-function:step-end}`,
+    ...rules,
+  ].join("\n");
+}
+
+function splashFrame(anim, frame, index, cell, ox, oy) {
+  const rects = [];
+  frame.grid.forEach((row, y) => {
+    row.forEach((code, x) => {
+      const color = anim.palette[code];
+      if (!code || !color || color === "transparent") return;
+      rects.push(rect(ox + x * cell, oy + y * cell, cell, cell, color, 0));
+    });
+  });
+  return [
+    `<g class="splash-frame" style="animation-name:splash-frame-${index}">`,
+    ...rects,
+    `</g>`,
+  ].join("\n");
+}
+
+function renderSplash(L) {
+  const cell = Math.min(Math.floor(Math.min(L.w, L.h) / 20), 10);
+  const canvas = cell * 20;
+  const ox = Math.round((L.w - canvas) / 2);
+  const oy = Math.round((L.h - canvas) / 2);
+  return [
+    ...openSvg(
+      L.w,
+      L.h,
+      `svg{shape-rendering:crispEdges}.splash-canvas{image-rendering:pixelated}${splashKeyframes(splashAnim.frames)}`
+    ),
+    `<g class="splash-canvas">`,
+    ...splashAnim.frames.map((frame, index) => splashFrame(splashAnim, frame, index, cell, ox, oy)),
+    `</g>`,
+    `</svg>`,
+  ].join("\n");
+}
+
 function settingsCard(L, index, name, value) {
   const y = L.contentY + index * (L.settingsCardH + L.settingsGap);
   const contentW = L.w - 2 * L.margin;
@@ -288,7 +356,7 @@ function renderContactSheet(files) {
   const scale = 1;
   const cols = 3;
   const itemW = 320;
-  const rows = 2;
+  const rows = Math.ceil(files.length / cols);
   const w = pad * 2 + cols * itemW + (cols - 1) * gap;
   const h = pad * 2 + rows * (320 + labelH) + gap;
   const parts = [
@@ -324,6 +392,7 @@ fs.mkdirSync(webOutDir, { recursive: true });
 const outputs = [];
 for (const [name, L] of Object.entries(layouts)) {
   const screens = [
+    ["splash", renderSplash(L)],
     ["usage", renderUsage(L)],
     ["settings", renderSettings(L)],
     ["bluetooth", renderBluetooth(L)],
