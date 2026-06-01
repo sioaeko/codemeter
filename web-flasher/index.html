@@ -377,6 +377,26 @@
         font-weight: 500;
       }
 
+      .case-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        margin: -2px 0 14px;
+        border: 1px solid var(--hairline-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--primary-active);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0 14px;
+      }
+
+      .case-link:hover {
+        border-color: var(--primary);
+        background: var(--surface-strong);
+      }
+
       .install-button {
         appearance: none;
         width: 100%;
@@ -399,6 +419,7 @@
 
       .install-button:focus-visible,
       .buy-link:focus-visible,
+      .case-link:focus-visible,
       .segment button:focus-visible,
       .preview-tabs button:focus-visible {
         outline: 3px solid rgba(204, 120, 92, 0.32);
@@ -689,6 +710,14 @@
                   <strong>세로 화면</strong>
                   <span>기본 배치</span>
                 </div>
+                <a
+                  class="case-link"
+                  href="https://makerworld.com/ko/models/1382304-aura-smart-weather-forecast-display#profileId-1430951"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  세로형 케이스 출력
+                </a>
                 <esp-web-install-button manifest="manifest.json">
                   <button slot="activate" class="install-button">Install Portrait</button>
                   <span slot="unsupported" class="unsupported">
@@ -705,6 +734,14 @@
                   <strong>가로 화면</strong>
                   <span>눕힌 거치용</span>
                 </div>
+                <a
+                  class="case-link"
+                  href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  가로형 케이스 출력
+                </a>
                 <esp-web-install-button manifest="manifest-landscape.json">
                   <button slot="activate" class="install-button">Install Landscape</button>
                   <span slot="unsupported" class="unsupported">
