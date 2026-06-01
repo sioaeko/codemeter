@@ -146,7 +146,7 @@ function label(text, x, y, size, color, opts = {}) {
 function logoBadge(L) {
   const w = 40;
   const h = 40;
-  return `<image href="${logoHref}" x="${L.margin}" y="${L.titleY}" width="${w}" height="${h}"/>`;
+  return `<image href="${logoHref}" x="6" y="4" width="${w}" height="${h}"/>`;
 }
 
 function topButton(L, text, side) {
