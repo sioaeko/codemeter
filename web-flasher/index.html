@@ -194,6 +194,14 @@
         margin: 42px 0 0;
       }
 
+      .firmware-preview[data-orientation="portrait"] {
+        width: min(100%, 280px);
+      }
+
+      .firmware-preview[data-orientation="landscape"] {
+        width: min(100%, 360px);
+      }
+
       .preview-top {
         display: flex;
         align-items: center;
@@ -585,6 +593,14 @@
         .firmware-preview {
           width: 100%;
           max-width: 430px;
+        }
+
+        .firmware-preview[data-orientation="portrait"] {
+          max-width: 280px;
+        }
+
+        .firmware-preview[data-orientation="landscape"] {
+          max-width: 360px;
         }
 
         .flash-panel {
