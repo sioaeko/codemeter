@@ -993,8 +993,13 @@ static void apply_battery_visibility(void) {
 }
 
 static void global_click_cb(lv_event_t* e) {
-    (void)e;
     if (current_screen == SCREEN_SPLASH) {
+        lv_indev_t* indev = lv_event_get_indev(e);
+        if (indev) {
+            lv_point_t p;
+            lv_indev_get_point(indev, &p);
+            if (splash_point_hits_art(p.x, p.y)) return;
+        }
         ui_show_screen(SCREEN_USAGE);
         return;
     }

@@ -13,7 +13,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 <text x="30" y="128" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Device: Claude Controller</text>
 <text x="30" y="152" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Address: F0:08:D1:2A:BC:34</text>
 <rect x="20" y="194" width="200" height="60" rx="8" fill="#1f1f1e"/>
-<g transform="translate(46 212) scale(1)" fill="none" stroke="#b0aea5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g>
+<g transform="translate(52 214) scale(0.8333333333333334)" fill="none" stroke="#b0aea5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g>
 <text x="84" y="224" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Reset Bluetooth</text>
 <text x="120" y="274" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">Clawdmeter-CYD</text>
 <text x="120" y="300" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">Built from Clawdmeter</text>

@@ -24,5 +24,8 @@ void splash_pick_for_current_rate(void);
 // True when splash is currently rendering (used to gate re-picks).
 bool splash_is_active(void);
 
+// True when a screen coordinate lands on the non-black splash character art.
+bool splash_point_hits_art(int16_t x, int16_t y);
+
 // Root container (so ui.cpp can attach a click event).
 lv_obj_t* splash_get_root(void);

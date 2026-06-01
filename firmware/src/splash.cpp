@@ -224,6 +224,33 @@ void splash_pick_for_current_rate(void) {
 
 bool splash_is_active(void) { return active; }
 
+bool splash_point_hits_art(int16_t x, int16_t y) {
+    if (SPLASH_ANIM_COUNT == 0 || cell <= 0) return false;
+
+    const BoardCaps& c = board_caps();
+    int local_x = x - ((c.width - canvas_w) / 2);
+    int local_y = y - ((c.height - canvas_h) / 2);
+    if (local_x < 0 || local_y < 0 || local_x >= canvas_w || local_y >= canvas_h) {
+        return false;
+    }
+
+    int gx = local_x / cell;
+    int gy = local_y / cell;
+    if (gx < 0 || gy < 0 || gx >= GRID || gy >= GRID) return false;
+
+    const splash_anim_def_t *a = &splash_anims[cur_anim];
+    if (a->frame_count == 0 || cur_frame >= a->frame_count) return false;
+    const uint8_t *frame = a->frames[cur_frame];
+    for (int ny = gy - 1; ny <= gy + 1; ny++) {
+        if (ny < 0 || ny >= GRID) continue;
+        for (int nx = gx - 1; nx <= gx + 1; nx++) {
+            if (nx < 0 || nx >= GRID) continue;
+            if (frame[ny * GRID + nx] != 0) return true;
+        }
+    }
+    return false;
+}
+
 void splash_show(void) {
     splash_pick_for_current_rate();
     if (splash_container) lv_obj_clear_flag(splash_container, LV_OBJ_FLAG_HIDDEN);

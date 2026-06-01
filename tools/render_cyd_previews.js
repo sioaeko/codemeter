@@ -340,7 +340,7 @@ function renderBluetooth(L) {
     label("Device: Claude Controller", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
     label("Address: F0:08:D1:2A:BC:34", L.margin + L.panelPad, infoY + macY, L.btDeviceSize, palette.dim),
     rect(L.margin, resetY, contentW, L.btResetZoneH, palette.panel, 8),
-    trashIcon(L.margin + contentW / 2 - 74, resetY + L.btResetZoneH / 2 - 12, 24),
+    trashIcon(L.margin + contentW / 2 - 68, resetY + L.btResetZoneH / 2 - 10, 20),
     label("Reset Bluetooth", L.margin + contentW / 2 - 36, resetY + L.btResetZoneH / 2, resetLabelSize, palette.dim),
     L.h > 260 ? label("Clawdmeter-CYD", L.w / 2, L.h - 46, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
     L.h > 260 ? label("Built from Clawdmeter", L.w / 2, L.h - 20, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
