@@ -480,6 +480,7 @@
       .case-link:focus-visible,
       .case-inline a:focus-visible,
       .segment button:focus-visible,
+      .daemon-segment button:focus-visible,
       .preview-tabs button:focus-visible {
         outline: 3px solid rgba(204, 120, 92, 0.32);
         outline-offset: 2px;
@@ -550,24 +551,56 @@
         padding: 12px 14px;
       }
 
-      .daemon-grid {
+      .daemon-tool {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 250px minmax(0, 1fr);
         gap: 18px;
+        align-items: start;
+        max-width: 880px;
       }
 
-      .daemon-group {
+      .daemon-controls {
         display: grid;
         gap: 12px;
-        min-width: 0;
       }
 
-      .daemon-group-title {
-        margin: 0;
+      .daemon-control {
+        display: grid;
+        gap: 7px;
+      }
+
+      .daemon-control > span {
         color: var(--primary-active);
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
-        letter-spacing: 0.02em;
+      }
+
+      .daemon-segment {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 6px;
+      }
+
+      .daemon-segment button {
+        appearance: none;
+        min-height: 40px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .daemon-segment button.is-active {
+        background: var(--canvas);
+        color: var(--ink);
+        box-shadow: 0 1px 4px rgba(20, 20, 19, 0.08);
       }
 
       .daemon-card {
@@ -575,6 +608,10 @@
         border-radius: var(--radius);
         background: #fffdfa;
         padding: 18px;
+      }
+
+      .daemon-card[hidden] {
+        display: none;
       }
 
       .daemon-card h3 {
@@ -787,7 +824,11 @@
           padding: 28px 0;
         }
 
-        .daemon-grid {
+        .daemon-tool {
+          grid-template-columns: 1fr;
+        }
+
+        .daemon-controls {
           grid-template-columns: 1fr;
         }
 
@@ -1040,12 +1081,66 @@
               </p>
             </div>
 
-            <div class="daemon-grid">
-              <div class="daemon-group">
-                <h3 class="daemon-group-title" data-i18n="daemonMacTitle">
-                  macOS
-                </h3>
-              <article class="daemon-card">
+            <div class="daemon-tool">
+              <div
+                class="daemon-controls"
+                aria-label="데몬 설치 옵션"
+                data-i18n-aria-label="daemonOptionsAria"
+              >
+                <div class="daemon-control">
+                  <span data-i18n="daemonOsLabel">OS</span>
+                  <div
+                    class="daemon-segment"
+                    role="group"
+                    aria-label="OS 선택"
+                    data-i18n-aria-label="daemonOsAria"
+                  >
+                    <button
+                      type="button"
+                      class="is-active"
+                      data-daemon-os="macos"
+                      aria-pressed="true"
+                    >
+                      macOS
+                    </button>
+                    <button
+                      type="button"
+                      data-daemon-os="windows"
+                      aria-pressed="false"
+                    >
+                      Windows
+                    </button>
+                  </div>
+                </div>
+
+                <div class="daemon-control">
+                  <span data-i18n="daemonTargetLabel">표시 대상</span>
+                  <div
+                    class="daemon-segment"
+                    role="group"
+                    aria-label="표시 대상 선택"
+                    data-i18n-aria-label="daemonTargetAria"
+                  >
+                    <button
+                      type="button"
+                      class="is-active"
+                      data-daemon-target="codex"
+                      aria-pressed="true"
+                    >
+                      Codex
+                    </button>
+                    <button
+                      type="button"
+                      data-daemon-target="claude"
+                      aria-pressed="false"
+                    >
+                      Claude Code
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <article class="daemon-card" data-daemon-card="macos-codex">
                 <h3 data-i18n="daemonCodexTitle">macOS - Codex 사용량</h3>
                 <p data-i18n="daemonCodexCopy">
                   Codex CLI에 로그인한 뒤 installer를 실행합니다.
@@ -1060,7 +1155,7 @@ codex login
                 </p>
               </article>
 
-              <article class="daemon-card">
+              <article class="daemon-card" data-daemon-card="macos-claude" hidden>
                 <h3 data-i18n="daemonClaudeTitle">macOS - Claude Code 사용량</h3>
                 <p data-i18n="daemonClaudeCopy">
                   Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.
@@ -1073,13 +1168,8 @@ cd clawdmeter-cyd
                   <code>tail -F ~/Library/Logs/claude-usage-daemon.out.log</code>
                 </p>
               </article>
-              </div>
 
-              <div class="daemon-group">
-                <h3 class="daemon-group-title" data-i18n="daemonWindowsGroupTitle">
-                  Windows
-                </h3>
-              <article class="daemon-card">
+              <article class="daemon-card" data-daemon-card="windows-codex" hidden>
                 <h3 data-i18n="daemonWindowsTitle">Windows - Codex 사용량</h3>
                 <p data-i18n="daemonWindowsCopy">
                   PowerShell에서 수동으로 실행합니다.
@@ -1095,7 +1185,7 @@ py -3 -m venv daemon\.venv
                 </p>
               </article>
 
-              <article class="daemon-card">
+              <article class="daemon-card" data-daemon-card="windows-claude" hidden>
                 <h3 data-i18n="daemonWindowsClaudeTitle">
                   Windows - Claude Code 사용량
                 </h3>
@@ -1111,7 +1201,6 @@ py -3 -m venv daemon\.venv
                   상시 표시하려면 이 PowerShell 창을 열어두세요.
                 </p>
               </article>
-              </div>
             </div>
           </div>
         </section>
@@ -1190,13 +1279,16 @@ py -3 -m venv daemon\.venv
             "펌웨어 설치 후 데스크톱에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.",
           daemonWarning:
             "Codex용과 Claude Code용 중 하나만 설치하세요. 둘을 동시에 켜면 같은 화면에 번갈아 값을 써서 표시가 흔들릴 수 있습니다.",
-          daemonMacTitle: "macOS",
+          daemonOptionsAria: "데몬 설치 옵션",
+          daemonOsLabel: "OS",
+          daemonOsAria: "OS 선택",
+          daemonTargetLabel: "표시 대상",
+          daemonTargetAria: "표시 대상 선택",
           daemonCodexTitle: "macOS - Codex 사용량",
           daemonCodexCopy: "Codex CLI에 로그인한 뒤 installer를 실행합니다.",
           daemonClaudeTitle: "macOS - Claude Code 사용량",
           daemonClaudeCopy:
             "Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.",
-          daemonWindowsGroupTitle: "Windows",
           daemonWindowsTitle: "Windows - Codex 사용량",
           daemonWindowsCopy: "PowerShell에서 수동으로 실행합니다.",
           daemonWindowsClaudeTitle: "Windows - Claude Code 사용량",
@@ -1248,13 +1340,16 @@ py -3 -m venv daemon\.venv
             "After flashing, run one desktop daemon to send usage data over Bluetooth.",
           daemonWarning:
             "Install either the Codex daemon or the Claude Code daemon. Running both can make the display alternate between two values.",
-          daemonMacTitle: "macOS",
+          daemonOptionsAria: "Daemon install options",
+          daemonOsLabel: "OS",
+          daemonOsAria: "Choose OS",
+          daemonTargetLabel: "Usage source",
+          daemonTargetAria: "Choose usage source",
           daemonCodexTitle: "macOS - Codex usage",
           daemonCodexCopy: "Sign in with the Codex CLI, then run the installer.",
           daemonClaudeTitle: "macOS - Claude Code usage",
           daemonClaudeCopy:
             "Sign in with Claude Code first, then run the installer.",
-          daemonWindowsGroupTitle: "Windows",
           daemonWindowsTitle: "Windows - Codex usage",
           daemonWindowsCopy: "Run it manually from PowerShell.",
           daemonWindowsClaudeTitle: "Windows - Claude Code usage",
@@ -1302,6 +1397,9 @@ py -3 -m venv daemon\.venv
       const orientationButtons = document.querySelectorAll("[data-target]");
       const choices = document.querySelectorAll("[data-choice]");
       const screenButtons = document.querySelectorAll("[data-preview-screen]");
+      const daemonOsButtons = document.querySelectorAll("[data-daemon-os]");
+      const daemonTargetButtons = document.querySelectorAll("[data-daemon-target]");
+      const daemonCards = document.querySelectorAll("[data-daemon-card]");
       const preview = document.querySelector("[data-orientation]");
       const previewImage = document.querySelector("[data-preview-image]");
       const assetVersion = "0.3.17";
@@ -1316,6 +1414,11 @@ py -3 -m venv daemon\.venv
         screen: "splash",
       };
 
+      const daemonState = {
+        os: "macos",
+        target: "codex",
+      };
+
       function updatePreview() {
         if (!preview || !previewImage) return;
         const { orientation, screen } = previewState;
@@ -1325,8 +1428,29 @@ py -3 -m venv daemon\.venv
         previewImage.alt = text("previewImageAlt");
       }
 
+      function updateDaemonGuide() {
+        const activeCard = `${daemonState.os}-${daemonState.target}`;
+
+        daemonCards.forEach((card) => {
+          card.hidden = card.dataset.daemonCard !== activeCard;
+        });
+
+        daemonOsButtons.forEach((button) => {
+          const active = button.dataset.daemonOs === daemonState.os;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        daemonTargetButtons.forEach((button) => {
+          const active = button.dataset.daemonTarget === daemonState.target;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+      }
+
       applyTranslations();
       updatePreview();
+      updateDaemonGuide();
 
       orientationButtons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -1359,6 +1483,20 @@ py -3 -m venv daemon\.venv
 
           previewState.screen = target;
           updatePreview();
+        });
+      });
+
+      daemonOsButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          daemonState.os = button.dataset.daemonOs;
+          updateDaemonGuide();
+        });
+      });
+
+      daemonTargetButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          daemonState.target = button.dataset.daemonTarget;
+          updateDaemonGuide();
         });
       });
     </script>
