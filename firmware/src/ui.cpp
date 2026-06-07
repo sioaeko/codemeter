@@ -255,9 +255,14 @@ static lv_obj_t* lbl_ble_mac;
 
 // ---- Settings screen widgets ----
 static lv_obj_t* settings_container;
+static lv_obj_t* settings_page_general;
+static lv_obj_t* settings_page_night;
+static lv_obj_t* lbl_settings_title;
+static lv_obj_t* lbl_settings_nav;
 static lv_obj_t* lbl_metric_value;
 static lv_obj_t* lbl_theme_value;
 static lv_obj_t* lbl_accent_value;
+static lv_obj_t* lbl_bluetooth_value;
 static lv_obj_t* lbl_night_value;
 static lv_obj_t* lbl_night_start_value;
 static lv_obj_t* lbl_night_end_value;
@@ -274,6 +279,7 @@ static lv_image_dsc_t battery_dscs[5];  // empty, low, medium, full, charging
 static lv_image_dsc_t logo_dsc;
 static lv_image_dsc_t logo_tiny_dsc;
 static screen_t current_screen = SCREEN_USAGE;
+static uint8_t settings_page = 0;
 static UsageData last_usage = {};
 static ble_state_t last_ui_ble_state = BLE_STATE_INIT;
 static uint32_t splash_started_ms = 0;
@@ -408,12 +414,31 @@ static void format_time_label(uint16_t minutes, char* buf, size_t len) {
     snprintf(buf, len, "%02u:%02u", minutes / 60, minutes % 60);
 }
 
+static void apply_settings_page_visibility(void) {
+    if (settings_page > 1) settings_page = 0;
+    if (settings_page_general) {
+        if (settings_page == 0) lv_obj_clear_flag(settings_page_general, LV_OBJ_FLAG_HIDDEN);
+        else                    lv_obj_add_flag(settings_page_general, LV_OBJ_FLAG_HIDDEN);
+    }
+    if (settings_page_night) {
+        if (settings_page == 1) lv_obj_clear_flag(settings_page_night, LV_OBJ_FLAG_HIDDEN);
+        else                    lv_obj_add_flag(settings_page_night, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
 static void refresh_settings_labels(void) {
     const char* label = metric_label();
     if (lbl_title) lv_label_set_text(lbl_title, label);
+    if (lbl_settings_title) {
+        lv_label_set_text(lbl_settings_title, settings_page == 0 ? "Settings" : "Night");
+    }
+    if (lbl_settings_nav) {
+        lv_label_set_text(lbl_settings_nav, settings_page == 0 ? "NEXT" : "PREV");
+    }
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
+    if (lbl_bluetooth_value) lv_label_set_text(lbl_bluetooth_value, "Open");
     if (lbl_night_value) {
         lv_label_set_text(lbl_night_value, settings_night_enabled() ? "On" : "Off");
     }
@@ -426,7 +451,8 @@ static void refresh_settings_labels(void) {
         format_time_label(settings_night_end_min(), time_buf, sizeof(time_buf));
         lv_label_set_text(lbl_night_end_value, time_buf);
     }
-    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BLE clock");
+    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, settings_page == 0 ? "1/2" : "2/2");
+    apply_settings_page_visibility();
 }
 
 static void format_reset_time(int mins, char* buf, size_t len) {
@@ -448,9 +474,11 @@ static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
 static void settings_accent_click_cb(lv_event_t* e);
+static void settings_bluetooth_click_cb(lv_event_t* e);
 static void settings_night_click_cb(lv_event_t* e);
 static void settings_night_start_click_cb(lv_event_t* e);
 static void settings_night_end_click_cb(lv_event_t* e);
+static void settings_nav_click_cb(lv_event_t* e);
 static void settings_button_click_cb(lv_event_t* e);
 static void settings_back_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
@@ -576,6 +604,35 @@ static lv_obj_t* make_back_button(lv_obj_t* parent) {
     int edge = (L.scr_h <= 340) ? 6 : L.margin;
     int y = tiny ? 7 : L.title_y - 1;
     lv_obj_align(btn, LV_ALIGN_TOP_LEFT, edge, y);
+    return btn;
+}
+
+static lv_obj_t* make_settings_nav_button(lv_obj_t* parent) {
+    lv_obj_t* btn = lv_obj_create(parent);
+    bool tiny = L.scr_h <= 340;
+    lv_obj_set_size(btn, tiny ? 58 : 76, tiny ? 28 : 36);
+    lv_obj_set_ext_click_area(btn, tiny ? 8 : 6);
+    lv_obj_set_style_bg_color(btn, COL_BAR_BG, 0);
+    lv_obj_set_style_bg_opa(btn, LV_OPA_COVER, 0);
+    lv_obj_set_style_radius(btn, LV_RADIUS_CIRCLE, 0);
+    lv_obj_set_style_border_width(btn, 0, 0);
+    lv_obj_set_style_pad_all(btn, 0, 0);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(btn, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(btn, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_event_cb(btn, settings_nav_click_cb, LV_EVENT_CLICKED, NULL);
+    register_pill(btn);
+
+    lbl_settings_nav = lv_label_create(btn);
+    lv_label_set_text(lbl_settings_nav, "NEXT");
+    lv_obj_set_style_text_font(lbl_settings_nav, L.usage_reset_font, 0);
+    lv_obj_set_style_text_color(lbl_settings_nav, COL_ACCENT, 0);
+    lv_obj_center(lbl_settings_nav);
+    register_accent(lbl_settings_nav);
+
+    int edge = (L.scr_h <= 340) ? 6 : L.margin;
+    int y = tiny ? 7 : L.title_y - 1;
+    lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -edge, y);
     return btn;
 }
 
@@ -758,19 +815,17 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 // ======== Settings Screen ========
 
 static int settings_card_h(void) {
-    if (L.scr_h <= 260) return 28;
-    if (L.scr_h <= 340) return 33;
-    return 50;
+    if (L.scr_h <= 260) return 36;
+    if (L.scr_h <= 340) return 48;
+    return 70;
 }
 
 static int settings_card_gap(void) {
-    if (L.scr_h <= 260) return 3;
-    if (L.scr_h <= 340) return 5;
-    return 8;
+    return (L.scr_h <= 260) ? 6 : 8;
 }
 
 static int settings_base_y(void) {
-    return (L.scr_h <= 260) ? 52 : L.content_y;
+    return L.content_y;
 }
 
 static lv_obj_t* make_settings_card(lv_obj_t* parent, int index, const char* name,
@@ -814,28 +869,50 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_obj_set_style_pad_all(settings_container, 0, 0);
     lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_SCROLLABLE);
 
-    lv_obj_t* title = lv_label_create(settings_container);
-    lv_label_set_text(title, "Settings");
+    lbl_settings_title = lv_label_create(settings_container);
+    lv_label_set_text(lbl_settings_title, "Settings");
     const bool tiny_portrait = (L.scr_w <= 260 && L.scr_h <= 340);
-    lv_obj_set_style_text_font(title, tiny_portrait ? &font_styrene_24 : L.title_font, 0);
-    lv_obj_set_style_text_color(title, COL_TEXT, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID,
-                 tiny_portrait ? 18 : L.title_x_offset,
+    lv_obj_set_style_text_font(lbl_settings_title, tiny_portrait ? &font_styrene_24 : L.title_font, 0);
+    lv_obj_set_style_text_color(lbl_settings_title, COL_TEXT, 0);
+    lv_obj_align(lbl_settings_title, LV_ALIGN_TOP_MID,
+                 tiny_portrait ? 0 : L.title_x_offset,
                  tiny_portrait ? 20 : L.title_y);
-    register_primary(title);
+    register_primary(lbl_settings_title);
     make_back_button(settings_container);
+    make_settings_nav_button(settings_container);
 
-    make_settings_card(settings_container, 0, "Display", &lbl_metric_value,
+    settings_page_general = lv_obj_create(settings_container);
+    lv_obj_set_size(settings_page_general, L.scr_w, L.scr_h);
+    lv_obj_set_pos(settings_page_general, 0, 0);
+    lv_obj_set_style_bg_opa(settings_page_general, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(settings_page_general, 0, 0);
+    lv_obj_set_style_pad_all(settings_page_general, 0, 0);
+    lv_obj_clear_flag(settings_page_general, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_move_background(settings_page_general);
+
+    settings_page_night = lv_obj_create(settings_container);
+    lv_obj_set_size(settings_page_night, L.scr_w, L.scr_h);
+    lv_obj_set_pos(settings_page_night, 0, 0);
+    lv_obj_set_style_bg_opa(settings_page_night, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(settings_page_night, 0, 0);
+    lv_obj_set_style_pad_all(settings_page_night, 0, 0);
+    lv_obj_clear_flag(settings_page_night, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_move_background(settings_page_night);
+
+    make_settings_card(settings_page_general, 0, "Display", &lbl_metric_value,
                        settings_metric_click_cb);
-    make_settings_card(settings_container, 1, "Theme", &lbl_theme_value,
+    make_settings_card(settings_page_general, 1, "Theme", &lbl_theme_value,
                        settings_theme_click_cb);
-    make_settings_card(settings_container, 2, "Accent", &lbl_accent_value,
+    make_settings_card(settings_page_general, 2, "Accent", &lbl_accent_value,
                        settings_accent_click_cb);
-    make_settings_card(settings_container, 3, "Night", &lbl_night_value,
+    make_settings_card(settings_page_general, 3, "Bluetooth", &lbl_bluetooth_value,
+                       settings_bluetooth_click_cb);
+
+    make_settings_card(settings_page_night, 0, "Night", &lbl_night_value,
                        settings_night_click_cb);
-    make_settings_card(settings_container, 4, "Start", &lbl_night_start_value,
+    make_settings_card(settings_page_night, 1, "Start", &lbl_night_start_value,
                        settings_night_start_click_cb);
-    make_settings_card(settings_container, 5, "End", &lbl_night_end_value,
+    make_settings_card(settings_page_night, 2, "End", &lbl_night_end_value,
                        settings_night_end_click_cb);
 
     lbl_settings_note = lv_label_create(settings_container);
@@ -1018,6 +1095,7 @@ static void show_settings_from_current(void) {
     if (current_screen != SCREEN_SETTINGS && current_screen != SCREEN_SPLASH) {
         prev_non_settings_screen = current_screen;
     }
+    settings_page = 0;
     ui_show_screen(SCREEN_SETTINGS);
 }
 
@@ -1078,6 +1156,11 @@ static void settings_accent_click_cb(lv_event_t* e) {
     apply_theme_styles();
 }
 
+static void settings_bluetooth_click_cb(lv_event_t* e) {
+    (void)e;
+    ui_show_screen(SCREEN_BLUETOOTH);
+}
+
 static uint16_t add_one_hour(uint16_t minutes) {
     return (uint16_t)((minutes + 60) % 1440);
 }
@@ -1097,6 +1180,12 @@ static void settings_night_start_click_cb(lv_event_t* e) {
 static void settings_night_end_click_cb(lv_event_t* e) {
     (void)e;
     settings_set_night_end_min(add_one_hour(settings_night_end_min()));
+    refresh_settings_labels();
+}
+
+static void settings_nav_click_cb(lv_event_t* e) {
+    (void)e;
+    settings_page = settings_page == 0 ? 1 : 0;
     refresh_settings_labels();
 }
 
@@ -1130,7 +1219,11 @@ void ui_show_screen(screen_t screen) {
         break;
     case SCREEN_USAGE:      lv_obj_clear_flag(usage_container, LV_OBJ_FLAG_HIDDEN); break;
     case SCREEN_BLUETOOTH:  lv_obj_clear_flag(ble_container, LV_OBJ_FLAG_HIDDEN); break;
-    case SCREEN_SETTINGS:   lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_HIDDEN); break;
+    case SCREEN_SETTINGS:
+        if (current_screen != SCREEN_SETTINGS) settings_page = 0;
+        refresh_settings_labels();
+        lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
+        break;
     default: break;
     }
 

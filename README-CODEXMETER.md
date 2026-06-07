@@ -12,7 +12,7 @@ Cheap Yellow Display / ESP32-2432S028R board.
   moved the custom service to Clawdmeter-CYD UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
 - Added on-device settings for `Used` vs remaining quota mode, theme, accent,
-  and Night Mode.
+  Bluetooth status access, and Night Mode.
 - Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
   polls `https://chatgpt.com/backend-api/wham/usage`.
@@ -36,14 +36,15 @@ Default pinout is for the common ESP32-2432S028R:
 - Button: BOOT/GPIO0 also cycles Usage/Bluetooth/Settings/Splash screens
 
 The Settings screen lets you switch the main meter between `Used` and `Left`,
-change theme/accent, and configure Night Mode. `Used` shows consumed quota,
-while `Left` shows remaining available quota. The selected mode is stored in
-ESP32 NVS and survives reboot.
+change theme/accent, open Bluetooth status, and configure Night Mode. `Used`
+shows consumed quota, while `Left` shows remaining available quota. The
+selected mode is stored in ESP32 NVS and survives reboot.
 
 ## Night Mode
 
 This firmware does not start a Wi-Fi access point or web portal. Night Mode is
-configured on the board's `Settings` screen:
+configured on page 2 of the board's `Settings` screen. Use `NEXT` / `PREV` to
+switch between the general settings page and the Night Mode page:
 
 - `Night`: toggle the schedule on/off
 - `Start`: advance the start time by one hour
