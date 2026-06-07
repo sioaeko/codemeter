@@ -6,6 +6,7 @@ struct UsageData {
     int session_reset_mins;  // minutes until session resets
     float weekly_pct;        // 7-day window utilization (0-100)
     int weekly_reset_mins;   // minutes until weekly resets
+    int local_min;           // local wall-clock minute of day, -1 if unknown
     char status[16];         // "allowed" or "limited"
     bool ok;                 // data parse succeeded
     bool valid;              // false until first successful parse

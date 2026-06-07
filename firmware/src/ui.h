@@ -20,3 +20,4 @@ screen_t ui_get_current_screen(void);
 bool ui_splash_is_held(void);
 void ui_update_ble_status(ble_state_t state, const char* name, const char* mac);
 void ui_update_battery(int percent, bool charging);
+void ui_refresh_settings(void);

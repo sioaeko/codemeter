@@ -41,7 +41,7 @@ async def main() -> None:
     d.log(f"RX characteristic present: {found_rx}")
 
     if found_rx:
-        payload = '{"s":42,"sr":120,"w":17,"wr":4320,"st":"ok_test","ok":true}'
+        payload = '{"s":42,"sr":120,"w":17,"wr":4320,"now":720,"st":"ok_test","ok":true}'
         d.log(f"Writing test payload: {payload}")
         await client.write_gatt_char(d.RX_CHAR_UUID, payload.encode(), response=False)
         d.log("PASS: wrote test payload — check the device screen.")

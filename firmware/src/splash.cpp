@@ -7,7 +7,7 @@
 #include <string.h>
 #include <esp_heap_caps.h>
 
-// 20×20 grid. CELL sized so the canvas fits the smaller display dimension —
+// 20x20 grid. CELL sized so the canvas fits the smaller display dimension.
 // the canvas is square and centered, so on portrait or letterboxed panels
 // it leaves vertical margin rather than cropping.
 #define GRID         20
@@ -109,11 +109,10 @@ void splash_init(lv_obj_t *parent) {
 #ifdef BOARD_HAS_PSRAM
     const uint32_t canvas_caps = MALLOC_CAP_SPIRAM;
 #else
-    // Without PSRAM the full 480×480 RGB565 canvas (460 KB) won't fit. Cap
-    // the canvas so the buffer stays under ~80 KB, leaving the rest of
-    // internal SRAM free for LVGL, NimBLE, and the audio/PMU stacks. The
-    // canvas is centered, so the cost is extra black border around the
-    // pixel art — not cropping.
+    // Without PSRAM the full 480x480 RGB565 canvas (460 KB) won't fit. Cap
+    // the canvas so BLE, LVGL, and the splash can coexist in internal SRAM.
+    // The canvas is centered, so the cost is extra black border around the
+    // pixel art, not cropping.
     const uint32_t canvas_caps = MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT;
     const int MAX_CELL_NO_PSRAM = 10;  // 10*20=200; 200*200*2=78 KB
     if (cell > MAX_CELL_NO_PSRAM) cell = MAX_CELL_NO_PSRAM;

@@ -24,7 +24,7 @@ LV_FONT_DECLARE(font_mono_18);
 // Layout values computed from the active board's geometry. Populated once
 // in ui_init() and treated as const for the rest of the program. Adding a
 // new display size means extending compute_layout() with another
-// breakpoint — never editing the screen-builder functions below.
+// breakpoint; never edit the screen-builder functions below.
 struct Layout {
     int16_t scr_w, scr_h;
     int16_t margin;
@@ -62,7 +62,7 @@ static Layout L = {};
 
 // Pick layout values from the active board's pixel dimensions. The two
 // existing boards happen to land on the two breakpoints below; new ports
-// inherit the closer one — visually OK, may need a polish pass for
+// inherit the closer one. It may need a polish pass for
 // pixel-perfect alignment but never blocks the port from booting.
 static void compute_layout(const BoardCaps& c) {
     L.scr_w = c.width;
@@ -75,7 +75,7 @@ static void compute_layout(const BoardCaps& c) {
     L.show_logo = true;
 
     if (c.height >= 460) {
-        // Large layout — tuned for 480x480 (AMOLED-2.16).
+        // Large layout, tuned for 480x480 (AMOLED-2.16).
         L.content_y = 100;
         L.usage_panel_h = 150;
         L.usage_panel_gap = 16;
@@ -96,7 +96,7 @@ static void compute_layout(const BoardCaps& c) {
         L.bt_credit_1_font = &font_styrene_24;
         L.bt_credit_2_font = &font_styrene_20;
     } else if (c.width >= 300 && c.height <= 260) {
-        // Tiny landscape layout — tuned for 320x240 CYD.
+        // Tiny landscape layout, tuned for 320x240 CYD.
         L.margin = 16;
         L.title_y = 12;
         L.title_x_offset = 0;
@@ -123,7 +123,7 @@ static void compute_layout(const BoardCaps& c) {
         L.bt_credit_1_font = &font_styrene_14;
         L.bt_credit_2_font = &font_styrene_12;
     } else if (c.width <= 260 && c.height <= 340) {
-        // Tiny portrait layout — tuned for 240x320 CYD.
+        // Tiny portrait layout, tuned for 240x320 CYD.
         L.margin = 20;
         L.title_y = 18;
         L.title_x_offset = 0;
@@ -150,7 +150,7 @@ static void compute_layout(const BoardCaps& c) {
         L.bt_credit_1_font = &font_styrene_14;
         L.bt_credit_2_font = &font_styrene_14;
     } else {
-        // Compact layout — tuned for 368x448 (AMOLED-1.8).
+        // Compact layout, tuned for 368x448 (AMOLED-1.8).
         L.content_y = 85;
         L.usage_panel_h = 130;
         L.usage_panel_gap = 12;
@@ -258,7 +258,9 @@ static lv_obj_t* settings_container;
 static lv_obj_t* lbl_metric_value;
 static lv_obj_t* lbl_theme_value;
 static lv_obj_t* lbl_accent_value;
-static lv_obj_t* lbl_bluetooth_value;
+static lv_obj_t* lbl_night_value;
+static lv_obj_t* lbl_night_start_value;
+static lv_obj_t* lbl_night_end_value;
 static lv_obj_t* lbl_settings_note;
 
 // ---- Battery indicator (shared, on top) ----
@@ -386,7 +388,7 @@ static lv_color_t display_pct_color(float shown_pct) {
 
 static const char* metric_label(void) {
     return (settings_display_metric() == DISPLAY_METRIC_USAGE)
-               ? "Usage"
+               ? "Left"
                : "Used";
 }
 
@@ -402,14 +404,29 @@ static const char* accent_label(void) {
                : "Codex";
 }
 
+static void format_time_label(uint16_t minutes, char* buf, size_t len) {
+    snprintf(buf, len, "%02u:%02u", minutes / 60, minutes % 60);
+}
+
 static void refresh_settings_labels(void) {
     const char* label = metric_label();
     if (lbl_title) lv_label_set_text(lbl_title, label);
     if (lbl_metric_value) lv_label_set_text(lbl_metric_value, label);
     if (lbl_theme_value) lv_label_set_text(lbl_theme_value, theme_label());
     if (lbl_accent_value) lv_label_set_text(lbl_accent_value, accent_label());
-    if (lbl_bluetooth_value) lv_label_set_text(lbl_bluetooth_value, "Open");
-    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BACK exits");
+    if (lbl_night_value) {
+        lv_label_set_text(lbl_night_value, settings_night_enabled() ? "On" : "Off");
+    }
+    char time_buf[8];
+    if (lbl_night_start_value) {
+        format_time_label(settings_night_start_min(), time_buf, sizeof(time_buf));
+        lv_label_set_text(lbl_night_start_value, time_buf);
+    }
+    if (lbl_night_end_value) {
+        format_time_label(settings_night_end_min(), time_buf, sizeof(time_buf));
+        lv_label_set_text(lbl_night_end_value, time_buf);
+    }
+    if (lbl_settings_note) lv_label_set_text(lbl_settings_note, "BLE clock");
 }
 
 static void format_reset_time(int mins, char* buf, size_t len) {
@@ -424,14 +441,16 @@ static void format_reset_time(int mins, char* buf, size_t len) {
     }
 }
 
-// Forward decls — callbacks defined near ui_show_screen below
+// Forward decls; callbacks are defined near ui_show_screen below.
 static void global_click_cb(lv_event_t* e);
 static void logo_click_cb(lv_event_t* e);
 static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
 static void settings_accent_click_cb(lv_event_t* e);
-static void settings_bluetooth_click_cb(lv_event_t* e);
+static void settings_night_click_cb(lv_event_t* e);
+static void settings_night_start_click_cb(lv_event_t* e);
+static void settings_night_end_click_cb(lv_event_t* e);
 static void settings_button_click_cb(lv_event_t* e);
 static void settings_back_click_cb(lv_event_t* e);
 static void apply_theme_styles(void);
@@ -739,20 +758,26 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 // ======== Settings Screen ========
 
 static int settings_card_h(void) {
-    if (L.scr_h <= 260) return 36;
-    if (L.scr_h <= 340) return 48;
-    return 70;
+    if (L.scr_h <= 260) return 28;
+    if (L.scr_h <= 340) return 33;
+    return 50;
 }
 
 static int settings_card_gap(void) {
-    return (L.scr_h <= 260) ? 6 : 8;
+    if (L.scr_h <= 260) return 3;
+    if (L.scr_h <= 340) return 5;
+    return 8;
+}
+
+static int settings_base_y(void) {
+    return (L.scr_h <= 260) ? 52 : L.content_y;
 }
 
 static lv_obj_t* make_settings_card(lv_obj_t* parent, int index, const char* name,
                                     lv_obj_t** out_value,
                                     lv_event_cb_t cb) {
     int h = settings_card_h();
-    int y = L.content_y + index * (h + settings_card_gap());
+    int y = settings_base_y() + index * (h + settings_card_gap());
     lv_obj_t* panel = make_panel(parent, L.margin, y, L.content_w, h);
     lv_obj_clear_flag(panel, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_flag(panel, LV_OBJ_FLAG_CLICKABLE);
@@ -806,8 +831,12 @@ static void init_settings_screen(lv_obj_t* scr) {
                        settings_theme_click_cb);
     make_settings_card(settings_container, 2, "Accent", &lbl_accent_value,
                        settings_accent_click_cb);
-    make_settings_card(settings_container, 3, "Bluetooth", &lbl_bluetooth_value,
-                       settings_bluetooth_click_cb);
+    make_settings_card(settings_container, 3, "Night", &lbl_night_value,
+                       settings_night_click_cb);
+    make_settings_card(settings_container, 4, "Start", &lbl_night_start_value,
+                       settings_night_start_click_cb);
+    make_settings_card(settings_container, 5, "End", &lbl_night_end_value,
+                       settings_night_end_click_cb);
 
     lbl_settings_note = lv_label_create(settings_container);
     lv_label_set_text(lbl_settings_note, "BACK exits");
@@ -818,6 +847,7 @@ static void init_settings_screen(lv_obj_t* scr) {
     lv_label_set_long_mode(lbl_settings_note, LV_LABEL_LONG_CLIP);
     lv_obj_align(lbl_settings_note, LV_ALIGN_BOTTOM_MID, 0, -L.spinner_bottom);
     register_dim(lbl_settings_note);
+    if (L.scr_h <= 260) lv_obj_add_flag(lbl_settings_note, LV_OBJ_FLAG_HIDDEN);
 
     refresh_settings_labels();
     lv_obj_add_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
@@ -875,6 +905,10 @@ static void apply_theme_styles(void) {
 }
 
 // ======== Public API ========
+
+void ui_refresh_settings(void) {
+    apply_theme_styles();
+}
 
 void ui_init(void) {
     compute_layout(board_caps());
@@ -1044,9 +1078,26 @@ static void settings_accent_click_cb(lv_event_t* e) {
     apply_theme_styles();
 }
 
-static void settings_bluetooth_click_cb(lv_event_t* e) {
+static uint16_t add_one_hour(uint16_t minutes) {
+    return (uint16_t)((minutes + 60) % 1440);
+}
+
+static void settings_night_click_cb(lv_event_t* e) {
     (void)e;
-    ui_show_screen(SCREEN_BLUETOOTH);
+    settings_set_night_enabled(!settings_night_enabled());
+    refresh_settings_labels();
+}
+
+static void settings_night_start_click_cb(lv_event_t* e) {
+    (void)e;
+    settings_set_night_start_min(add_one_hour(settings_night_start_min()));
+    refresh_settings_labels();
+}
+
+static void settings_night_end_click_cb(lv_event_t* e) {
+    (void)e;
+    settings_set_night_end_min(add_one_hour(settings_night_end_min()));
+    refresh_settings_labels();
 }
 
 static void settings_button_click_cb(lv_event_t* e) {

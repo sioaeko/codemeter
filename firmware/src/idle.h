@@ -1,12 +1,14 @@
 #pragma once
 #include <stdbool.h>
+#include <stdint.h>
 
 void idle_init(void);
 void idle_tick(void);
 void idle_note_activity(void);
+void idle_set_forced_sleep(bool forced, uint32_t wake_ms);
 
 // Returns true if this press was consumed as a wake-up (caller MUST skip the
-// button's normal action). Returns false when already awake — also notes the
+// button's normal action). Returns false when already awake; also notes the
 // activity, so callers don't need a separate idle_note_activity() call.
 bool idle_consume_wake_press(void);
 
@@ -14,3 +16,4 @@ bool idle_consume_wake_press(void);
 // sleeves, etc.). Callers use this to silently drop touch events while the
 // panel is dark.
 bool idle_is_asleep(void);
+bool idle_forced_sleep_active(void);

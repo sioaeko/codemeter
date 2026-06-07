@@ -196,6 +196,8 @@ poll() {
     token=$(read_token) || { log "Error: could not read token"; return 1; }
     local now
     now=$(date +%s)
+    local local_min
+    local_min=$((10#$(date +%H) * 60 + 10#$(date +%M)))
 
     local headers
     headers=$(curl -s -D - -o /dev/null \
@@ -222,13 +224,13 @@ poll() {
     status=${status:-unknown}
 
     local payload
-    payload=$(awk -v u5="$s5h_util" -v r5="$s5h_reset" -v u7="$s7d_util" -v r7="$s7d_reset" -v st="$status" -v now="$now" \
+    payload=$(awk -v u5="$s5h_util" -v r5="$s5h_reset" -v u7="$s7d_util" -v r7="$s7d_reset" -v st="$status" -v now="$now" -v lm="$local_min" \
         'BEGIN {
             sp = sprintf("%.0f", u5 * 100);
             sr = (r5 - now) / 60; sr = sr > 0 ? sprintf("%.0f", sr) : 0;
             wp = sprintf("%.0f", u7 * 100);
             wr = (r7 - now) / 60; wr = wr > 0 ? sprintf("%.0f", wr) : 0;
-            printf "{\"s\":%s,\"sr\":%s,\"w\":%s,\"wr\":%s,\"st\":\"%s\",\"ok\":true}", sp, sr, wp, wr, st;
+            printf "{\"s\":%s,\"sr\":%s,\"w\":%s,\"wr\":%s,\"now\":%s,\"st\":\"%s\",\"ok\":true}", sp, sr, wp, wr, lm, st;
         }')
 
     log "Sending: $payload"

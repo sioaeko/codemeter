@@ -1,6 +1,6 @@
 {
   "name": "Clawdmeter-CYD",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "new_install_prompt_erase": true,
   "builds": [
     {

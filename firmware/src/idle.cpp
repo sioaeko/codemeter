@@ -17,6 +17,9 @@ static uint32_t fade_started_ms  = 0;
 static uint32_t fade_last_step_ms = 0;
 static uint8_t  fade_from = DISPLAY_DEFAULT_BRIGHTNESS;
 static uint8_t  fade_to   = 0;
+static bool     forced_sleep = false;
+static uint32_t forced_wake_ms = 5UL * 60UL * 1000UL;
+static uint32_t forced_wake_until_ms = 0;
 
 static void apply_brightness(uint8_t b) {
     display_hal_set_brightness(b);
@@ -27,6 +30,16 @@ static void begin_fade(uint8_t to, uint32_t now) {
     fade_to   = to;
     fade_started_ms = now;
     fade_last_step_ms = now;
+}
+
+static bool time_reached(uint32_t now, uint32_t target) {
+    return (int32_t)(now - target) >= 0;
+}
+
+static bool forced_sleep_should_apply(uint32_t now) {
+    if (!forced_sleep) return false;
+    if (forced_wake_until_ms == 0) return true;
+    return time_reached(now, forced_wake_until_ms);
 }
 
 void idle_init(void) {
@@ -45,16 +58,40 @@ void idle_note_activity(void) {
     state = STATE_FADING_IN;
 }
 
+void idle_set_forced_sleep(bool forced, uint32_t wake_ms) {
+    if (wake_ms < 1000UL) wake_ms = 1000UL;
+    if (wake_ms > 60UL * 60UL * 1000UL) wake_ms = 60UL * 60UL * 1000UL;
+    forced_wake_ms = wake_ms;
+
+    if (forced) {
+        forced_sleep = true;
+        return;
+    }
+
+    bool was_forced = forced_sleep;
+    forced_sleep = false;
+    forced_wake_until_ms = 0;
+    if (was_forced && (state == STATE_ASLEEP || state == STATE_FADING_OUT)) {
+        uint32_t now = millis();
+        last_activity_ms = now;
+        begin_fade(DISPLAY_DEFAULT_BRIGHTNESS, now);
+        state = STATE_FADING_IN;
+    }
+}
+
 bool idle_consume_wake_press(void) {
     if (state == STATE_ASLEEP || state == STATE_FADING_OUT) {
         uint32_t now = millis();
         last_activity_ms = now;
+        if (forced_sleep) {
+            forced_wake_until_ms = now + forced_wake_ms;
+        }
         begin_fade(DISPLAY_DEFAULT_BRIGHTNESS, now);
         state = STATE_FADING_IN;
         return true;
     }
     if (state == STATE_FADING_IN) {
-        // Mid-wake — still swallow this press; the user shouldn't get a
+        // Mid-wake: still swallow this press; the user shouldn't get a
         // half-wake half-action surprise.
         last_activity_ms = millis();
         return true;
@@ -67,12 +104,24 @@ bool idle_is_asleep(void) {
     return state == STATE_ASLEEP || state == STATE_FADING_OUT;
 }
 
+bool idle_forced_sleep_active(void) {
+    return forced_sleep_should_apply(millis());
+}
+
 void idle_tick(void) {
     uint32_t now = millis();
+    bool forced_now = forced_sleep_should_apply(now);
 
-    // While on USB power (if configured), don't sleep — and wake from sleep
+    if (forced_now) {
+        if (state == STATE_AWAKE || state == STATE_FADING_IN) {
+            begin_fade(0, now);
+            state = STATE_FADING_OUT;
+        }
+    }
+
+    // While on USB power (if configured), don't sleep, and wake from sleep
     // when power comes back. Treats USB-in as continuous activity.
-    if (!IDLE_SLEEP_WHEN_CHARGING && power_hal_is_vbus_in()) {
+    if (!forced_now && !IDLE_SLEEP_WHEN_CHARGING && power_hal_is_vbus_in()) {
         last_activity_ms = now;
         if (state == STATE_ASLEEP || state == STATE_FADING_OUT) {
             begin_fade(DISPLAY_DEFAULT_BRIGHTNESS, now);
@@ -82,7 +131,7 @@ void idle_tick(void) {
 
     switch (state) {
     case STATE_AWAKE:
-        if (now - last_activity_ms >= IDLE_TIMEOUT_MS) {
+        if (!forced_now && now - last_activity_ms >= IDLE_TIMEOUT_MS) {
             begin_fade(0, now);
             state = STATE_FADING_OUT;
         }

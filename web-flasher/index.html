@@ -514,6 +514,28 @@
         font-size: 13px;
       }
 
+      .boot-help {
+        margin-top: 14px;
+        border: 1px solid #ecd486;
+        border-radius: var(--radius);
+        background: var(--warning-bg);
+        color: var(--warning-text);
+        padding: 13px 14px;
+      }
+
+      .boot-help strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+        font-size: 13px;
+      }
+
+      .boot-help p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
       .daemon {
         border-top: 1px solid var(--hairline);
         padding: 34px 0;
@@ -900,7 +922,7 @@
                   <div class="preview-screen">
                     <img
                       data-preview-image
-                      src="previews/cyd_2432s028r/portrait_splash.svg?v=0.3.9"
+                      src="previews/cyd_2432s028r/portrait_splash.svg?v=0.3.18"
                       alt="Clawdmeter-CYD portrait firmware preview"
                       data-i18n-alt="previewImageAlt"
                     />
@@ -958,7 +980,7 @@
                     보드 방향을 고른 뒤 Install을 누르세요.
                   </p>
                 </div>
-                <span class="version-pill">v0.3.17</span>
+                <span class="version-pill">v0.3.18</span>
               </div>
 
               <div
@@ -1059,6 +1081,13 @@
                 설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를
                 누른 채 다시 연결해보세요.
               </p>
+              <div class="boot-help">
+                <strong data-i18n="bootHelpTitle">초기화 실패 시</strong>
+                <p data-i18n="bootHelpCopy">
+                  BOOT 버튼을 누른 채 Install을 누르고 포트 선택까지 유지하세요.
+                  Erasing 또는 Installing이 뜨면 BOOT에서 손을 떼면 됩니다.
+                </p>
+              </div>
             </section>
           </div>
         </section>
@@ -1248,7 +1277,7 @@ py -3 -m venv daemon\.venv
           buyCyd: "CYD 구매하기",
           eyebrow: "CYD 펌웨어 설치",
           lede:
-            "Clawdmeter 기반 CYD 펌웨어입니다. Claude Code와 Codex 사용량 표시를 모두 지원합니다.",
+            "Clawdmeter 기반 CYD 펌웨어입니다. Claude Code와 Codex 사용량 표시를 모두 지원하며, Night Mode는 보드 Settings에서 조절합니다.",
           requirementsAria: "설치 조건",
           reqBoard: "CYD 보드",
           reqCable: "USB 데이터 케이블",
@@ -1271,7 +1300,10 @@ py -3 -m venv daemon\.venv
           unsupported: "Web Serial을 지원하는 브라우저에서 열어주세요.",
           notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
           panelNote:
-            "설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를 누른 채 다시 연결해보세요.",
+            "설치 중에는 USB를 분리하지 마세요. Wi-Fi/AP 설정은 없고 Night Mode는 보드 Settings에서 저장됩니다.",
+          bootHelpTitle: "초기화 실패 시",
+          bootHelpCopy:
+            "BOOT 버튼을 누른 채 Install을 누르고 포트 선택까지 유지하세요. Erasing 또는 Installing이 뜨면 BOOT에서 손을 떼면 됩니다.",
           daemonAria: "데몬 설치",
           daemonEyebrow: "Desktop daemon",
           daemonTitle: "데몬 설치",
@@ -1309,7 +1341,7 @@ py -3 -m venv daemon\.venv
           buyCyd: "Buy CYD",
           eyebrow: "CYD firmware installer",
           lede:
-            "CYD firmware based on Clawdmeter, with Claude Code and Codex usage display support.",
+            "CYD firmware based on Clawdmeter, with Claude Code and Codex usage display support. Night Mode is adjusted on the board Settings screen.",
           requirementsAria: "Install requirements",
           reqBoard: "CYD board",
           reqCable: "USB data cable",
@@ -1332,7 +1364,10 @@ py -3 -m venv daemon\.venv
           unsupported: "Open this page in a browser that supports Web Serial.",
           notAllowed: "Web Serial only works on HTTPS or localhost.",
           panelNote:
-            "Keep USB connected while flashing. If the port does not appear, reconnect while holding BOOT.",
+            "Keep USB connected while flashing. There is no Wi-Fi/AP setup; Night Mode is saved on the board Settings screen.",
+          bootHelpTitle: "If initialization fails",
+          bootHelpCopy:
+            "Hold BOOT, press Install, and keep holding BOOT through port selection. Release BOOT once Erasing or Installing appears.",
           daemonAria: "Daemon install",
           daemonEyebrow: "Desktop daemon",
           daemonTitle: "Install the daemon",
@@ -1402,7 +1437,7 @@ py -3 -m venv daemon\.venv
       const daemonCards = document.querySelectorAll("[data-daemon-card]");
       const preview = document.querySelector("[data-orientation]");
       const previewImage = document.querySelector("[data-preview-image]");
-      const assetVersion = "0.3.17";
+      const assetVersion = "0.3.18";
 
       const previewSources = {
         portrait: ["splash", "usage", "settings", "bluetooth"],

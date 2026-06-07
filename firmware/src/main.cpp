@@ -11,6 +11,7 @@
 #include "usage_rate.h"
 #include "idle.h"
 #include "idle_cfg.h"
+#include "settings.h"
 
 #include "hal/board_caps.h"
 #include "hal/display_hal.h"
@@ -22,18 +23,21 @@
 static UsageData usage = {};
 static uint32_t boot_splash_started_ms = 0;
 static bool pending_first_usage_screen = false;
+static int night_clock_min = -1;
+static uint32_t night_clock_updated_ms = 0;
+static bool last_night_active = false;
 
 #define BOOT_SPLASH_MIN_MS 3500
 
 // ---- LVGL draw buffers (partial render mode) ----
 // PSRAM-equipped boards (S3) can comfortably hold larger strips. PSRAM-free
-// boards (e.g. ESP32-C6) allocate from internal SRAM, so we shrink the strip
-// — 480×20 RGB565 = 19 KB × 2 buffers = 38 KB, fits beside everything else.
+// boards (e.g. ESP32-C6/CYD) allocate from internal SRAM, so we shrink the
+// strip. At CYD width, 320x6 RGB565 x 2 buffers is about 7.5 KB.
 #ifdef BOARD_HAS_PSRAM
 #define BUF_LINES 40
 #define LV_BUF_CAPS (MALLOC_CAP_SPIRAM)
 #else
-#define BUF_LINES 20
+#define BUF_LINES 6
 #define LV_BUF_CAPS (MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT)
 #endif
 static uint16_t* buf1 = nullptr;
@@ -54,12 +58,12 @@ static void rounder_cb(lv_event_t* e) {
 }
 
 // Touch policy is driven by IDLE_WAKE_ON_TOUCH:
-//   true  → a press edge while asleep wakes the device and the first touch is
+//   true  - a press edge while asleep wakes the device and the first touch is
 //           swallowed (mirrors the button wake-consumption); a press while
 //           awake counts as activity.
-//   false → touch never counts as activity and is fully swallowed while the
-//           panel is dark, so pets/sleeves can't wake it overnight and LVGL
-//           can't quietly toggle splash<->usage on a black panel.
+//   false - touch never counts as activity and is fully swallowed while the
+//           panel is dark, so accidental contact cannot wake it overnight and
+//           LVGL cannot quietly toggle splash/usage on a black panel.
 static void my_touch_cb(lv_indev_t* indev, lv_indev_data_t* data) {
     uint16_t x, y;
     bool pressed;
@@ -70,7 +74,7 @@ static void my_touch_cb(lv_indev_t* indev, lv_indev_data_t* data) {
         static bool touch_was = false;
         static bool touch_wake_swallowed = false;
         if (raw_pressed && !touch_was) {
-            // Press edge — consume as wake if asleep.
+            // Press edge: consume as wake if asleep.
             if (idle_consume_wake_press()) {
                 touch_wake_swallowed = true;
                 pressed = false;
@@ -82,7 +86,7 @@ static void my_touch_cb(lv_indev_t* indev, lv_indev_data_t* data) {
                 pressed = false;
             }
         } else if (raw_pressed && touch_wake_swallowed) {
-            // Held finger through wake — keep hiding until release.
+            // Held finger through wake: keep hiding until release.
             pressed = false;
         }
         touch_was = raw_pressed;
@@ -112,10 +116,38 @@ static bool parse_json(const char* json, UsageData* out) {
     out->session_reset_mins = doc["sr"] | -1;
     out->weekly_pct = doc["w"] | 0.0f;
     out->weekly_reset_mins = doc["wr"] | -1;
+    out->local_min = doc["now"] | -1;
     strlcpy(out->status, doc["st"] | "unknown", sizeof(out->status));
     out->ok = doc["ok"] | false;
     out->valid = true;
     return true;
+}
+
+static bool night_current_min(uint16_t* out_min) {
+    if (!out_min || night_clock_min < 0 || night_clock_min >= 1440) return false;
+    uint32_t elapsed_min = (millis() - night_clock_updated_ms) / 60000UL;
+    *out_min = (uint16_t)((night_clock_min + elapsed_min) % 1440);
+    return true;
+}
+
+static bool night_schedule_active(uint16_t now_min) {
+    if (!settings_night_enabled()) return false;
+    uint16_t start = settings_night_start_min();
+    uint16_t end = settings_night_end_min();
+    if (start == end) return false;
+    if (start < end) return now_min >= start && now_min < end;
+    return now_min >= start || now_min < end;
+}
+
+static void night_mode_tick(void) {
+    uint16_t now_min = 0;
+    bool active = night_current_min(&now_min) && night_schedule_active(now_min);
+    uint32_t wake_ms = (uint32_t)settings_night_wake_minutes() * 60UL * 1000UL;
+    idle_set_forced_sleep(active, wake_ms);
+    if (active != last_night_active) {
+        Serial.printf("Night Mode %s\n", active ? "active" : "inactive");
+        last_night_active = active;
+    }
 }
 
 // ---- Serial command buffer ----
@@ -126,7 +158,7 @@ static int cmd_pos = 0;
 static void send_screenshot() {
 #ifndef BOARD_HAS_PSRAM
     // A full RGB565 framebuffer doesn't fit in internal SRAM on PSRAM-free
-    // boards (e.g. 480×480×2 = 460 KB). Capture is unsupported there.
+    // boards (e.g. 480x480x2 = 460 KB). Capture is unsupported there.
     Serial.println("SCREENSHOT_UNSUPPORTED");
     return;
 #else
@@ -233,21 +265,22 @@ static ble_state_t last_ble_state = BLE_STATE_INIT;
 
 void loop() {
     idle_tick();
+    night_mode_tick();
     lv_timer_handler();
     ui_tick_anim();
     ble_tick();
     power_hal_tick();
     imu_hal_tick();
     splash_tick();
-    // Rotation transition (blank + ramp) would fight the idle fade — skip
+    // Rotation transition (blank + ramp) would fight the idle fade, so skip
     // ticks while the panel is dark. A rotation that happens during sleep
     // is detected by the next tick after wake and ramped in then.
     if (!idle_is_asleep()) display_hal_tick();
 
     // ---- Physical buttons ----
-    //   PRIMARY   → HID Space  (Claude Code voice-mode PTT)
-    //   SECONDARY → HID Shift+Tab  (mode toggle; only if the board has one)
-    //   PWR       → cycle screens; touch the splash to cycle animations
+    //   PRIMARY   -> HID Space  (Claude Code voice-mode PTT)
+    //   SECONDARY -> HID Shift+Tab  (mode toggle; only if the board has one)
+    //   PWR       -> cycle screens; touch the splash to cycle animations
     // First press from sleep is consumed as a wake-only event by
     // idle_consume_wake_press(); the normal action fires from the second
     // press. Activity bookkeeping happens inside idle_consume_wake_press
@@ -322,6 +355,10 @@ void loop() {
     if (ble_has_data()) {
         bool first_usage_payload = !usage.valid;
         if (parse_json(ble_get_data(), &usage)) {
+            if (usage.local_min >= 0 && usage.local_min < 1440) {
+                night_clock_min = usage.local_min;
+                night_clock_updated_ms = millis();
+            }
             int g_before = usage_rate_group();
             usage_rate_sample(usage.session_pct);
             int g_after = usage_rate_group();

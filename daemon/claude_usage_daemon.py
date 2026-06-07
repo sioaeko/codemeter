@@ -56,6 +56,11 @@ def log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
+def local_minute() -> int:
+    now = time.localtime()
+    return now.tm_hour * 60 + now.tm_min
+
+
 def _extract_access_token(blob: str) -> str | None:
     """Pull the accessToken out of a credentials blob.
 
@@ -310,6 +315,7 @@ async def poll_api(token: str) -> dict | None:
         "sr": reset_minutes(hdr("anthropic-ratelimit-unified-5h-reset")),
         "w": pct(hdr("anthropic-ratelimit-unified-7d-utilization")),
         "wr": reset_minutes(hdr("anthropic-ratelimit-unified-7d-reset")),
+        "now": local_minute(),
         "st": hdr("anthropic-ratelimit-unified-5h-status", "unknown"),
         "ok": True,
     }

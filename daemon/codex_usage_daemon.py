@@ -42,6 +42,11 @@ def log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
+def local_minute() -> int:
+    now = time.localtime()
+    return now.tm_hour * 60 + now.tm_min
+
+
 def read_auth() -> dict[str, Any] | None:
     try:
         return json.loads(AUTH_PATH.read_text())
@@ -138,12 +143,12 @@ def used_percent(window: dict[str, Any] | None) -> float:
 async def fetch_usage() -> dict[str, Any]:
     auth = read_auth()
     if not auth:
-        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "st": "auth", "ok": False}
+        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "now": local_minute(), "st": "auth", "ok": False}
 
     tokens = auth.get("tokens") or {}
     access = tokens.get("access_token")
     if not access:
-        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "st": "auth", "ok": False}
+        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "now": local_minute(), "st": "auth", "ok": False}
 
     if token_expires_soon(access):
         if await refresh_token(auth):
@@ -171,7 +176,7 @@ async def fetch_usage() -> dict[str, Any]:
 
     if resp.status_code >= 400:
         log(f"Usage poll failed: HTTP {resp.status_code}")
-        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "st": "error", "ok": False}
+        return {"s": 0, "sr": -1, "w": 0, "wr": -1, "now": local_minute(), "st": "error", "ok": False}
 
     data = resp.json()
     rate = data.get("rate_limit") or {}
@@ -184,6 +189,7 @@ async def fetch_usage() -> dict[str, Any]:
         "sr": reset_minutes(primary),
         "w": used_percent(secondary),
         "wr": reset_minutes(secondary),
+        "now": local_minute(),
         "st": "allowed" if allowed else "limited",
         "ok": True,
     }

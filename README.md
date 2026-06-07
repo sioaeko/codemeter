@@ -1,108 +1,108 @@
 # Clawdmeter-CYD
 
-Cheap Yellow Display `ESP32-2432S028R`용 Clawdmeter fork입니다. Claude Code와
-Codex 사용량 표시를 모두 지원합니다.
-
-## 미리보기
+`ESP32-2432S028R` Cheap Yellow Display 보드에서 Claude Code 또는 Codex 사용량을 보여주는 Clawdmeter fork입니다.
 
 ![CYD UI preview](screenshots/cyd_2432s028r/preview.svg)
 
 ## 바로 설치
 
-**웹 설치:** [https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/)
-
-루트 주소도 바로 설치 페이지로 이동합니다:
-[https://sioaeko.github.io/clawdmeter-cyd/](https://sioaeko.github.io/clawdmeter-cyd/)
-
-Web Serial 지원 브라우저에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다.
-
-## 이 fork에서 바뀐 것
-
-이 저장소는 [HermannBjorgvin/Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter)를
-Codex + CYD 보드용으로 개조한 fork입니다.
-
-- CYD `ESP32-2432S028R` 보드 포트 추가
-- PlatformIO env `cyd_2432s028r` 추가
-- BLE 장치명 `Claude Controller`
-- Clawdmeter-CYD 전용 BLE UUID 사용
-- 240x320 세로 화면용 compact UI
-- 320x240 가로 화면용 firmware env와 웹 플래셔 옵션
-- 펌웨어 안에서 `Used` / `Usage` 표시 기준 전환 가능
-- CYD 색감 보정을 위한 LCD inversion / red-blue swap 훅
-- Codex / Claude Code 사용량 daemon 지원
-- macOS LaunchAgent installer 추가
-- GitHub Pages용 ESP Web Tools flasher 추가
-
-## 사용 순서
-
-### 1. 펌웨어 굽기
-
-웹 플래셔를 엽니다.
-
+웹 플래셔:
 [https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/)
 
-CYD를 USB로 연결한 뒤 원하는 방향의 버튼을 누르고 USB Serial 포트를 선택하세요.
-보드가 플래시 모드로 안 들어가면 `BOOT` 버튼을 누른 채 다시 시도하면 됩니다.
+루트 주소도 웹 플래셔로 이동합니다:
+[https://sioaeko.github.io/clawdmeter-cyd/](https://sioaeko.github.io/clawdmeter-cyd/)
+
+Chrome 또는 Edge에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다. Web Serial은 HTTPS 또는 `localhost`에서만 동작합니다.
+
+## 핵심 기능
+
+- CYD `ESP32-2432S028R` 보드용 펌웨어
+- Portrait `240x320`, Landscape `320x240` 빌드
+- Codex / Claude Code 사용량 BLE 표시
+- 사용량 기준 `Used` 또는 남은량 기준 `Left` 표시 전환
+- 보드 Settings 화면에서 표시 기준/테마/accent/Night Mode 설정
+- Night Mode: 지정 시간 동안 화면 완전 꺼짐, 터치 시 임시 wake
+- macOS LaunchAgent installer
+- Windows 수동 daemon 실행 지원
+- GitHub Pages용 ESP Web Tools flasher
+
+## 펌웨어 설치
+
+웹 플래셔에서 원하는 방향을 고릅니다.
 
 - **Portrait**: 240x320 세로 화면
 - **Landscape**: 320x240 가로 화면
 
-설치 후 첫 사용량 데이터가 들어오면 `Splash` 화면에서 `Usage` 화면으로 자동 전환됩니다.
-`Usage` 또는 `Bluetooth` 화면에서 좌상단 Claude 아이콘을 터치하면 다시 `Splash`
-화면을 볼 수 있고, `Splash` 화면을 터치하면 `Usage` 화면으로 돌아옵니다.
-`Settings` 화면에서 표시 카드를 터치하면 `Used`와 `Usage` 표시 기준이 전환되고,
-설정은 보드 안에 저장됩니다. `Used`는 사용한 비율, `Usage`는 남은 사용 가능 비율입니다.
+CLI로 플래시하려면:
 
-### 2. Bluetooth 페어링
+```bash
+./flash-mac.sh cyd_2432s028r
+./flash-mac.sh cyd_2432s028r_landscape
+```
 
-펌웨어 설치 후 보드를 켜고 컴퓨터에서 Bluetooth 장치를 찾습니다.
+펌웨어를 새로 빌드한 뒤 웹 플래셔 바이너리를 갱신하려면:
+
+```bash
+./tools/update_web_flasher.sh
+```
+
+## 보드 Settings
+
+이 펌웨어는 Wi-Fi/AP 웹 포털을 사용하지 않습니다. 설정은 보드의 `Settings` 화면에 저장됩니다.
+
+Settings에서 바꿀 수 있는 것:
+
+- 표시 기준: 사용한 비율 `Used` 또는 남은 비율 `Left`
+- 화면 테마와 Claude/Codex accent
+- Night Mode 켜기/끄기
+- Night Mode 시작/종료 시간
+
+Night Mode는 데스크톱 daemon이 Bluetooth payload에 같이 보내는 현지 시각을 기준으로 동작합니다. 부팅 직후 첫 사용량 payload를 받기 전에는 스케줄이 적용되지 않습니다. 기본값은 `23:00`부터 `07:00`까지이며, Night Mode 중 화면을 터치하면 기본 5분 동안 다시 켜집니다.
+
+## 보드 조작
+
+- `Usage` 화면: 사용량 표시
+- `Bluetooth` 화면: BLE 상태 표시
+- `Settings` 화면: 표시 기준/테마/accent/Night Mode 전환
+- `Splash` 화면: Claude 애니메이션
+- BOOT/GPIO0 버튼: 화면 전환
+- Usage/Bluetooth 좌상단 아이콘 터치: Splash로 이동
+- Splash 터치: Usage로 복귀
+
+`Used`는 사용한 비율이고, `Left`는 남은 사용 가능 비율입니다. 설정은 ESP32 NVS에 저장되어 재부팅 후에도 유지됩니다.
+
+## Bluetooth 페어링
+
+컴퓨터에서 아래 BLE 장치를 찾습니다.
 
 ```text
 Claude Controller
 ```
 
-Windows와 Mac mini를 같이 쓴다면 **Mac mini에만 페어링**하는 구성이 가장 깔끔합니다.
-Codex 사용량은 계정 기준이라 Windows에서 Codex를 써도 Mac mini daemon이 같은 계정으로
-로그인되어 있으면 화면에 반영됩니다.
+Windows와 Mac mini를 같이 쓰는 경우에는 보드를 **Mac mini에만 페어링**하고 Mac mini에서 daemon을 상시 실행하는 구성이 가장 안정적입니다. Codex 사용량은 계정 기준이라 Windows에서 Codex를 써도 Mac mini daemon이 같은 계정으로 로그인되어 있으면 보드에 반영됩니다.
 
-### 3. Mac mini에서 daemon 실행
+Codex daemon과 Claude daemon을 동시에 같은 보드에 붙이면 Windows BLE에서 characteristic 검색이 흔들릴 수 있습니다. 한 번에 하나만 켜는 구성을 권장합니다.
 
-Codex용 daemon과 Claude Code용 daemon 중 하나를 골라 실행하세요. 둘을 동시에 켜면
-같은 `Claude Controller` 화면에 서로 번갈아 값을 써서 표시가 흔들릴 수 있습니다.
+## macOS daemon
 
-#### Codex 사용량 표시
+Codex 사용량:
 
 ```bash
 codex login
 ./install-codex-mac.sh
-```
-
-로그 확인:
-
-```bash
 tail -F ~/Library/Logs/codex-usage-daemon.out.log
 ```
 
-#### Claude Code 사용량 표시
-
-Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.
+Claude Code 사용량:
 
 ```bash
 ./install-mac.sh
-```
-
-로그 확인:
-
-```bash
 tail -F ~/Library/Logs/claude-usage-daemon.out.log
 ```
 
-## Windows에서 쓰려면
+## Windows daemon
 
-Windows도 웹 플래셔로 펌웨어 설치는 됩니다. 다만 자동 daemon 설치는 현재 macOS 중심입니다.
-daemon 수동 실행은 아래처럼 가능합니다.
-
-### Codex
+Codex:
 
 ```powershell
 codex login
@@ -111,9 +111,7 @@ py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe .\daemon\codex_usage_daemon.py
 ```
 
-### Claude Code
-
-Claude Code에 먼저 로그인한 뒤 PowerShell에서 실행합니다.
+Claude Code:
 
 ```powershell
 py -3 -m venv daemon\.venv
@@ -121,72 +119,50 @@ py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe .\daemon\claude_usage_daemon.py
 ```
 
-상시 표시용이면 Windows보다 Mac mini에 daemon을 켜두는 쪽을 추천합니다.
+상시 표시용이면 Windows보다 Mac mini에서 daemon을 켜두는 쪽이 덜 번거롭습니다.
 
-## 개발 명령
+## 개발
 
-CYD 세로 펌웨어 빌드:
+CYD 세로 빌드:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r
 ```
 
-CYD 가로 펌웨어 빌드:
+CYD 가로 빌드:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r_landscape
 ```
 
-macOS에서 CLI 플래시:
+로컬 웹 플래셔 테스트:
 
 ```bash
-./flash-mac.sh cyd_2432s028r
-./flash-mac.sh cyd_2432s028r_landscape
+python3 -m http.server 8787 --directory web-flasher
 ```
 
-펌웨어를 새로 빌드한 뒤 웹 플래셔 바이너리 갱신:
+열기:
 
-```bash
-./tools/update_web_flasher.sh
+```text
+http://localhost:8787/
 ```
 
-CYD 프리뷰 이미지 재생성:
-
-```bash
-node tools/render_cyd_previews.js
-```
-
-웹 플래셔가 사용하는 factory images:
+웹 플래셔 factory images:
 
 ```text
 web-flasher/firmware/clawdmeter-cyd_2432s028r.factory.bin
 web-flasher/firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin
 ```
 
-## 파일 구조
-
-- `firmware/src/boards/cyd_2432s028r/` - CYD 보드 포트
-- `firmware/platformio.ini` - PlatformIO env `cyd_2432s028r`,
-  `cyd_2432s028r_landscape`
-- `daemon/codex_usage_daemon.py` - Codex 사용량 BLE daemon
-- `daemon/claude_usage_daemon.py` - Claude Code 사용량 BLE daemon
-- `install-codex-mac.sh` - macOS Codex daemon 설치 스크립트
-- `install-mac.sh` - macOS Claude Code daemon 설치 스크립트
-- `web-flasher/` - GitHub Pages 웹 플래셔
-- `tools/update_web_flasher.sh` - 최신 factory binary를 웹 플래셔에 복사
-
 ## 하드웨어 메모
 
-현재 펌웨어는 흔한 CYD 보드 핀맵을 기준으로 합니다.
+기본 타깃은 흔한 CYD 보드 리비전입니다.
 
 - TFT: MISO 12, MOSI 13, SCLK 14, CS 15, DC 2, BL 21
 - Touch: IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
-- Button: BOOT/GPIO0 화면 전환
-- Display setting: 보드 Settings 화면에서 `Used` / `Usage` 전환
+- Button: BOOT/GPIO0
 
-웹 플래셔에서 세로/가로 firmware를 고를 수 있습니다. 터치가 뒤집히거나 축이 바뀌면
-아래 파일의 `TOUCH_*` 값을 조정하세요. 색이 반전되거나 빨강/파랑이 바뀌면 같은 파일의
-`LCD_INVERT_COLORS` 또는 `LCD_SWAP_RED_BLUE` 값을 조정하면 됩니다.
+터치가 뒤집히거나 축이 맞지 않으면 아래 파일의 `TOUCH_*` 값을 조정합니다. 색이 반전되거나 빨강/파랑이 바뀌면 같은 파일의 `LCD_INVERT_COLORS`, `LCD_SWAP_RED_BLUE` 값을 확인합니다.
 
 ```text
 firmware/src/boards/cyd_2432s028r/board.h
@@ -194,5 +170,4 @@ firmware/src/boards/cyd_2432s028r/board.h
 
 ## Upstream
 
-원본 프로젝트는 Clawdmeter입니다. 이 fork는 Codex 사용량과 CYD
-`ESP32-2432S028R` 보드에 맞춘 버전입니다.
+원본 프로젝트는 [HermannBjorgvin/Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter)입니다. 이 fork는 Codex 사용량과 CYD `ESP32-2432S028R` 보드에 맞춘 버전입니다.

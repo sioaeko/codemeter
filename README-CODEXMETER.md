@@ -11,7 +11,8 @@ Cheap Yellow Display / ESP32-2432S028R board.
 - Kept the upstream-compatible BLE peripheral name `Claude Controller` and
   moved the custom service to Clawdmeter-CYD UUIDs.
 - Added compact 240x320 portrait and 320x240 landscape UI layouts.
-- Added an on-device display setting for `Used` vs `Usage` quota mode.
+- Added on-device settings for `Used` vs remaining quota mode, theme, accent,
+  and Night Mode.
 - Added CYD LCD color correction hooks for inversion and red/blue swap.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json`,
   polls `https://chatgpt.com/backend-api/wham/usage`.
@@ -21,7 +22,7 @@ Cheap Yellow Display / ESP32-2432S028R board.
 Both daemons push the same compact payload shape:
 
 ```json
-{ "s": 6, "sr": 285, "w": 1, "wr": 10065, "st": "allowed", "ok": true }
+{ "s": 6, "sr": 285, "w": 1, "wr": 10065, "now": 765, "st": "allowed", "ok": true }
 ```
 
 ## Hardware Target
@@ -34,9 +35,26 @@ Default pinout is for the common ESP32-2432S028R:
   tap Splash to return to Usage
 - Button: BOOT/GPIO0 also cycles Usage/Bluetooth/Settings/Splash screens
 
-The Settings screen lets you switch the main meter between `Used` and
-`Usage`. `Used` shows consumed quota, while `Usage` shows remaining available
-quota. The selected mode is stored in ESP32 NVS and survives reboot.
+The Settings screen lets you switch the main meter between `Used` and `Left`,
+change theme/accent, and configure Night Mode. `Used` shows consumed quota,
+while `Left` shows remaining available quota. The selected mode is stored in
+ESP32 NVS and survives reboot.
+
+## Night Mode
+
+This firmware does not start a Wi-Fi access point or web portal. Night Mode is
+configured on the board's `Settings` screen:
+
+- `Night`: toggle the schedule on/off
+- `Start`: advance the start time by one hour
+- `End`: advance the end time by one hour
+
+Night Mode turns the screen backlight fully off between the configured start
+and end times. Touching the screen wakes it temporarily; the default wake
+window is 5 minutes. The schedule follows the local wall-clock minute sent by
+the desktop daemon in the `now` payload field, so no Wi-Fi or NTP setup is
+required. The schedule is inactive until the board receives its first BLE
+payload after boot.
 
 There are CYD board revisions with different routing. If display or touch is
 mirrored, start with `firmware/src/boards/cyd_2432s028r/board.h`.
