@@ -7,7 +7,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "firmware/clawdmeter-cyd_2432s028r.factory.bin",
+          "path": "firmware/codemeter_2432s028r.factory.bin",
           "offset": 0
         }
       ]

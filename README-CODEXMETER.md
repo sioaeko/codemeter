@@ -43,7 +43,7 @@ Night Mode turns the screen backlight fully off between the configured start and
 
 The easiest install path is the static ESP Web Tools page:
 
-[https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/)
+[https://sioaeko.github.io/codemeter/web-flasher/](https://sioaeko.github.io/codemeter/web-flasher/)
 
 Test locally:
 
