@@ -1,5 +1,5 @@
 #!/bin/bash
-# macOS installer for Codexmeter daemon (Python + bleak + launchd).
+# macOS installer for the CYD Usage Meter Codex daemon (Python + bleak + launchd).
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -8,13 +8,13 @@ PLIST_SRC="$SCRIPT_DIR/daemon/$SERVICE_LABEL.plist"
 PLIST_DST="$HOME/Library/LaunchAgents/$SERVICE_LABEL.plist"
 VENV_DIR="$SCRIPT_DIR/daemon/.venv"
 DAEMON_PY="$SCRIPT_DIR/daemon/codex_usage_daemon.py"
-APP_DIR="$SCRIPT_DIR/daemon/CodexmeterDaemon.app"
-APP_EXEC="$APP_DIR/Contents/MacOS/CodexmeterDaemon"
+APP_DIR="$SCRIPT_DIR/daemon/CYDUsageDaemon.app"
+APP_EXEC="$APP_DIR/Contents/MacOS/CYDUsageDaemon"
 LOG_DIR="$HOME/Library/Logs"
 LOG_OUT="$LOG_DIR/codex-usage-daemon.out.log"
 LOG_ERR="$LOG_DIR/codex-usage-daemon.err.log"
 
-echo "=== Codexmeter macOS install ==="
+echo "=== CYD Usage Meter Codex macOS install ==="
 echo ""
 
 echo "[1/6] Checking prerequisites..."
@@ -68,15 +68,15 @@ cat > "$APP_DIR/Contents/Info.plist" <<PLIST
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
-    <string>CodexmeterDaemon</string>
+    <string>CYDUsageDaemon</string>
     <key>CFBundleIdentifier</key>
-    <string>com.user.codexmeter.daemon</string>
+    <string>com.user.cyd-usage-meter.codex.daemon</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Codexmeter Daemon</string>
+    <string>CYD Usage Daemon</string>
     <key>CFBundleDisplayName</key>
-    <string>Codexmeter Daemon</string>
+    <string>CYD Usage Daemon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -95,9 +95,9 @@ cat > "$APP_DIR/Contents/Info.plist" <<PLIST
         <string>1</string>
     </dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Codexmeter sends Codex usage percentages to your paired ESP32 display over Bluetooth.</string>
+    <string>CYD Usage Daemon sends usage percentages to your paired ESP32 display over Bluetooth.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Codexmeter sends Codex usage percentages to your paired ESP32 display over Bluetooth.</string>
+    <string>CYD Usage Daemon sends usage percentages to your paired ESP32 display over Bluetooth.</string>
 </dict>
 </plist>
 PLIST
@@ -111,13 +111,13 @@ cat > "$APP_DIR/Contents/Resources/Python.app/Contents/Info.plist" <<PLIST
     <key>CFBundleExecutable</key>
     <string>Python</string>
     <key>CFBundleIdentifier</key>
-    <string>com.user.codexmeter.daemon.python</string>
+    <string>com.user.cyd-usage-meter.codex.daemon.python</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Codexmeter Daemon</string>
+    <string>CYD Usage Daemon</string>
     <key>CFBundleDisplayName</key>
-    <string>Codexmeter Daemon</string>
+    <string>CYD Usage Daemon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -136,9 +136,9 @@ cat > "$APP_DIR/Contents/Resources/Python.app/Contents/Info.plist" <<PLIST
         <string>1</string>
     </dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Codexmeter sends Codex usage percentages to your paired ESP32 display over Bluetooth.</string>
+    <string>CYD Usage Daemon sends usage percentages to your paired ESP32 display over Bluetooth.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Codexmeter sends Codex usage percentages to your paired ESP32 display over Bluetooth.</string>
+    <string>CYD Usage Daemon sends usage percentages to your paired ESP32 display over Bluetooth.</string>
 </dict>
 </plist>
 PLIST
@@ -165,7 +165,7 @@ echo ""
 
 echo "[5/6] Bluetooth permission check..."
 echo "  On first run the daemon may trigger a Bluetooth permission prompt."
-echo "  If macOS asks, allow Bluetooth for 'Codexmeter Daemon'."
+echo "  If macOS asks, allow Bluetooth for 'CYD Usage Daemon'."
 echo ""
 read -r -p "Run a permission-priming scan now? [Y/n] " ans
 if [[ ! "$ans" =~ ^[Nn]$ ]]; then
@@ -184,7 +184,7 @@ echo ""
 echo "First-time Bluetooth pairing after firmware is flashed:"
 echo "  1. Power on the device."
 echo "  2. Open System Settings > Bluetooth."
-echo "  3. Click 'Connect' next to 'Claude Controller'."
+echo "  3. Click 'Connect' next to 'CYD Usage Meter'."
 echo "  4. The daemon will discover it within about 30 seconds."
 echo ""
 echo "Useful commands:"

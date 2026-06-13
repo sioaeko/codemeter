@@ -1,25 +1,21 @@
 #include "ui.h"
 #include "splash.h"
 #include <lvgl.h>
-#include "logo.h"
-#include "logo_tiny.h"
 #include "icons.h"
 #include "icons_small.h"
 #include "hal/board_caps.h"
 #include "settings.h"
 
-// Custom fonts (scaled for 314 PPI, ~1.9x from original 165 PPI)
-LV_FONT_DECLARE(font_tiempos_56);
-LV_FONT_DECLARE(font_tiempos_34);
-LV_FONT_DECLARE(font_styrene_48);
-LV_FONT_DECLARE(font_styrene_28);
-LV_FONT_DECLARE(font_styrene_24);
-LV_FONT_DECLARE(font_styrene_20);
-LV_FONT_DECLARE(font_styrene_16);
-LV_FONT_DECLARE(font_styrene_14);
-LV_FONT_DECLARE(font_styrene_12);
-LV_FONT_DECLARE(font_mono_32);
-LV_FONT_DECLARE(font_mono_18);
+#define FONT_TITLE_LG   (&lv_font_montserrat_48)
+#define FONT_TITLE_MD   (&lv_font_montserrat_34)
+#define FONT_TEXT_48    (&lv_font_montserrat_48)
+#define FONT_TEXT_28    (&lv_font_montserrat_28)
+#define FONT_TEXT_24    (&lv_font_montserrat_24)
+#define FONT_TEXT_20    (&lv_font_montserrat_20)
+#define FONT_TEXT_18    (&lv_font_montserrat_18)
+#define FONT_TEXT_16    (&lv_font_montserrat_16)
+#define FONT_TEXT_14    (&lv_font_montserrat_14)
+#define FONT_TEXT_12    (&lv_font_montserrat_12)
 
 // Layout values computed from the active board's geometry. Populated once
 // in ui_init() and treated as const for the rest of the program. Adding a
@@ -34,8 +30,6 @@ struct Layout {
     int16_t content_w;
     int16_t panel_pad;
     int16_t panel_pad_y;
-    bool show_logo;
-
     // Usage screen
     int16_t usage_panel_h;
     int16_t usage_panel_gap;
@@ -72,8 +66,6 @@ static void compute_layout(const BoardCaps& c) {
     L.title_x_offset = 16;
     L.panel_pad = 16;
     L.panel_pad_y = 12;
-    L.show_logo = true;
-
     if (c.height >= 460) {
         // Large layout, tuned for 480x480 (AMOLED-2.16).
         L.content_y = 100;
@@ -83,18 +75,18 @@ static void compute_layout(const BoardCaps& c) {
         L.usage_bar_h = 24;
         L.usage_reset_y = 94;
         L.spinner_bottom = 15;
-        L.title_font      = &font_tiempos_56;
-        L.usage_pct_font  = &font_styrene_48;
-        L.usage_pill_font = &font_styrene_28;
-        L.usage_reset_font = &font_styrene_28;
-        L.spinner_font    = &font_mono_32;
+        L.title_font      = FONT_TITLE_LG;
+        L.usage_pct_font  = FONT_TEXT_48;
+        L.usage_pill_font = FONT_TEXT_28;
+        L.usage_reset_font = FONT_TEXT_28;
+        L.spinner_font    = FONT_TEXT_28;
         L.bt_info_panel_h = 160;
         L.bt_reset_zone_h = 110;
-        L.bt_title_font    = &font_tiempos_56;
-        L.bt_status_font   = &font_styrene_48;
-        L.bt_device_font   = &font_styrene_28;
-        L.bt_credit_1_font = &font_styrene_24;
-        L.bt_credit_2_font = &font_styrene_20;
+        L.bt_title_font    = FONT_TITLE_LG;
+        L.bt_status_font   = FONT_TEXT_48;
+        L.bt_device_font   = FONT_TEXT_28;
+        L.bt_credit_1_font = FONT_TEXT_24;
+        L.bt_credit_2_font = FONT_TEXT_20;
     } else if (c.width >= 300 && c.height <= 260) {
         // Tiny landscape layout, tuned for 320x240 CYD.
         L.margin = 16;
@@ -103,25 +95,24 @@ static void compute_layout(const BoardCaps& c) {
         L.content_y = 60;
         L.panel_pad = 10;
         L.panel_pad_y = 6;
-        L.show_logo = true;
         L.usage_panel_h = 72;
         L.usage_panel_gap = 8;
         L.usage_bar_y = 34;
         L.usage_bar_h = 12;
         L.usage_reset_y = 48;
         L.spinner_bottom = 3;
-        L.title_font      = &font_tiempos_34;
-        L.usage_pct_font  = &font_styrene_24;
-        L.usage_pill_font = &font_styrene_14;
-        L.usage_reset_font = &font_styrene_12;
-        L.spinner_font    = &font_mono_18;
+        L.title_font      = FONT_TITLE_MD;
+        L.usage_pct_font  = FONT_TEXT_24;
+        L.usage_pill_font = FONT_TEXT_14;
+        L.usage_reset_font = FONT_TEXT_12;
+        L.spinner_font    = FONT_TEXT_18;
         L.bt_info_panel_h = 92;
         L.bt_reset_zone_h = 44;
-        L.bt_title_font    = &font_tiempos_34;
-        L.bt_status_font   = &font_styrene_20;
-        L.bt_device_font   = &font_styrene_14;
-        L.bt_credit_1_font = &font_styrene_14;
-        L.bt_credit_2_font = &font_styrene_12;
+        L.bt_title_font    = FONT_TITLE_MD;
+        L.bt_status_font   = FONT_TEXT_20;
+        L.bt_device_font   = FONT_TEXT_14;
+        L.bt_credit_1_font = FONT_TEXT_14;
+        L.bt_credit_2_font = FONT_TEXT_12;
     } else if (c.width <= 260 && c.height <= 340) {
         // Tiny portrait layout, tuned for 240x320 CYD.
         L.margin = 20;
@@ -130,25 +121,24 @@ static void compute_layout(const BoardCaps& c) {
         L.content_y = 70;
         L.panel_pad = 10;
         L.panel_pad_y = 8;
-        L.show_logo = true;
         L.usage_panel_h = 86;
         L.usage_panel_gap = 8;
         L.usage_bar_y = 42;
         L.usage_bar_h = 16;
         L.usage_reset_y = 58;
         L.spinner_bottom = 8;
-        L.title_font      = &font_tiempos_34;
-        L.usage_pct_font  = &font_styrene_28;
-        L.usage_pill_font = &font_styrene_16;
-        L.usage_reset_font = &font_styrene_14;
-        L.spinner_font    = &font_mono_18;
+        L.title_font      = FONT_TITLE_MD;
+        L.usage_pct_font  = FONT_TEXT_28;
+        L.usage_pill_font = FONT_TEXT_16;
+        L.usage_reset_font = FONT_TEXT_14;
+        L.spinner_font    = FONT_TEXT_18;
         L.bt_info_panel_h = 108;
         L.bt_reset_zone_h = 60;
-        L.bt_title_font    = &font_tiempos_34;
-        L.bt_status_font   = &font_styrene_20;
-        L.bt_device_font   = &font_styrene_14;
-        L.bt_credit_1_font = &font_styrene_14;
-        L.bt_credit_2_font = &font_styrene_14;
+        L.bt_title_font    = FONT_TITLE_MD;
+        L.bt_status_font   = FONT_TEXT_20;
+        L.bt_device_font   = FONT_TEXT_14;
+        L.bt_credit_1_font = FONT_TEXT_14;
+        L.bt_credit_2_font = FONT_TEXT_14;
     } else {
         // Compact layout, tuned for 368x448 (AMOLED-1.8).
         L.content_y = 85;
@@ -158,18 +148,18 @@ static void compute_layout(const BoardCaps& c) {
         L.usage_bar_h = 24;
         L.usage_reset_y = 78;
         L.spinner_bottom = 15;
-        L.title_font      = &font_tiempos_56;
-        L.usage_pct_font  = &font_styrene_48;
-        L.usage_pill_font = &font_styrene_28;
-        L.usage_reset_font = &font_styrene_28;
-        L.spinner_font    = &font_mono_32;
+        L.title_font      = FONT_TITLE_LG;
+        L.usage_pct_font  = FONT_TEXT_48;
+        L.usage_pill_font = FONT_TEXT_28;
+        L.usage_reset_font = FONT_TEXT_28;
+        L.spinner_font    = FONT_TEXT_28;
         L.bt_info_panel_h = 140;
         L.bt_reset_zone_h = 90;
-        L.bt_title_font    = &font_tiempos_34;
-        L.bt_status_font   = &font_styrene_28;
-        L.bt_device_font   = &font_styrene_20;
-        L.bt_credit_1_font = &font_styrene_16;
-        L.bt_credit_2_font = &font_styrene_14;
+        L.bt_title_font    = FONT_TITLE_MD;
+        L.bt_status_font   = FONT_TEXT_28;
+        L.bt_device_font   = FONT_TEXT_20;
+        L.bt_credit_1_font = FONT_TEXT_16;
+        L.bt_credit_2_font = FONT_TEXT_14;
     }
 
     L.content_w = L.scr_w - 2 * L.margin;
@@ -183,37 +173,36 @@ static bool theme_is_light(void) {
     return settings_display_theme() == DISPLAY_THEME_LIGHT;
 }
 
-static bool accent_is_claude(void) {
-    return settings_accent_theme() == ACCENT_THEME_CLAUDE;
+static bool accent_is_warm(void) {
+    return settings_accent_theme() == ACCENT_THEME_WARM;
 }
 
 static lv_color_t col_accent(void) {
-    return accent_is_claude() ? lv_color_hex(0xd97757) : lv_color_hex(0x10a37f);
+    return accent_is_warm() ? lv_color_hex(0xd9825b) : lv_color_hex(0x18a085);
 }
 
 static lv_color_t col_bg(void) {
-    return theme_is_light() ? lv_color_hex(0xf3eadb) : lv_color_hex(0x000000);
+    return theme_is_light() ? lv_color_hex(0xf4f7f8) : lv_color_hex(0x05070a);
 }
 
 static lv_color_t col_panel(void) {
-    return theme_is_light() ? lv_color_hex(0xfffbf2) : lv_color_hex(0x1f1f1e);
+    return theme_is_light() ? lv_color_hex(0xffffff) : lv_color_hex(0x15191d);
 }
 
 static lv_color_t col_text(void) {
-    return theme_is_light() ? lv_color_hex(0x2d2b27) : lv_color_hex(0xfaf9f5);
+    return theme_is_light() ? lv_color_hex(0x162027) : lv_color_hex(0xf6f8fa);
 }
 
 static lv_color_t col_dim(void) {
-    return theme_is_light() ? lv_color_hex(0x6f6258) : lv_color_hex(0xb0aea5);
+    return theme_is_light() ? lv_color_hex(0x5c6972) : lv_color_hex(0x98a2ad);
 }
 
 static lv_color_t col_green(void) {
-    if (accent_is_claude()) return theme_is_light() ? lv_color_hex(0x6f7f4e) : lv_color_hex(0x788c5d);
-    return lv_color_hex(0x10a37f);
+    return lv_color_hex(0x18a085);
 }
 
 static lv_color_t col_amber(void) {
-    return accent_is_claude() ? lv_color_hex(0xd97757) : lv_color_hex(0xd9a441);
+    return lv_color_hex(0xd9a441);
 }
 
 static lv_color_t col_red(void) {
@@ -221,7 +210,7 @@ static lv_color_t col_red(void) {
 }
 
 static lv_color_t col_bar_bg(void) {
-    return theme_is_light() ? lv_color_hex(0xe3d3bf) : lv_color_hex(0x2a2a28);
+    return theme_is_light() ? lv_color_hex(0xdde5e8) : lv_color_hex(0x263039);
 }
 
 #define COL_BG        col_bg()
@@ -270,14 +259,11 @@ static lv_obj_t* lbl_settings_note;
 
 // ---- Battery indicator (shared, on top) ----
 static lv_obj_t* battery_img;
-static lv_obj_t* logo_img;
 static lv_obj_t* img_ble_icon;
 static lv_obj_t* img_trash_icon;
 static lv_image_dsc_t battery_dscs[5];  // empty, low, medium, full, charging
 
 // ---- Shared ----
-static lv_image_dsc_t logo_dsc;
-static lv_image_dsc_t logo_tiny_dsc;
 static screen_t current_screen = SCREEN_USAGE;
 static uint8_t settings_page = 0;
 static UsageData last_usage = {};
@@ -322,48 +308,18 @@ static uint32_t anim_msg_start = 0;
 #define ANIM_MSG_MS     4000
 
 static const char* const spinner_frames[] = {
-    "\xC2\xB7", "\xE2\x9C\xBB", "\xE2\x9C\xBD",
-    "\xE2\x9C\xB6", "\xE2\x9C\xB3", "\xE2\x9C\xA2",
+    ".", "o", "O", "o",
 };
-#define SPINNER_COUNT 6
-#define SPINNER_PHASES (2 * (SPINNER_COUNT - 1))  // 10: ping-pong 0..5..0
+#define SPINNER_COUNT 4
+#define SPINNER_PHASES (2 * (SPINNER_COUNT - 1))
 
 static const uint16_t spinner_ms[SPINNER_COUNT] = {
-    260, 130, 130, 130, 130, 260,
+    260, 130, 130, 260,
 };
 
 static const char* const anim_messages[] = {
-    "Accomplishing", "Elucidating", "Perusing",
-    "Actioning", "Enchanting", "Philosophising",
-    "Actualizing", "Envisioning", "Pondering",
-    "Baking", "Finagling", "Pontificating",
-    "Booping", "Flibbertigibbeting", "Processing",
-    "Brewing", "Forging", "Puttering",
-    "Calculating", "Forming", "Puzzling",
-    "Cerebrating", "Frolicking", "Reticulating",
-    "Channelling", "Generating", "Ruminating",
-    "Churning", "Germinating", "Scheming",
-    "Clauding", "Hatching", "Schlepping",
-    "Coalescing", "Herding", "Shimmying",
-    "Cogitating", "Honking", "Shucking",
-    "Combobulating", "Hustling", "Simmering",
-    "Computing", "Ideating", "Smooshing",
-    "Concocting", "Imagining", "Spelunking",
-    "Conjuring", "Incubating", "Spinning",
-    "Considering", "Inferring", "Stewing",
-    "Contemplating", "Jiving", "Sussing",
-    "Cooking", "Manifesting", "Synthesizing",
-    "Crafting", "Marinating", "Thinking",
-    "Creating", "Meandering", "Tinkering",
-    "Crunching", "Moseying", "Transmuting",
-    "Deciphering", "Mulling", "Unfurling",
-    "Deliberating", "Mustering", "Unravelling",
-    "Determining", "Musing", "Vibing",
-    "Discombobulating", "Noodling", "Wandering",
-    "Divining", "Percolating", "Whirring",
-    "Doing", "Wibbling",
-    "Effecting", "Wizarding",
-    "Working", "Wrangling",
+    "Syncing", "Updating", "Measuring", "Waiting",
+    "Refreshing", "Processing", "Tracking", "Rendering",
 };
 #define ANIM_MSG_COUNT (sizeof(anim_messages) / sizeof(anim_messages[0]))
 
@@ -405,9 +361,9 @@ static const char* theme_label(void) {
 }
 
 static const char* accent_label(void) {
-    return (settings_accent_theme() == ACCENT_THEME_CLAUDE)
-               ? "Claude"
-               : "Codex";
+    return (settings_accent_theme() == ACCENT_THEME_WARM)
+               ? "Warm"
+               : "Green";
 }
 
 static void format_time_label(uint16_t minutes, char* buf, size_t len) {
@@ -469,7 +425,6 @@ static void format_reset_time(int mins, char* buf, size_t len) {
 
 // Forward decls; callbacks are defined near ui_show_screen below.
 static void global_click_cb(lv_event_t* e);
-static void logo_click_cb(lv_event_t* e);
 static void ble_reset_click_cb(lv_event_t* e);
 static void settings_metric_click_cb(lv_event_t* e);
 static void settings_theme_click_cb(lv_event_t* e);
@@ -724,7 +679,7 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
     lv_obj_t* lbl_ble_title = lv_label_create(ble_container);
     lv_label_set_text(lbl_ble_title, "Bluetooth");
     const bool tiny_portrait = (L.scr_w <= 260 && L.scr_h <= 340);
-    lv_obj_set_style_text_font(lbl_ble_title, tiny_portrait ? &font_styrene_24 : L.bt_title_font, 0);
+    lv_obj_set_style_text_font(lbl_ble_title, tiny_portrait ? FONT_TEXT_24 : L.bt_title_font, 0);
     lv_obj_set_style_text_color(lbl_ble_title, COL_TEXT, 0);
     lv_obj_align(lbl_ble_title, LV_ALIGN_TOP_MID,
                  tiny_portrait ? -10 : L.title_x_offset,
@@ -793,14 +748,14 @@ static void init_bluetooth_screen(lv_obj_t* scr) {
 
     if (L.scr_h > 260) {
         lv_obj_t* lbl_credit = lv_label_create(ble_container);
-        lv_label_set_text(lbl_credit, "Clawdmeter-CYD");
+        lv_label_set_text(lbl_credit, "CYD Usage Meter");
         lv_obj_set_style_text_font(lbl_credit, L.bt_credit_1_font, 0);
         lv_obj_set_style_text_color(lbl_credit, COL_DIM, 0);
         lv_obj_align(lbl_credit, LV_ALIGN_BOTTOM_MID, 0, -46);
         register_dim(lbl_credit);
 
         lv_obj_t* lbl_credit2 = lv_label_create(ble_container);
-        lv_label_set_text(lbl_credit2, "Built from Clawdmeter");
+        lv_label_set_text(lbl_credit2, "Community firmware");
         lv_obj_set_style_text_font(lbl_credit2, L.bt_credit_2_font, 0);
         lv_obj_set_style_text_color(lbl_credit2, COL_DIM, 0);
         lv_obj_align(lbl_credit2, LV_ALIGN_BOTTOM_MID, 0, -20);
@@ -872,7 +827,7 @@ static void init_settings_screen(lv_obj_t* scr) {
     lbl_settings_title = lv_label_create(settings_container);
     lv_label_set_text(lbl_settings_title, "Settings");
     const bool tiny_portrait = (L.scr_w <= 260 && L.scr_h <= 340);
-    lv_obj_set_style_text_font(lbl_settings_title, tiny_portrait ? &font_styrene_24 : L.title_font, 0);
+    lv_obj_set_style_text_font(lbl_settings_title, tiny_portrait ? FONT_TEXT_24 : L.title_font, 0);
     lv_obj_set_style_text_color(lbl_settings_title, COL_TEXT, 0);
     lv_obj_align(lbl_settings_title, LV_ALIGN_TOP_MID,
                  tiny_portrait ? 0 : L.title_x_offset,
@@ -995,8 +950,6 @@ void ui_init(void) {
     lv_obj_set_style_bg_color(scr, COL_BG, 0);
     lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
-    init_icon_dsc_rgb565a8(&logo_dsc, LOGO_WIDTH, LOGO_HEIGHT, logo_data);
-    init_icon_dsc_rgb565a8(&logo_tiny_dsc, LOGO_TINY_WIDTH, LOGO_TINY_HEIGHT, logo_tiny_data);
     init_battery_icons();
 
     init_usage_screen(scr);
@@ -1006,22 +959,6 @@ void ui_init(void) {
 
     if (splash_get_root()) {
         lv_obj_add_event_cb(splash_get_root(), global_click_cb, LV_EVENT_CLICKED, NULL);
-    }
-
-    if (L.show_logo) {
-        logo_img = lv_image_create(scr);
-        if (L.scr_h <= 340) {
-            lv_image_set_src(logo_img, &logo_tiny_dsc);
-            lv_image_set_scale(logo_img, LV_SCALE_NONE);
-            lv_obj_set_pos(logo_img, 6, 4);
-        } else {
-            lv_image_set_src(logo_img, &logo_dsc);
-            lv_image_set_scale(logo_img, LV_SCALE_NONE);
-            lv_obj_set_pos(logo_img, L.margin, L.title_y - 10);
-        }
-        lv_obj_add_flag(logo_img, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_set_ext_click_area(logo_img, (L.scr_h <= 340) ? 12 : 8);
-        lv_obj_add_event_cb(logo_img, logo_click_cb, LV_EVENT_CLICKED, NULL);
     }
 
     battery_img = lv_image_create(scr);
@@ -1125,13 +1062,6 @@ static void global_click_cb(lv_event_t* e) {
     show_settings_from_current();
 }
 
-static void logo_click_cb(lv_event_t* e) {
-    (void)e;
-    if (current_screen == SCREEN_USAGE || current_screen == SCREEN_BLUETOOTH) {
-        ui_show_screen(SCREEN_SPLASH);
-    }
-}
-
 static void ble_reset_click_cb(lv_event_t* e) {
     (void)e;
     ble_clear_bonds();
@@ -1225,11 +1155,6 @@ void ui_show_screen(screen_t screen) {
         lv_obj_clear_flag(settings_container, LV_OBJ_FLAG_HIDDEN);
         break;
     default: break;
-    }
-
-    if (logo_img) {
-        if (screen == SCREEN_USAGE || screen == SCREEN_BLUETOOTH) lv_obj_clear_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
-        else                                                       lv_obj_add_flag(logo_img, LV_OBJ_FLAG_HIDDEN);
     }
 
     if (screen != SCREEN_SPLASH) prev_non_splash_screen = screen;

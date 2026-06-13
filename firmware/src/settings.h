@@ -12,8 +12,8 @@ enum display_theme_t {
 };
 
 enum accent_theme_t {
-    ACCENT_THEME_CLAUDE = 0,
-    ACCENT_THEME_CODEX = 1,
+    ACCENT_THEME_WARM = 0,
+    ACCENT_THEME_GREEN = 1,
 };
 
 void settings_init(void);

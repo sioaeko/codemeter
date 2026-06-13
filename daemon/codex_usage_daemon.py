@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Codex usage daemon for Codexmeter.
+"""Codex usage daemon for CYD Usage Meter.
 
 Reads Codex CLI ChatGPT credentials from ~/.codex/auth.json, polls the
 ChatGPT backend usage endpoint, and writes a compact JSON payload to the
@@ -21,7 +21,7 @@ import httpx
 from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 
-DEVICE_NAME = "Claude Controller"
+DEVICE_NAME = "CYD Usage Meter"
 SERVICE_UUID = "434f4445-582d-4d65-7465-720000000001"
 RX_CHAR_UUID = "434f4445-582d-4d65-7465-720000000002"
 REQ_CHAR_UUID = "434f4445-582d-4d65-7465-720000000004"
@@ -159,7 +159,7 @@ async def fetch_usage() -> dict[str, Any]:
     account_id = tokens.get("account_id")
     headers = {
         "Authorization": f"Bearer {access}",
-        "User-Agent": "codexmeter",
+        "User-Agent": "cyd-usage-meter",
     }
     if account_id:
         headers["ChatGPT-Account-Id"] = account_id

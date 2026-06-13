@@ -1,9 +1,6 @@
-# Clawdmeter-CYD installer
+# CYD Usage Meter Installer
 
-Static ESP Web Tools installer for the CYD / ESP32-2432S028R build.
-
-The page UI follows the [Claude design system](DESIGN.md) from `npx getdesign add claude`
-(Cormorant Garamond + Inter, cream canvas, coral CTAs, dark product mockups).
+Static ESP Web Tools installer for the CYD / `ESP32-2432S028R` build.
 
 ## Local Test
 
@@ -17,22 +14,17 @@ Then open:
 http://localhost:8787/
 ```
 
-**GitHub Pages (published site):**
+Published page:
 
 ```text
 https://sioaeko.github.io/clawdmeter-cyd/web-flasher/
 ```
 
-GitHub Pages is published from the repo root. Open `/web-flasher/` for the
-installer page.
-
-Use Chrome, Edge, or another browser with Web Serial support. The page offers
-both portrait (`240x320`) and landscape (`320x240`) firmware.
+Use Chrome, Edge, or another browser with Web Serial support. The page offers both portrait (`240x320`) and landscape (`320x240`) firmware.
 
 ## Update Firmware
 
-After rebuilding both CYD firmware variants, refresh the binaries used by the
-web flasher:
+After rebuilding both CYD firmware variants, refresh the binaries used by the web flasher:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r
@@ -47,5 +39,4 @@ firmware/clawdmeter-cyd_2432s028r.factory.bin
 firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin
 ```
 
-Each factory image is the combined PlatformIO output containing bootloader,
-partition table, boot app, and application firmware.
+Each factory image is the combined PlatformIO output containing bootloader, partition table, boot app, and application firmware.

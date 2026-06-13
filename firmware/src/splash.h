@@ -2,29 +2,26 @@
 #include <stdint.h>
 #include <lvgl.h>
 
-// Initialize splash module. Creates the canvas widget inside `parent` and
-// allocates the 480x480 pixel buffer (PSRAM).
+// Initialize the generic splash/status module inside `parent`.
 void splash_init(lv_obj_t *parent);
 
-// Advance animation frame if hold time elapsed. Call from main loop.
+// Advance the abstract meter animation if its hold time elapsed.
 void splash_tick(void);
 
-// Cycle to the next animation in the catalog.
+// Advance to the next abstract animation phase.
 void splash_next(void);
 
 // Show/hide the splash container.
 void splash_show(void);
 void splash_hide(void);
 
-// Pick the next animation matching the current usage-rate group.
-// Called automatically by splash_show(); also exposed so other modules can
-// trigger a re-pick when the rate group changes mid-display.
+// Refresh the splash accent for the current usage-rate group.
 void splash_pick_for_current_rate(void);
 
-// True when splash is currently rendering (used to gate re-picks).
+// True when splash is currently rendering.
 bool splash_is_active(void);
 
-// True when a screen coordinate lands on the non-black splash character art.
+// True when a screen coordinate lands on the central splash art.
 bool splash_point_hits_art(int16_t x, int16_t y);
 
 // Root container (so ui.cpp can attach a click event).

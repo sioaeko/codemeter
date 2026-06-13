@@ -3,7 +3,7 @@
 #include <NimBLEDevice.h>
 #include <NimBLEHIDDevice.h>
 
-#define DEVICE_NAME "Claude Controller"
+#define DEVICE_NAME "CYD Usage Meter"
 
 // Custom GATT UUIDs for data channel
 #define SERVICE_UUID        "434f4445-582d-4d65-7465-720000000001"
@@ -72,7 +72,7 @@ static void start_advertising() {
     NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
     adv->reset();
     // Primary advertising packet (≤31 bytes):
-    //   flags (3) + appearance (4) + HID service 0x1812 (4) + name "Claude Controller" (19)
+    //   flags (3) + appearance (4) + HID service 0x1812 (4) + device name
     //   = 30 bytes. macOS Bluetooth Settings only surfaces BLE-only devices
     //   that explicitly advertise the standard HID service UUID (0x1812) —
     //   without it the device is recognized internally but hidden from the
@@ -164,7 +164,7 @@ void ble_init(void) {
     // --- HID keyboard service ---
     hid_dev = new NimBLEHIDDevice(server);
     hid_dev->setReportMap((uint8_t*)HID_REPORT_MAP, sizeof(HID_REPORT_MAP));
-    hid_dev->setManufacturer("OpenAI");
+    hid_dev->setManufacturer("Community");
     // PnP ID: (vendorIdSource, vendorId, productId, version).
     // Source 1 = Bluetooth SIG, vendor 0x02E5 = Espressif. Originally claimed
     // Apple's USB vendor 0x05AC + Magic Keyboard product 0x820A — macOS

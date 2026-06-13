@@ -1,5 +1,5 @@
 [Unit]
-Description=Codexmeter usage daemon
+Description=CYD Usage Meter Codex daemon
 After=bluetooth.target
 
 [Service]

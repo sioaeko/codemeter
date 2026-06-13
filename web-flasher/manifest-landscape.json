@@ -1,6 +1,6 @@
 {
-  "name": "Clawdmeter-CYD landscape",
-  "version": "0.3.19",
+  "name": "CYD Usage Meter landscape",
+  "version": "0.4.0",
   "new_install_prompt_erase": true,
   "builds": [
     {

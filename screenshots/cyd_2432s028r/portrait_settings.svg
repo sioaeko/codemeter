@@ -1,24 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
-<rect width="240" height="320" fill="#000000"/>
+<rect width="240" height="320" fill="#05070a"/>
 <style>
 text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.title{font-family:Georgia,"Times New Roman",serif}
+.title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:650}
 .mono{font-family:"SF Mono","Menlo",monospace}
 </style>
-<text x="138" y="33.92" font-size="24" fill="#faf9f5" dominant-baseline="middle" text-anchor="middle" class="title">Settings</text>
-<rect x="6" y="7" width="58" height="28" rx="14" fill="#2a2a28"/>
-<text x="35" y="21" font-size="14" fill="#d97757" dominant-baseline="middle" text-anchor="middle" font-weight="700">BACK</text>
-<rect x="20" y="70" width="200" height="48" rx="8" fill="#1f1f1e"/>
-<text x="30" y="94" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Display</text>
-<text x="210" y="94" font-size="16" fill="#faf9f5" dominant-baseline="middle" text-anchor="end" font-weight="600">Used</text>
-<rect x="20" y="126" width="200" height="48" rx="8" fill="#1f1f1e"/>
-<text x="30" y="150" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Theme</text>
-<text x="210" y="150" font-size="16" fill="#faf9f5" dominant-baseline="middle" text-anchor="end" font-weight="600">Dark</text>
-<rect x="20" y="182" width="200" height="48" rx="8" fill="#1f1f1e"/>
-<text x="30" y="206" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Accent</text>
-<text x="210" y="206" font-size="16" fill="#faf9f5" dominant-baseline="middle" text-anchor="end" font-weight="600">Claude</text>
-<rect x="20" y="238" width="200" height="48" rx="8" fill="#1f1f1e"/>
-<text x="30" y="262" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="start">Bluetooth</text>
-<text x="210" y="262" font-size="16" fill="#faf9f5" dominant-baseline="middle" text-anchor="end" font-weight="600">Open</text>
-<text x="120" y="304.3" font-size="14" fill="#b0aea5" dominant-baseline="middle" text-anchor="middle">BACK exits</text>
+<text x="138" y="33.92" font-size="24" fill="#f6f8fa" dominant-baseline="middle" text-anchor="middle" class="title">Settings</text>
+<rect x="6" y="7" width="58" height="28" rx="14" fill="#263039"/>
+<text x="35" y="21" font-size="14" fill="#18a085" dominant-baseline="middle" text-anchor="middle" font-weight="700">BACK</text>
+<rect x="20" y="70" width="200" height="48" rx="8" fill="#15191d"/>
+<text x="30" y="94" font-size="14" fill="#98a2ad" dominant-baseline="middle" text-anchor="start">Display</text>
+<text x="210" y="94" font-size="16" fill="#f6f8fa" dominant-baseline="middle" text-anchor="end" font-weight="600">Used</text>
+<rect x="20" y="126" width="200" height="48" rx="8" fill="#15191d"/>
+<text x="30" y="150" font-size="14" fill="#98a2ad" dominant-baseline="middle" text-anchor="start">Theme</text>
+<text x="210" y="150" font-size="16" fill="#f6f8fa" dominant-baseline="middle" text-anchor="end" font-weight="600">Dark</text>
+<rect x="20" y="182" width="200" height="48" rx="8" fill="#15191d"/>
+<text x="30" y="206" font-size="14" fill="#98a2ad" dominant-baseline="middle" text-anchor="start">Accent</text>
+<text x="210" y="206" font-size="16" fill="#f6f8fa" dominant-baseline="middle" text-anchor="end" font-weight="600">Green</text>
+<rect x="20" y="238" width="200" height="48" rx="8" fill="#15191d"/>
+<text x="30" y="262" font-size="14" fill="#98a2ad" dominant-baseline="middle" text-anchor="start">Bluetooth</text>
+<text x="210" y="262" font-size="16" fill="#f6f8fa" dominant-baseline="middle" text-anchor="end" font-weight="600">Open</text>
+<text x="120" y="304.3" font-size="14" fill="#98a2ad" dominant-baseline="middle" text-anchor="middle">BACK exits</text>
 </svg>

@@ -278,8 +278,8 @@ void loop() {
     if (!idle_is_asleep()) display_hal_tick();
 
     // ---- Physical buttons ----
-    //   PRIMARY   -> HID Space  (Claude Code voice-mode PTT)
-    //   SECONDARY -> HID Shift+Tab  (mode toggle; only if the board has one)
+    //   PRIMARY   -> HID Space
+    //   SECONDARY -> HID Shift+Tab (only if the board has one)
     //   PWR       -> cycle screens; touch the splash to cycle animations
     // First press from sleep is consumed as a wake-only event by
     // idle_consume_wake_press(); the normal action fires from the second

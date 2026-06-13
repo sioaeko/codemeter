@@ -7,20 +7,14 @@ const outDir = path.join(root, "screenshots", "cyd_2432s028r");
 const webOutDir = path.join(root, "web-flasher", "previews", "cyd_2432s028r");
 
 const palette = {
-  bg: "#000000",
-  panel: "#1f1f1e",
-  text: "#faf9f5",
-  dim: "#b0aea5",
-  bar: "#2a2a28",
-  accent: "#d97757",
-  green: "#10a37f",
+  bg: "#05070a",
+  panel: "#15191d",
+  text: "#f6f8fa",
+  dim: "#98a2ad",
+  bar: "#263039",
+  accent: "#18a085",
+  green: "#18a085",
 };
-
-const logoData = fs.readFileSync(path.join(root, "assets", "logo_80.png")).toString("base64");
-const logoHref = `data:image/png;base64,${logoData}`;
-const splashAnim = JSON.parse(
-  fs.readFileSync(path.join(root, "tools", "claudepix_data", "work_coding.json"), "utf8")
-);
 
 const layouts = {
   portrait: {
@@ -108,7 +102,7 @@ function esc(value) {
 function openSvg(w, h, extraStyle = "") {
   const styles = [
     `text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}`,
-    `.title{font-family:Georgia,"Times New Roman",serif}`,
+    `.title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:650}`,
     `.mono{font-family:"SF Mono","Menlo",monospace}`,
   ];
   if (extraStyle) styles.push(extraStyle);
@@ -144,9 +138,7 @@ function label(text, x, y, size, color, opts = {}) {
 }
 
 function logoBadge(L) {
-  const w = 40;
-  const h = 40;
-  return `<image href="${logoHref}" x="6" y="4" width="${w}" height="${h}"/>`;
+  return "";
 }
 
 function topButton(L, text, side) {
@@ -203,7 +195,7 @@ function renderUsage(L) {
     title(L, "Used"),
     usagePanel(L, y1, 37, "5h", "Resets in 2h 15m", 0.37),
     usagePanel(L, y2, 12, "Weekly", "Resets in 6d 23h", 0.12),
-    label("✻ Pondering...", L.w / 2, L.h - L.spinnerBottom - L.spinnerSize * 0.45, L.spinnerSize, palette.accent, {
+    label(". Syncing...", L.w / 2, L.h - L.spinnerBottom - L.spinnerSize * 0.45, L.spinnerSize, palette.accent, {
       anchor: "middle",
       className: "mono",
     }),
@@ -212,63 +204,26 @@ function renderUsage(L) {
   ].join("\n");
 }
 
-function pct(value, total) {
-  return (value * 100 / total).toFixed(3);
-}
-
-function splashKeyframes(frames) {
-  const total = frames.reduce((sum, frame) => sum + frame.hold, 0);
-  let cursor = 0;
-  const rules = frames.map((frame, index) => {
-    const start = pct(cursor, total);
-    cursor += frame.hold;
-    const end = pct(cursor, total);
-    const before = pct(Math.max(0, cursor - frame.hold - 1), total);
-    const after = pct(Math.min(total, cursor + 1), total);
-    if (index === 0) {
-      return `@keyframes splash-frame-${index}{0%,${end}%{opacity:1} ${after}%,100%{opacity:0}}`;
-    }
-    if (index === frames.length - 1) {
-      return `@keyframes splash-frame-${index}{0%,${before}%{opacity:0} ${start}%,100%{opacity:1}}`;
-    }
-    return `@keyframes splash-frame-${index}{0%,${before}%{opacity:0} ${start}%,${end}%{opacity:1} ${after}%,100%{opacity:0}}`;
-  });
-  return [
-    `.splash-frame{opacity:0;animation-duration:${total}ms;animation-iteration-count:infinite;animation-timing-function:step-end}`,
-    ...rules,
-  ].join("\n");
-}
-
-function splashFrame(anim, frame, index, cell, ox, oy) {
-  const rects = [];
-  frame.grid.forEach((row, y) => {
-    row.forEach((code, x) => {
-      const color = anim.palette[code];
-      if (!code || !color || color === "transparent") return;
-      rects.push(rect(ox + x * cell, oy + y * cell, cell, cell, color, 0));
-    });
-  });
-  return [
-    `<g class="splash-frame" style="animation-name:splash-frame-${index}">`,
-    ...rects,
-    `</g>`,
-  ].join("\n");
-}
-
 function renderSplash(L) {
-  const cell = Math.min(Math.floor(Math.min(L.w, L.h) / 20), 10);
-  const canvas = cell * 20;
-  const ox = Math.round((L.w - canvas) / 2);
-  const oy = Math.round((L.h - canvas) / 2);
+  const artW = Math.min(Math.round(Math.min(L.w, L.h) * 0.66), 220);
+  const artH = Math.round(artW * 0.75);
+  const x = Math.round((L.w - artW) / 2);
+  const y = Math.round((L.h - artH) / 2);
+  const gap = 8;
+  const barW = Math.floor((artW - gap * 4) / 5);
+  const heights = [0.34, 0.72, 0.52, 0.88, 0.43];
+  const baseline = y + artH - 18;
   return [
-    ...openSvg(
-      L.w,
-      L.h,
-      `svg{shape-rendering:crispEdges}.splash-canvas{image-rendering:pixelated}${splashKeyframes(splashAnim.frames)}`
-    ),
-    `<g class="splash-canvas">`,
-    ...splashAnim.frames.map((frame, index) => splashFrame(splashAnim, frame, index, cell, ox, oy)),
-    `</g>`,
+    ...openSvg(L.w, L.h),
+    title(L, "Usage Meter", { size: L.h <= 260 ? 24 : 28, y: L.h <= 260 ? 18 : 32, className: "" }),
+    rect(x - 13, y - 14, artW + 26, artH + 28, palette.panel, 8),
+    ...heights.map((v, index) => {
+      const h = Math.round((artH - 34) * v);
+      return rect(x + index * (barW + gap), baseline - h, barW, h, palette.accent, 4);
+    }),
+    label("BLE display", L.w / 2, L.h - (L.h <= 260 ? 14 : 26), L.h <= 260 ? 12 : 14, palette.dim, {
+      anchor: "middle",
+    }),
     `</svg>`,
   ].join("\n");
 }
@@ -299,7 +254,7 @@ function renderSettings(L) {
     topButton(L, "BACK", "left"),
     settingsCard(L, 0, "Display", "Used"),
     settingsCard(L, 1, "Theme", "Dark"),
-    settingsCard(L, 2, "Accent", "Claude"),
+    settingsCard(L, 2, "Accent", "Green"),
     settingsCard(L, 3, "Bluetooth", "Open"),
     label("BACK exits", L.w / 2, L.h - L.spinnerBottom - L.resetSize * 0.55, L.resetSize, palette.dim, {
       anchor: "middle",
@@ -339,13 +294,13 @@ function renderBluetooth(L) {
     rect(L.margin, infoY, contentW, L.btInfoPanelH, palette.panel, 8),
     bluetoothIcon(L.margin + L.panelPad, infoY + L.panelPadY, btIconSize),
     label("Connected", L.margin + L.panelPad + 48, infoY + L.panelPadY + btIconSize / 2, L.btStatusSize, palette.green, { weight: 700 }),
-    label("Device: Claude Controller", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
+    label("Device: CYD Usage Meter", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
     label("Address: F0:08:D1:2A:BC:34", L.margin + L.panelPad, infoY + macY, L.btDeviceSize, palette.dim),
     rect(L.margin, resetY, contentW, L.btResetZoneH, palette.panel, 8),
     trashIcon(L.margin + contentW / 2 - 68, resetY + L.btResetZoneH / 2 - 10, 20),
     label("Reset Bluetooth", L.margin + contentW / 2 - 36, resetY + L.btResetZoneH / 2, resetLabelSize, palette.dim),
-    L.h > 260 ? label("Clawdmeter-CYD", L.w / 2, L.h - 46, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
-    L.h > 260 ? label("Built from Clawdmeter", L.w / 2, L.h - 20, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
+    L.h > 260 ? label("CYD Usage Meter", L.w / 2, L.h - 46, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
+    L.h > 260 ? label("Community firmware", L.w / 2, L.h - 20, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
     topButton(L, "SET", "right"),
     `</svg>`,
   ].join("\n");

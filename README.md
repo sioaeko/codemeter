@@ -1,34 +1,39 @@
-# Clawdmeter-CYD
+# CYD Usage Meter
 
-`ESP32-2432S028R` Cheap Yellow Display 보드에서 Claude Code 또는 Codex 사용량을 보여주는 Clawdmeter fork입니다.
+`ESP32-2432S028R` Cheap Yellow Display에서 Codex 또는 Claude Code 사용량을 보여주는 BLE 사용량 미터입니다.
+
+바로 설치:
+
+[https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/)
+
+Chrome/Edge에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다. Web Serial은 HTTPS 또는 `localhost`에서만 동작합니다.
 
 ![CYD UI preview](screenshots/cyd_2432s028r/preview.svg)
 
-## 바로 설치
+## 기능
 
-웹 플래셔:
-[https://sioaeko.github.io/clawdmeter-cyd/web-flasher/](https://sioaeko.github.io/clawdmeter-cyd/web-flasher/)
-
-루트 주소도 웹 플래셔로 이동합니다:
-[https://sioaeko.github.io/clawdmeter-cyd/](https://sioaeko.github.io/clawdmeter-cyd/)
-
-Chrome 또는 Edge에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다. Web Serial은 HTTPS 또는 `localhost`에서만 동작합니다.
-
-## 핵심 기능
-
-- CYD `ESP32-2432S028R` 보드용 펌웨어
-- Portrait `240x320`, Landscape `320x240` 빌드
+- CYD `ESP32-2432S028R` 지원
+- Portrait `240x320`, Landscape `320x240` 펌웨어 제공
 - Codex / Claude Code 사용량 BLE 표시
-- 사용량 기준 `Used` 또는 남은량 기준 `Left` 표시 전환
-- 보드 Settings 화면에서 표시 기준/테마/accent/Bluetooth/Night Mode 설정
-- Night Mode: 지정 시간 동안 화면 완전 꺼짐, 터치 시 임시 wake
-- macOS LaunchAgent installer
+- `Used` 사용량 기준과 `Left` 남은량 기준 전환
+- 보드 Settings에서 Display, Theme, Accent, Bluetooth, Night Mode 설정
+- Night Mode: 지정 시간 동안 화면을 완전히 끄고, 터치하면 임시 wake
+- macOS Codex/Claude daemon installer
 - Windows 수동 daemon 실행 지원
-- GitHub Pages용 ESP Web Tools flasher
+- GitHub Pages 기반 ESP Web Tools flasher
 
-## 펌웨어 설치
+## 배포 정리
 
-웹 플래셔에서 원하는 방향을 고릅니다.
+이 빌드는 단순 사용량 UI와 설정 UI만 유지하고, 제3자 마스코트/브랜드 로고/비공개 폰트 기반 자산을 제거한 clean 배포 방향입니다.
+
+- 스플래시는 자체 추상 미터 애니메이션입니다.
+- 펌웨어 폰트는 LVGL 내장 Montserrat를 사용합니다.
+- BLE 장치명은 `CYD Usage Meter`입니다.
+- Claude Code, Codex, Anthropic, OpenAI는 호환 대상 설명에만 사용됩니다. 이 프로젝트는 해당 회사들과 공식 제휴가 없습니다.
+
+## Flash
+
+웹 플래셔에서 원하는 방향을 고르면 됩니다.
 
 - **Portrait**: 240x320 세로 화면
 - **Landscape**: 320x240 가로 화면
@@ -40,58 +45,48 @@ CLI로 플래시하려면:
 ./flash-mac.sh cyd_2432s028r_landscape
 ```
 
-펌웨어를 새로 빌드한 뒤 웹 플래셔 바이너리를 갱신하려면:
+펌웨어를 다시 빌드한 뒤 웹 플래셔 바이너리를 갱신하려면:
 
 ```bash
 ./tools/update_web_flasher.sh
 ```
 
-## 보드 Settings
+## Board Settings
 
-이 펌웨어는 Wi-Fi/AP 웹 포털을 사용하지 않습니다. 설정은 보드의 `Settings` 화면에 저장됩니다.
+Wi-Fi/AP 설정 포털은 사용하지 않습니다. 설정은 보드의 `Settings` 화면에 저장됩니다.
 
-Settings는 두 페이지로 나뉩니다. `NEXT`/`PREV`로 넘깁니다.
+Settings는 두 페이지입니다. `NEXT`/`PREV`로 이동합니다.
 
-1페이지에서 바꿀 수 있는 것:
+Page 1:
 
-- 표시 기준: 사용한 비율 `Used` 또는 남은 비율 `Left`
-- 화면 테마와 Claude/Codex accent
-- Bluetooth 상태 화면 진입
+- `Display`: `Used` 또는 `Left`
+- `Theme`: `Dark` 또는 `Light`
+- `Accent`: `Green` 또는 `Warm`
+- `Bluetooth`: BLE 상태 화면 열기
 
-2페이지에서 바꿀 수 있는 것:
+Page 2:
 
-- Night Mode 켜기/끄기
-- Night Mode 시작/종료 시간
+- `Night`: Night Mode 켜기/끄기
+- `Start`: 시작 시간을 1시간씩 이동
+- `End`: 종료 시간을 1시간씩 이동
 
-Night Mode는 데스크톱 daemon이 Bluetooth payload에 같이 보내는 현지 시각을 기준으로 동작합니다. 부팅 직후 첫 사용량 payload를 받기 전에는 스케줄이 적용되지 않습니다. 기본값은 `23:00`부터 `07:00`까지이며, Night Mode 중 화면을 터치하면 기본 5분 동안 다시 켜집니다.
+Night Mode는 desktop daemon이 BLE payload에 같이 보내는 `now` 값을 기준으로 동작합니다. 부팅 직후 첫 payload를 받기 전에는 스케줄이 적용되지 않습니다.
 
-## 보드 조작
+## Bluetooth
 
-- `Usage` 화면: 사용량 표시
-- `Bluetooth` 화면: BLE 상태 표시
-- `Settings` 화면: 표시 기준/테마/accent/Bluetooth/Night Mode 전환
-- `Splash` 화면: Claude 애니메이션
-- BOOT/GPIO0 버튼: 화면 전환
-- Usage/Bluetooth 좌상단 아이콘 터치: Splash로 이동
-- Splash 터치: Usage로 복귀
-
-`Used`는 사용한 비율이고, `Left`는 남은 사용 가능 비율입니다. 설정은 ESP32 NVS에 저장되어 재부팅 후에도 유지됩니다.
-
-## Bluetooth 페어링
-
-컴퓨터에서 아래 BLE 장치를 찾습니다.
+컴퓨터에서 아래 BLE 장치를 찾으면 됩니다.
 
 ```text
-Claude Controller
+CYD Usage Meter
 ```
 
-Windows와 Mac mini를 같이 쓰는 경우에는 보드를 **Mac mini에만 페어링**하고 Mac mini에서 daemon을 상시 실행하는 구성이 가장 안정적입니다. Codex 사용량은 계정 기준이라 Windows에서 Codex를 써도 Mac mini daemon이 같은 계정으로 로그인되어 있으면 보드에 반영됩니다.
+Windows와 Mac mini를 같이 쓰는 경우에는 보드를 **Mac mini에만 페어링**하고 Mac mini에서 daemon을 상시 실행하는 구성이 가장 안정적입니다. 사용량은 계정 기준이라 Windows에서 Codex를 써도 Mac mini daemon이 같은 계정으로 로그인되어 있으면 보드에 반영됩니다.
 
-Codex daemon과 Claude daemon을 동시에 같은 보드에 붙이면 Windows BLE에서 characteristic 검색이 흔들릴 수 있습니다. 한 번에 하나만 켜는 구성을 권장합니다.
+Codex daemon과 Claude Code daemon을 동시에 같은 보드에 붙이면 값이 서로 덮일 수 있습니다. 한 번에 하나만 켜는 구성을 권장합니다.
 
-## macOS daemon
+## macOS Daemon
 
-Codex 사용량:
+Codex:
 
 ```bash
 codex login
@@ -99,14 +94,14 @@ codex login
 tail -F ~/Library/Logs/codex-usage-daemon.out.log
 ```
 
-Claude Code 사용량:
+Claude Code:
 
 ```bash
 ./install-mac.sh
 tail -F ~/Library/Logs/claude-usage-daemon.out.log
 ```
 
-## Windows daemon
+## Windows Daemon
 
 Codex:
 
@@ -125,50 +120,41 @@ py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe .\daemon\claude_usage_daemon.py
 ```
 
-상시 표시용이면 Windows보다 Mac mini에서 daemon을 켜두는 쪽이 덜 번거롭습니다.
+## Development
 
-## 개발
-
-CYD 세로 빌드:
+CYD portrait build:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r
 ```
 
-CYD 가로 빌드:
+CYD landscape build:
 
 ```bash
 pio run -d firmware -e cyd_2432s028r_landscape
 ```
 
-로컬 웹 플래셔 테스트:
+Local web flasher:
 
 ```bash
 python3 -m http.server 8787 --directory web-flasher
 ```
 
-열기:
+Open:
 
 ```text
 http://localhost:8787/
 ```
 
-웹 플래셔 factory images:
+## Hardware Notes
 
-```text
-web-flasher/firmware/clawdmeter-cyd_2432s028r.factory.bin
-web-flasher/firmware/clawdmeter-cyd_2432s028r_landscape.factory.bin
-```
-
-## 하드웨어 메모
-
-기본 타깃은 흔한 CYD 보드 리비전입니다.
+Default target is the common CYD board revision:
 
 - TFT: MISO 12, MOSI 13, SCLK 14, CS 15, DC 2, BL 21
 - Touch: IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
 - Button: BOOT/GPIO0
 
-터치가 뒤집히거나 축이 맞지 않으면 아래 파일의 `TOUCH_*` 값을 조정합니다. 색이 반전되거나 빨강/파랑이 바뀌면 같은 파일의 `LCD_INVERT_COLORS`, `LCD_SWAP_RED_BLUE` 값을 확인합니다.
+If touch or colors are reversed, check:
 
 ```text
 firmware/src/boards/cyd_2432s028r/board.h
@@ -176,4 +162,4 @@ firmware/src/boards/cyd_2432s028r/board.h
 
 ## Upstream
 
-원본 프로젝트는 [HermannBjorgvin/Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter)입니다. 이 fork는 Codex 사용량과 CYD `ESP32-2432S028R` 보드에 맞춘 버전입니다.
+This repository started as a CYD port of [HermannBjorgvin/Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter).
