@@ -239,6 +239,26 @@ function renderSettings(L) {
   ].join("\n");
 }
 
+function renderNight(L) {
+  return [
+    ...openSvg(L.w, L.h),
+    title(L, "Night", {
+      size: L.settingsTitleSize,
+      dx: L.settingsTitleDx,
+      y: L.settingsTitleY,
+      className: L.settingsTitleSize < 30 ? "" : "title",
+    }),
+    topButton(L, "PREV", "left"),
+    settingsCard(L, 0, "Night", "Off"),
+    settingsCard(L, 1, "Start", "23:00"),
+    settingsCard(L, 2, "End", "07:00"),
+    label("2/2", L.w / 2, L.h - L.spinnerBottom - L.resetSize * 0.55, L.resetSize, palette.dim, {
+      anchor: "middle",
+    }),
+    `</svg>`,
+  ].join("\n");
+}
+
 function bluetoothIcon(x, y, size) {
   const s = size / 24;
   return `<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke="${palette.dim}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></g>`;
@@ -328,6 +348,7 @@ for (const [name, L] of Object.entries(layouts)) {
     ["usage", renderUsage(L)],
     ["settings", renderSettings(L)],
     ["bluetooth", renderBluetooth(L)],
+    ["night", renderNight(L)],
   ];
   for (const [screen, svg] of screens) {
     const fileName = `${name}_${screen}.svg`;

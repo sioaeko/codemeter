@@ -258,7 +258,7 @@
 
       .preview-tabs {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 6px;
         margin-top: 10px;
         border: 1px solid #2e2b27;
@@ -956,6 +956,13 @@
                   >
                     Bluetooth
                   </button>
+                  <button
+                    type="button"
+                    data-preview-screen="night"
+                    aria-pressed="false"
+                  >
+                    Night
+                  </button>
                 </div>
               </figure>
             </div>
@@ -1433,8 +1440,8 @@ py -3 -m venv daemon\.venv
       const assetVersion = "0.4.0";
 
       const previewSources = {
-        portrait: ["usage", "settings", "bluetooth"],
-        landscape: ["usage", "settings", "bluetooth"],
+        portrait: ["usage", "settings", "bluetooth", "night"],
+        landscape: ["usage", "settings", "bluetooth", "night"],
       };
 
       const previewState = {
