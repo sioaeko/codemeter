@@ -112,7 +112,7 @@ void splash_init(lv_obj_t* parent) {
     }
 
     title_label = lv_label_create(splash_container);
-    lv_label_set_text(title_label, "Usage Meter");
+    lv_label_set_text(title_label, "CodeMeter");
     lv_obj_set_style_text_font(title_label, title_font(), 0);
     lv_obj_set_style_text_color(title_label, text_color(), 0);
     lv_obj_align(title_label, LV_ALIGN_TOP_MID, 0, c.height <= 260 ? 18 : 32);

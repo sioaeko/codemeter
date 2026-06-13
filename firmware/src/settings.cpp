@@ -6,7 +6,7 @@ static Preferences prefs;
 static bool prefs_ready = false;
 static display_metric_t current_metric = DISPLAY_METRIC_USED;
 static display_theme_t current_theme = DISPLAY_THEME_DARK;
-static accent_theme_t current_accent = ACCENT_THEME_GREEN;
+static accent_theme_t current_accent = ACCENT_THEME_WARM;
 static bool current_night_enabled = false;
 static uint16_t current_night_start_min = 23 * 60;
 static uint16_t current_night_end_min = 7 * 60;
@@ -31,7 +31,7 @@ static uint16_t sanitize_wake_minutes(uint16_t value) {
 
 void settings_init(void) {
     if (!prefs_ready) {
-        prefs_ready = prefs.begin("codexmeter", false);
+        prefs_ready = prefs.begin("codemeter", false);
     }
 
     uint8_t stored = prefs_ready ? prefs.getUChar("metric", DISPLAY_METRIC_USED)
@@ -46,8 +46,8 @@ void settings_init(void) {
                         ? DISPLAY_THEME_DARK
                         : DISPLAY_THEME_LIGHT;
 
-    stored = prefs_ready ? prefs.getUChar("accent", ACCENT_THEME_GREEN)
-                         : ACCENT_THEME_GREEN;
+    stored = prefs_ready ? prefs.getUChar("accent", ACCENT_THEME_WARM)
+                         : ACCENT_THEME_WARM;
     current_accent = (stored == ACCENT_THEME_GREEN)
                          ? ACCENT_THEME_GREEN
                          : ACCENT_THEME_WARM;

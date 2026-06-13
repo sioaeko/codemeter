@@ -1,16 +1,16 @@
 # Project Context
 
-CYD Usage Meter is ESP32 firmware for a desk-side Codex or Claude Code usage display. The current distribution keeps the generic usage/settings UI and removes bundled third-party mascot animations, official-looking brand strings, and proprietary font-derived firmware assets.
+CodeMeter is ESP32 firmware for a desk-side Codex or Claude Code usage display. The current distribution keeps the generic usage/settings UI and removes bundled third-party mascot animations, official-looking brand strings, and proprietary font-derived firmware assets.
 
 ## Current Product Surface
 
-- BLE device name: `CYD Usage Meter`
+- BLE device name: `CodeMeter`
 - Supported CYD envs: `cyd_2432s028r`, `cyd_2432s028r_landscape`
-- Main screens: Splash, Usage, Bluetooth, Settings
+- Main screens: Usage, Bluetooth, Settings, plus a startup status screen
 - Settings pages:
-  - Page 1: Display (`Used`/`Left`), Theme, Accent (`Green`/`Warm`), Bluetooth
+  - Page 1: Display (`Used`/`Left`), Theme, Accent (`Warm`/`Green`), Bluetooth
   - Page 2: Night, Start, End
-- Splash is a generic abstract meter animation implemented in `firmware/src/splash.cpp`.
+- Startup status UI is a generic abstract meter animation implemented in `firmware/src/splash.cpp`.
 - UI fonts use LVGL built-in Montserrat sizes enabled in `firmware/platformio.ini`.
 
 Compatibility references to Codex and Claude Code are descriptive only. Do not add official logos, mascots, proprietary fonts, copied product chrome, or official-looking manufacturer strings.
@@ -23,10 +23,10 @@ firmware/src/
   boards/<name>/            per-board display/touch/input/power/imu implementations
   main.cpp                  setup + loop, HAL calls only
   ui.{h,cpp}                usage/bluetooth/settings UI
-  splash.{h,cpp}            generic abstract splash animation
+  splash.{h,cpp}            generic startup status animation
   ble.{h,cpp}               NimBLE peripheral: custom data service + HID keyboard
   settings.{h,cpp}          NVS-backed display/theme/accent/night settings
-  usage_rate.{h,cpp}        usage activity grouping for splash accent
+  usage_rate.{h,cpp}        usage activity grouping for status accent
   data.h                    UsageData struct
   icons.h / icons_small.h   RGB565A8 icon arrays
 ```
@@ -66,7 +66,7 @@ python3 -m http.server 8787 --directory web-flasher
 
 ## Daemon / Host Side
 
-Daemons discover the BLE peripheral by name (`CYD Usage Meter`) and write the same compact JSON payload to the RX characteristic:
+Daemons discover the BLE peripheral by name (`CodeMeter`) and write the same compact JSON payload to the RX characteristic:
 
 ```json
 { "s": 6, "sr": 285, "w": 1, "wr": 10065, "now": 765, "st": "allowed", "ok": true }

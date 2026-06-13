@@ -24,4 +24,4 @@ Regenerate the SVG screenshots used by the README and web flasher:
 node tools/render_cyd_previews.js
 ```
 
-The preview renderer draws generic usage, settings, Bluetooth, and abstract splash screens. It does not depend on third-party mascot sprites or proprietary fonts.
+The preview renderer draws generic usage, settings, and Bluetooth screens. It does not depend on third-party mascot sprites or proprietary fonts.

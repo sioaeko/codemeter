@@ -1,4 +1,4 @@
-# CYD Usage Meter Port Notes
+# CodeMeter Port Notes
 
 This fork turns the CYD / `ESP32-2432S028R` board into a BLE usage display for Codex or Claude Code.
 
@@ -6,10 +6,10 @@ This fork turns the CYD / `ESP32-2432S028R` board into a BLE usage display for C
 
 - Added PlatformIO envs `cyd_2432s028r` and `cyd_2432s028r_landscape`.
 - Added a CYD HAL port for the ILI9341 SPI display and XPT2046 SPI touch controller.
-- Renamed the BLE peripheral to `CYD Usage Meter`.
+- Renamed the BLE peripheral to `CodeMeter`.
 - Kept the compact `240x320` and `320x240` usage/settings UI.
 - Added on-device settings for `Used` vs `Left`, theme, accent, Bluetooth status, and Night Mode.
-- Replaced third-party mascot/proprietary font splash assets with a generic abstract meter splash.
+- Replaced third-party mascot/proprietary font splash assets with a generic startup status UI.
 - Added `daemon/codex_usage_daemon.py`, which reads `~/.codex/auth.json` and sends usage over BLE.
 - Kept the Claude Code daemon as a compatibility option using the same BLE payload.
 
@@ -25,7 +25,7 @@ Default pinout is for the common ESP32-2432S028R:
 
 - TFT: ILI9341, SPI pins MISO 12, MOSI 13, SCLK 14, CS 15, DC 2, BL 21
 - Touch: XPT2046, SPI pins IRQ 36, MISO 39, MOSI 32, CLK 25, CS 33
-- Button: BOOT/GPIO0 cycles Usage/Bluetooth/Settings/Splash screens
+- Button: BOOT/GPIO0 cycles Usage/Bluetooth/Settings screens after startup
 
 The Settings screen lets you switch the main meter between `Used` and `Left`, change theme/accent, open Bluetooth status, and configure Night Mode. The selected mode is stored in ESP32 NVS and survives reboot.
 
@@ -66,7 +66,7 @@ CLI:
 
 ## Daemons
 
-Run either the Codex daemon or the Claude Code daemon. Running both at once makes them race to update the same `CYD Usage Meter` display.
+Run either the Codex daemon or the Claude Code daemon. Running both at once makes them race to update the same `CodeMeter` display.
 
 Codex:
 

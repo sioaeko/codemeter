@@ -1,4 +1,4 @@
-# CYD Usage Meter
+# CodeMeter
 
 `ESP32-2432S028R` Cheap Yellow Display에서 Codex 또는 Claude Code 사용량을 보여주는 BLE 사용량 미터입니다.
 
@@ -26,9 +26,9 @@ Chrome/Edge에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다.
 
 이 빌드는 단순 사용량 UI와 설정 UI만 유지하고, 제3자 마스코트/브랜드 로고/비공개 폰트 기반 자산을 제거한 clean 배포 방향입니다.
 
-- 스플래시는 자체 추상 미터 애니메이션입니다.
+- 부팅 상태 화면은 자체 추상 미터 UI입니다.
 - 펌웨어 폰트는 LVGL 내장 Montserrat를 사용합니다.
-- BLE 장치명은 `CYD Usage Meter`입니다.
+- BLE 장치명은 `CodeMeter`입니다.
 - Claude Code, Codex, Anthropic, OpenAI는 호환 대상 설명에만 사용됩니다. 이 프로젝트는 해당 회사들과 공식 제휴가 없습니다.
 
 ## Flash
@@ -61,7 +61,7 @@ Page 1:
 
 - `Display`: `Used` 또는 `Left`
 - `Theme`: `Dark` 또는 `Light`
-- `Accent`: `Green` 또는 `Warm`
+- `Accent`: `Warm` 또는 `Green`
 - `Bluetooth`: BLE 상태 화면 열기
 
 Page 2:
@@ -77,7 +77,7 @@ Night Mode는 desktop daemon이 BLE payload에 같이 보내는 `now` 값을 기
 컴퓨터에서 아래 BLE 장치를 찾으면 됩니다.
 
 ```text
-CYD Usage Meter
+CodeMeter
 ```
 
 Windows와 Mac mini를 같이 쓰는 경우에는 보드를 **Mac mini에만 페어링**하고 Mac mini에서 daemon을 상시 실행하는 구성이 가장 안정적입니다. 사용량은 계정 기준이라 Windows에서 Codex를 써도 Mac mini daemon이 같은 계정으로 로그인되어 있으면 보드에 반영됩니다.

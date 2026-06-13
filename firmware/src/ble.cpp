@@ -3,7 +3,7 @@
 #include <NimBLEDevice.h>
 #include <NimBLEHIDDevice.h>
 
-#define DEVICE_NAME "CYD Usage Meter"
+#define DEVICE_NAME "CodeMeter"
 
 // Custom GATT UUIDs for data channel
 #define SERVICE_UUID        "434f4445-582d-4d65-7465-720000000001"

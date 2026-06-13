@@ -1,4 +1,4 @@
-# CYD Usage Meter Installer
+# CodeMeter Installer
 
 Static ESP Web Tools installer for the CYD / `ESP32-2432S028R` build.
 

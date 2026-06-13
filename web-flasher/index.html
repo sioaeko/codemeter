@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <title>CYD Usage Meter 설치</title>
+    <title>CodeMeter 설치</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -872,10 +872,10 @@
           <a
             class="brand"
             href="#install"
-            aria-label="CYD Usage Meter 설치로 이동"
+            aria-label="CodeMeter 설치로 이동"
             data-i18n-aria-label="brandAria"
           >
-            CYD Usage Meter
+            CodeMeter
           </a>
           <a
             class="buy-link"
@@ -893,7 +893,7 @@
           <div class="container hero-grid">
             <div>
               <p class="eyebrow" data-i18n="eyebrow">CYD firmware installer</p>
-              <h1>CYD Usage Meter</h1>
+              <h1>CodeMeter</h1>
               <p class="lede" data-i18n="lede">
                 CYD 보드용 사용량 미터 펌웨어입니다. Codex와 Claude Code
                 사용량 표시를 모두 지원합니다.
@@ -911,7 +911,7 @@
               <figure
                 class="firmware-preview"
                 data-orientation="portrait"
-                aria-label="CYD Usage Meter 펌웨어 화면 미리보기"
+                aria-label="CodeMeter 펌웨어 화면 미리보기"
                 data-i18n-aria-label="previewAria"
               >
                 <figcaption class="preview-top">
@@ -922,8 +922,8 @@
                   <div class="preview-screen">
                     <img
                       data-preview-image
-                      src="previews/cyd_2432s028r/portrait_splash.svg?v=0.4.0"
-                      alt="CYD Usage Meter portrait firmware preview"
+                      src="previews/cyd_2432s028r/portrait_usage.svg?v=0.4.0"
+                      alt="CodeMeter portrait firmware preview"
                       data-i18n-alt="previewImageAlt"
                     />
                   </div>
@@ -937,15 +937,8 @@
                   <button
                     type="button"
                     class="is-active"
-                    data-preview-screen="splash"
-                    aria-pressed="true"
-                  >
-                    Splash
-                  </button>
-                  <button
-                    type="button"
                     data-preview-screen="usage"
-                    aria-pressed="false"
+                    aria-pressed="true"
                   >
                     Usage
                   </button>
@@ -1259,7 +1252,7 @@ py -3 -m venv daemon\.venv
 
       <footer class="footer">
         <div class="container footer-inner">
-          <span>CYD Usage Meter</span>
+          <span>CodeMeter</span>
           <div class="footer-links">
             <a href="manifest.json">portrait manifest</a>
             <a href="manifest-landscape.json">landscape manifest</a>
@@ -1272,8 +1265,8 @@ py -3 -m venv daemon\.venv
     <script>
       const i18n = {
         ko: {
-          title: "CYD Usage Meter 설치",
-          brandAria: "CYD Usage Meter 설치로 이동",
+          title: "CodeMeter 설치",
+          brandAria: "CodeMeter 설치로 이동",
           buyCyd: "CYD 구매하기",
           eyebrow: "CYD 펌웨어 설치",
           lede:
@@ -1282,8 +1275,8 @@ py -3 -m venv daemon\.venv
           reqBoard: "CYD 보드",
           reqCable: "USB 데이터 케이블",
           reqBrowser: "Web Serial",
-          previewAria: "CYD Usage Meter 펌웨어 화면 미리보기",
-          previewImageAlt: "CYD Usage Meter 펌웨어 화면 미리보기",
+          previewAria: "CodeMeter 펌웨어 화면 미리보기",
+          previewImageAlt: "CodeMeter 펌웨어 화면 미리보기",
           previewTabsAria: "프리뷰 화면 선택",
           installAria: "펌웨어 설치",
           installTitle: "설치",
@@ -1336,8 +1329,8 @@ py -3 -m venv daemon\.venv
           step3Copy: "브라우저가 선택한 시리얼 포트에 플래시합니다.",
         },
         en: {
-          title: "Install CYD Usage Meter",
-          brandAria: "Go to the CYD Usage Meter installer",
+          title: "Install CodeMeter",
+          brandAria: "Go to the CodeMeter installer",
           buyCyd: "Buy CYD",
           eyebrow: "CYD firmware installer",
           lede:
@@ -1346,8 +1339,8 @@ py -3 -m venv daemon\.venv
           reqBoard: "CYD board",
           reqCable: "USB data cable",
           reqBrowser: "Web Serial browser",
-          previewAria: "CYD Usage Meter firmware preview",
-          previewImageAlt: "CYD Usage Meter firmware preview",
+          previewAria: "CodeMeter firmware preview",
+          previewImageAlt: "CodeMeter firmware preview",
           previewTabsAria: "Choose preview screen",
           installAria: "Firmware installer",
           installTitle: "Install",
@@ -1440,13 +1433,13 @@ py -3 -m venv daemon\.venv
       const assetVersion = "0.4.0";
 
       const previewSources = {
-        portrait: ["splash", "usage", "settings", "bluetooth"],
-        landscape: ["splash", "usage", "settings", "bluetooth"],
+        portrait: ["usage", "settings", "bluetooth"],
+        landscape: ["usage", "settings", "bluetooth"],
       };
 
       const previewState = {
         orientation: "portrait",
-        screen: "splash",
+        screen: "usage",
       };
 
       const daemonState = {

@@ -12,7 +12,7 @@ const palette = {
   text: "#f6f8fa",
   dim: "#98a2ad",
   bar: "#263039",
-  accent: "#18a085",
+  accent: "#d9825b",
   green: "#18a085",
 };
 
@@ -204,30 +204,6 @@ function renderUsage(L) {
   ].join("\n");
 }
 
-function renderSplash(L) {
-  const artW = Math.min(Math.round(Math.min(L.w, L.h) * 0.66), 220);
-  const artH = Math.round(artW * 0.75);
-  const x = Math.round((L.w - artW) / 2);
-  const y = Math.round((L.h - artH) / 2);
-  const gap = 8;
-  const barW = Math.floor((artW - gap * 4) / 5);
-  const heights = [0.34, 0.72, 0.52, 0.88, 0.43];
-  const baseline = y + artH - 18;
-  return [
-    ...openSvg(L.w, L.h),
-    title(L, "Usage Meter", { size: L.h <= 260 ? 24 : 28, y: L.h <= 260 ? 18 : 32, className: "" }),
-    rect(x - 13, y - 14, artW + 26, artH + 28, palette.panel, 8),
-    ...heights.map((v, index) => {
-      const h = Math.round((artH - 34) * v);
-      return rect(x + index * (barW + gap), baseline - h, barW, h, palette.accent, 4);
-    }),
-    label("BLE display", L.w / 2, L.h - (L.h <= 260 ? 14 : 26), L.h <= 260 ? 12 : 14, palette.dim, {
-      anchor: "middle",
-    }),
-    `</svg>`,
-  ].join("\n");
-}
-
 function settingsCard(L, index, name, value) {
   const y = L.contentY + index * (L.settingsCardH + L.settingsGap);
   const contentW = L.w - 2 * L.margin;
@@ -254,7 +230,7 @@ function renderSettings(L) {
     topButton(L, "BACK", "left"),
     settingsCard(L, 0, "Display", "Used"),
     settingsCard(L, 1, "Theme", "Dark"),
-    settingsCard(L, 2, "Accent", "Green"),
+    settingsCard(L, 2, "Accent", "Warm"),
     settingsCard(L, 3, "Bluetooth", "Open"),
     label("BACK exits", L.w / 2, L.h - L.spinnerBottom - L.resetSize * 0.55, L.resetSize, palette.dim, {
       anchor: "middle",
@@ -294,12 +270,12 @@ function renderBluetooth(L) {
     rect(L.margin, infoY, contentW, L.btInfoPanelH, palette.panel, 8),
     bluetoothIcon(L.margin + L.panelPad, infoY + L.panelPadY, btIconSize),
     label("Connected", L.margin + L.panelPad + 48, infoY + L.panelPadY + btIconSize / 2, L.btStatusSize, palette.green, { weight: 700 }),
-    label("Device: CYD Usage Meter", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
+    label("Device: CodeMeter", L.margin + L.panelPad, infoY + deviceY, L.btDeviceSize, palette.dim),
     label("Address: F0:08:D1:2A:BC:34", L.margin + L.panelPad, infoY + macY, L.btDeviceSize, palette.dim),
     rect(L.margin, resetY, contentW, L.btResetZoneH, palette.panel, 8),
     trashIcon(L.margin + contentW / 2 - 68, resetY + L.btResetZoneH / 2 - 10, 20),
     label("Reset Bluetooth", L.margin + contentW / 2 - 36, resetY + L.btResetZoneH / 2, resetLabelSize, palette.dim),
-    L.h > 260 ? label("CYD Usage Meter", L.w / 2, L.h - 46, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
+    L.h > 260 ? label("CodeMeter", L.w / 2, L.h - 46, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
     L.h > 260 ? label("Community firmware", L.w / 2, L.h - 20, L.btDeviceSize, palette.dim, { anchor: "middle" }) : "",
     topButton(L, "SET", "right"),
     `</svg>`,
@@ -349,7 +325,6 @@ fs.mkdirSync(webOutDir, { recursive: true });
 const outputs = [];
 for (const [name, L] of Object.entries(layouts)) {
   const screens = [
-    ["splash", renderSplash(L)],
     ["usage", renderUsage(L)],
     ["settings", renderSettings(L)],
     ["bluetooth", renderBluetooth(L)],

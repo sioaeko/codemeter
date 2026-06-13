@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build and flash CYD Usage Meter firmware on macOS.
+# Build and flash CodeMeter firmware on macOS.
 # Usage:
 #   ./flash-mac.sh <board>                       # auto-detect common USB serial ports
 #   ./flash-mac.sh <board> /dev/cu.usbserial-110 # explicit USB serial port
@@ -46,7 +46,7 @@ fi
 
 export PLATFORMIO_CORE_DIR="${PLATFORMIO_CORE_DIR:-$SCRIPT_DIR/.platformio}"
 
-echo "=== Flashing CYD Usage Meter ==="
+echo "=== Flashing CodeMeter ==="
 echo "Board: $BOARD"
 echo "Port:  $PORT"
 echo ""
