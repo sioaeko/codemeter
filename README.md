@@ -24,7 +24,7 @@ Chrome/Edge에서 CYD를 USB로 연결하고 **Install**을 누르면 됩니다.
 
 ## 배포 정리
 
-이 빌드는 단순 사용량 UI와 설정 UI만 유지하고, 제3자 마스코트/브랜드 로고/비공개 폰트 기반 자산을 제거한 clean 배포 방향입니다.
+이 빌드는 단순 사용량 UI와 설정 UI만 유지하고, 기존 repo에서 저작권/상표권 문제가 될 수 있던 제3자 마스코트, 브랜드 로고, 비공개 폰트 기반 자산을 모두 제거하거나 자체 구현으로 대체한 clean 배포 방향입니다.
 
 - 부팅 상태 화면은 자체 추상 미터 UI입니다.
 - 펌웨어 폰트는 LVGL 내장 Montserrat를 사용합니다.
@@ -163,3 +163,4 @@ firmware/src/boards/cyd_2432s028r/board.h
 ## Upstream
 
 This repository started as a CYD port of [HermannBjorgvin/Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter).
+The current CodeMeter distribution keeps the useful usage/settings behavior, but all previously bundled copyright-sensitive assets and brand-specific presentation pieces have been removed or replaced. The startup/status UI is original, the firmware fonts use LVGL's built-in Montserrat, and no third-party mascot, official logo, or proprietary font asset is included in this repository.
