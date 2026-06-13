@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
       rel="stylesheet"
     />
     <script
@@ -19,46 +19,66 @@
     ></script>
     <style>
       :root {
-        --bg: #f4f7f8;
-        --surface: #ffffff;
-        --surface-soft: #eef3f4;
-        --ink: #162027;
-        --body: #43505a;
-        --muted: #6d7a84;
-        --line: #d9e2e5;
-        --line-strong: #bdcbd0;
-        --primary: #12866f;
-        --primary-dark: #0b5f50;
-        --warning-bg: #fff6dd;
-        --warning-text: #70520a;
-        --error-bg: #fde9e7;
-        --error-text: #8b302b;
-        --dark: #05070a;
+        --primary: #cc785c;
+        --primary-active: #a9583e;
+        --ink: #141413;
+        --body: #3d3d3a;
+        --muted: #6c6a64;
+        --hairline: #e6dfd8;
+        --hairline-strong: #d8cec2;
+        --canvas: #faf9f5;
+        --surface: #f5f0e8;
+        --surface-strong: #efe9de;
+        --surface-dark: #181715;
+        --surface-dark-soft: #24221f;
+        --on-primary: #ffffff;
+        --on-dark: #faf9f5;
+        --on-dark-soft: #b8b2a8;
+        --success: #5db8a6;
+        --warning-bg: #fbf0d1;
+        --warning-text: #6d5208;
+        --error-bg: #f8e3df;
+        --error-text: #8b3030;
         --radius: 8px;
-        --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        --font-display: Newsreader, Georgia, "Times New Roman", serif;
+        --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
       }
 
-      * {
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        background: var(--bg);
+        background: var(--canvas);
         color: var(--body);
-        font-family: var(--font);
+        font-family: var(--font-body);
+        font-size: 16px;
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
       }
 
       a {
         color: inherit;
+        text-decoration: none;
       }
 
       button {
         font: inherit;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       .container {
@@ -68,371 +88,637 @@
       }
 
       .topbar {
-        border-bottom: 1px solid var(--line);
-        background: rgba(244, 247, 248, 0.92);
-        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--hairline);
+        background: rgba(250, 249, 245, 0.92);
+        backdrop-filter: blur(18px);
       }
 
       .topbar-inner {
-        min-height: 64px;
+        height: 68px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 20px;
       }
 
       .brand {
-        color: var(--ink);
-        font-size: 19px;
-        font-weight: 700;
-        text-decoration: none;
-      }
-
-      .top-actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      .link-pill {
         display: inline-flex;
         align-items: center;
-        min-height: 36px;
-        border: 1px solid var(--line-strong);
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 1;
+      }
+
+      .buy-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border: 1px solid var(--hairline-strong);
         border-radius: 999px;
         background: var(--surface);
         color: var(--ink);
         font-size: 13px;
-        font-weight: 650;
-        padding: 0 14px;
-        text-decoration: none;
+        font-weight: 600;
+        padding: 0 16px;
         white-space: nowrap;
       }
 
-      main {
-        padding: 38px 0 42px;
+      .buy-link:hover {
+        border-color: var(--primary);
+        color: var(--primary-active);
+      }
+
+      .hero {
+        flex: 1;
+        display: grid;
+        align-items: center;
+        padding: 56px 0 40px;
       }
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 400px;
-        gap: 34px;
-        align-items: start;
-      }
-
-      .intro {
-        display: grid;
-        gap: 22px;
+        grid-template-columns: minmax(0, 1fr) 440px;
+        gap: 56px;
+        align-items: center;
       }
 
       .eyebrow {
-        margin: 0 0 8px;
-        color: var(--primary-dark);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-      }
-
-      h1,
-      h2,
-      h3,
-      p {
-        margin-top: 0;
+        margin: 0 0 14px;
+        color: var(--primary);
+        font-size: 13px;
+        font-weight: 600;
       }
 
       h1 {
-        margin-bottom: 12px;
+        margin: 0;
+        max-width: 650px;
         color: var(--ink);
-        font-size: clamp(38px, 7vw, 64px);
+        font-family: var(--font-display);
+        font-size: 66px;
+        font-weight: 400;
         line-height: 1;
         letter-spacing: 0;
       }
 
       .lede {
-        max-width: 640px;
-        margin-bottom: 0;
-        font-size: 17px;
+        max-width: 560px;
+        margin: 22px 0 0;
+        color: var(--body);
+        font-size: 18px;
       }
 
       .quick-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        margin: 20px 0 0;
+        gap: 10px;
+        margin: 28px 0 0;
         padding: 0;
         list-style: none;
       }
 
       .quick-list li {
-        border: 1px solid var(--line);
+        border: 1px solid var(--hairline);
         border-radius: 999px;
         background: var(--surface);
         color: var(--body);
         font-size: 13px;
-        font-weight: 600;
-        padding: 7px 11px;
+        font-weight: 500;
+        padding: 8px 12px;
       }
 
-      .preview {
-        width: min(100%, 360px);
+      .firmware-preview {
+        width: min(100%, 380px);
+        margin: 42px 0 0;
       }
 
-      .preview[data-orientation="portrait"] {
+      .firmware-preview[data-orientation="portrait"] {
         width: min(100%, 280px);
       }
 
-      .preview-head {
+      .firmware-preview[data-orientation="landscape"] {
+        width: min(100%, 360px);
+      }
+
+      .preview-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
         margin-bottom: 10px;
         color: var(--muted);
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 600;
+      }
+
+      .status-dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .status-dot::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--success);
       }
 
       .preview-shell {
-        border-radius: 18px;
-        background: #111820;
-        padding: 12px;
-        box-shadow: 0 18px 40px rgba(22, 32, 39, 0.18);
+        border: 1px solid #2e2b27;
+        border-radius: var(--radius);
+        background: var(--surface-dark);
+        padding: 14px;
       }
 
       .preview-screen {
-        overflow: hidden;
-        border-radius: 10px;
-        background: var(--dark);
+        display: grid;
+        place-items: center;
+        min-height: 230px;
       }
 
       .preview-screen img {
         display: block;
         width: 100%;
         height: auto;
-      }
-
-      .tabs,
-      .segments {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-      }
-
-      .tabs {
-        margin-top: 12px;
-      }
-
-      .tabs button,
-      .segments button {
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: var(--surface);
-        color: var(--body);
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 650;
-        min-height: 36px;
-        padding: 0 13px;
-      }
-
-      .tabs button.is-active,
-      .segments button.is-active {
-        border-color: var(--primary);
-        background: var(--primary);
-        color: #ffffff;
-      }
-
-      .install-panel,
-      .daemon-panel,
-      .note-panel {
-        border: 1px solid var(--line);
+        border: 1px solid #383631;
         border-radius: var(--radius);
-        background: var(--surface);
+        background: #000000;
       }
 
-      .install-panel {
-        padding: 22px;
+      .firmware-preview[data-orientation="portrait"] .preview-screen img {
+        max-width: 240px;
+      }
+
+      .firmware-preview[data-orientation="landscape"] .preview-screen img {
+        max-width: 320px;
+      }
+
+      .preview-tabs {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        margin-top: 10px;
+        border: 1px solid #2e2b27;
+        border-radius: var(--radius);
+        background: var(--surface-dark);
+        padding: 6px;
+      }
+
+      .preview-tabs button {
+        appearance: none;
+        min-height: 34px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--on-dark-soft);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .preview-tabs button.is-active {
+        background: var(--surface-dark-soft);
+        color: var(--on-dark);
+      }
+
+      .flash-panel {
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: #fffdfa;
+        padding: 28px;
       }
 
       .panel-head {
         display: flex;
-        align-items: flex-start;
         justify-content: space-between;
-        gap: 14px;
-        margin-bottom: 20px;
+        gap: 20px;
+        align-items: flex-start;
       }
 
       .panel-head h2 {
-        margin-bottom: 4px;
+        margin: 0;
         color: var(--ink);
-        font-size: 24px;
+        font-size: 22px;
+        font-weight: 600;
       }
 
       .panel-head p {
-        margin-bottom: 0;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
       }
 
-      .version {
+      .version-pill {
+        flex: 0 0 auto;
+        border: 1px solid var(--hairline);
         border-radius: 999px;
-        background: var(--surface-soft);
         color: var(--muted);
         font-size: 12px;
-        font-weight: 700;
-        padding: 6px 9px;
-        white-space: nowrap;
+        font-weight: 600;
+        padding: 6px 10px;
       }
 
-      .choice {
+      .segment {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        margin: 24px 0;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 6px;
+      }
+
+      .segment button {
+        appearance: none;
+        min-height: 54px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .segment button span {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .segment button.is-active {
+        background: var(--canvas);
+        color: var(--ink);
+        box-shadow: 0 1px 4px rgba(20, 20, 19, 0.08);
+      }
+
+      .install-choice {
         display: none;
-        margin-top: 16px;
-        border-top: 1px solid var(--line);
-        padding-top: 18px;
       }
 
-      .choice.is-active {
+      .install-choice.is-active {
         display: block;
+      }
+
+      .choice-copy {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
       }
 
       .choice-title {
         display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 14px;
+        flex-direction: column;
+        gap: 2px;
       }
 
-      .choice-title strong {
+      .choice-copy strong {
         color: var(--ink);
-        font-size: 17px;
-      }
-
-      .choice-title span {
-        color: var(--muted);
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 600;
       }
 
+      .choice-copy span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .case-link {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        border: 1px solid var(--hairline-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--primary-active);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0 14px;
+      }
+
+      .case-link:hover {
+        border-color: var(--primary);
+        background: var(--surface-strong);
+      }
+
+      .case-link span {
+        color: inherit;
+        font-size: inherit;
+      }
+
+      .case-inline {
+        display: flex;
+        flex: 0 1 auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0 5px;
+        max-width: min(100%, 280px);
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.55;
+        text-align: right;
+      }
+
+      .case-inline span {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      .case-inline .case-separator,
+      .case-inline a {
+        white-space: nowrap;
+      }
+
+      .case-inline a {
+        color: var(--primary-active);
+        font-size: inherit;
+        font-weight: 650;
+        text-decoration: none;
+      }
+
+      .case-inline a:hover {
+        color: var(--primary);
+      }
+
       .install-button {
+        appearance: none;
         width: 100%;
-        min-height: 48px;
+        min-height: 52px;
         border: 0;
         border-radius: var(--radius);
         background: var(--primary);
-        color: #ffffff;
+        color: var(--on-primary);
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-size: 15px;
-        font-weight: 750;
+        font-weight: 600;
       }
 
       .install-button:hover {
-        background: var(--primary-dark);
+        background: var(--primary-active);
+      }
+
+      .install-button:focus-visible,
+      .buy-link:focus-visible,
+      .case-link:focus-visible,
+      .case-inline a:focus-visible,
+      .segment button:focus-visible,
+      .daemon-segment button:focus-visible,
+      .preview-tabs button:focus-visible {
+        outline: 3px solid rgba(204, 120, 92, 0.32);
+        outline-offset: 2px;
       }
 
       .unsupported,
       .not-allowed {
         display: block;
+        margin-top: 14px;
         border-radius: var(--radius);
-        padding: 12px;
-        font-size: 13px;
+        padding: 12px 14px;
+        font-size: 14px;
+        line-height: 1.45;
       }
 
       .unsupported {
         background: var(--error-bg);
         color: var(--error-text);
+        border: 1px solid #efc1ba;
       }
 
       .not-allowed {
         background: var(--warning-bg);
         color: var(--warning-text);
+        border: 1px solid #ecd486;
       }
 
-      .help {
-        margin: 16px 0 0;
-        border-left: 3px solid var(--primary);
-        padding-left: 12px;
+      .panel-note {
+        margin: 18px 0 0;
         color: var(--muted);
         font-size: 13px;
       }
 
-      .sections {
-        display: grid;
-        gap: 20px;
-        margin-top: 34px;
+      .boot-help {
+        margin-top: 14px;
+        border: 1px solid #ecd486;
+        border-radius: var(--radius);
+        background: var(--warning-bg);
+        color: var(--warning-text);
+        padding: 13px 14px;
       }
 
-      .daemon-panel {
-        padding: 22px;
-      }
-
-      .daemon-grid {
-        display: grid;
-        grid-template-columns: 280px minmax(0, 1fr);
-        gap: 20px;
-      }
-
-      .daemon-panel h2 {
-        margin-bottom: 6px;
+      .boot-help strong {
+        display: block;
+        margin-bottom: 4px;
         color: var(--ink);
-        font-size: 24px;
+        font-size: 13px;
       }
 
-      .daemon-panel p {
-        margin-bottom: 14px;
+      .boot-help p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .daemon {
+        border-top: 1px solid var(--hairline);
+        padding: 34px 0;
+      }
+
+      .daemon-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .daemon-head {
+        max-width: 760px;
+      }
+
+      .daemon-head h2 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 26px;
+        font-weight: 600;
+      }
+
+      .daemon-head p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .daemon-warning {
+        border: 1px solid #ecd486;
+        border-radius: var(--radius);
+        background: var(--warning-bg);
+        color: var(--warning-text) !important;
+        padding: 12px 14px;
+      }
+
+      .daemon-tool {
+        display: grid;
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+        max-width: 880px;
       }
 
       .daemon-controls {
         display: grid;
-        gap: 14px;
-        align-content: start;
+        gap: 12px;
       }
 
-      .control-label {
-        display: block;
-        margin-bottom: 6px;
-        color: var(--ink);
-        font-size: 13px;
+      .daemon-control {
+        display: grid;
+        gap: 7px;
+      }
+
+      .daemon-control > span {
+        color: var(--primary-active);
+        font-size: 12px;
         font-weight: 700;
       }
 
+      .daemon-segment {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 6px;
+      }
+
+      .daemon-segment button {
+        appearance: none;
+        min-height: 40px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .daemon-segment button.is-active {
+        background: var(--canvas);
+        color: var(--ink);
+        box-shadow: 0 1px 4px rgba(20, 20, 19, 0.08);
+      }
+
       .daemon-card {
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
+        background: #fffdfa;
+        padding: 18px;
+      }
+
+      .daemon-card[hidden] {
         display: none;
       }
 
-      .daemon-card.is-active {
-        display: block;
-      }
-
       .daemon-card h3 {
-        margin-bottom: 8px;
+        margin: 0;
         color: var(--ink);
-        font-size: 18px;
+        font-size: 17px;
+        font-weight: 600;
       }
 
-      pre {
-        overflow-x: auto;
-        margin: 0;
+      .daemon-card p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .command-block {
+        margin: 14px 0 0;
         border-radius: var(--radius);
-        background: #10161c;
-        color: #ecf3f4;
+        background: var(--surface-dark);
+        color: var(--on-dark);
+        overflow-x: auto;
         padding: 14px;
+      }
+
+      .command-block code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 13px;
         line-height: 1.55;
+        white-space: pre;
       }
 
-      code {
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      .daemon-log {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
       }
 
-      .note-panel {
-        padding: 18px 22px;
+      .daemon-log code {
+        border: 1px solid var(--hairline);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--body);
+        padding: 2px 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .steps {
+        border-top: 1px solid var(--hairline);
+        padding: 28px 0 36px;
+      }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .step {
+        min-height: 92px;
+        border-left: 2px solid var(--primary);
+        padding-left: 16px;
+      }
+
+      .step span {
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .step h3 {
+        margin: 7px 0 0;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .step p {
+        margin: 6px 0 0;
         color: var(--muted);
         font-size: 13px;
       }
 
       .footer {
-        border-top: 1px solid var(--line);
         padding: 22px 0 30px;
         color: var(--muted);
         font-size: 13px;
@@ -443,257 +729,720 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        flex-wrap: wrap;
+        border-top: 1px solid var(--hairline);
+        padding-top: 20px;
       }
 
       .footer-links {
         display: flex;
-        gap: 14px;
         flex-wrap: wrap;
+        gap: 14px;
       }
 
-      @media (max-width: 860px) {
-        .hero-grid,
-        .daemon-grid {
+      .footer a {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          padding-top: 42px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 34px;
+        }
+
+        h1 {
+          max-width: 720px;
+          font-size: 48px;
+        }
+
+        .firmware-preview {
+          width: 100%;
+          max-width: 430px;
+        }
+
+        .firmware-preview[data-orientation="portrait"] {
+          max-width: 280px;
+        }
+
+        .firmware-preview[data-orientation="landscape"] {
+          max-width: 360px;
+        }
+
+        .flash-panel {
+          max-width: 560px;
+        }
+
+        .daemon-inner {
           grid-template-columns: 1fr;
         }
-
-        .install-panel {
-          order: -1;
-        }
-
-        main {
-          padding-top: 24px;
-        }
       }
 
-      @media (max-width: 520px) {
+      @media (max-width: 640px) {
         .container {
-          padding: 0 16px;
+          padding: 0 18px;
         }
 
         .topbar-inner {
-          align-items: flex-start;
-          flex-direction: column;
-          padding: 14px 0;
+          height: 62px;
+          gap: 12px;
         }
 
-        .top-actions {
+        .brand {
+          font-size: 21px;
+        }
+
+        .buy-link {
+          min-height: 34px;
+          padding: 0 12px;
+          font-size: 12px;
+        }
+
+        .hero {
+          padding: 34px 0 28px;
+        }
+
+        h1 {
+          font-size: 48px;
+        }
+
+        .lede {
+          font-size: 16px;
+        }
+
+        .firmware-preview {
+          margin-top: 30px;
+        }
+
+        .flash-panel {
+          padding: 22px;
+        }
+
+        .panel-head {
+          display: block;
+        }
+
+        .version-pill {
+          display: inline-block;
+          margin-top: 14px;
+        }
+
+        .choice-copy {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .case-inline {
           justify-content: flex-start;
+          max-width: 100%;
+          text-align: left;
         }
 
-        .panel-head,
-        .choice-title {
-          flex-direction: column;
+        .daemon {
+          padding: 28px 0;
+        }
+
+        .daemon-tool {
+          grid-template-columns: 1fr;
+        }
+
+        .daemon-controls {
+          grid-template-columns: 1fr;
+        }
+
+        .steps-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-inner {
           align-items: flex-start;
+          flex-direction: column;
         }
       }
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <div class="container topbar-inner">
-        <a class="brand" href="#install">CYD Usage Meter</a>
-        <nav class="top-actions" aria-label="빠른 링크">
-          <a class="link-pill" href="manifest.json">Portrait manifest</a>
-          <a class="link-pill" href="manifest-landscape.json">Landscape manifest</a>
-          <a class="link-pill" href="https://github.com/sioaeko/clawdmeter-cyd">GitHub</a>
-        </nav>
-      </div>
-    </header>
+    <div class="page">
+      <header class="topbar">
+        <div class="container topbar-inner">
+          <a
+            class="brand"
+            href="#install"
+            aria-label="CYD Usage Meter 설치로 이동"
+            data-i18n-aria-label="brandAria"
+          >
+            CYD Usage Meter
+          </a>
+          <a
+            class="buy-link"
+            href="https://www.aliexpress.com/item/1005006994102781.html?sku_id=12000038982645297"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span data-i18n="buyCyd">CYD 구매하기</span>
+          </a>
+        </div>
+      </header>
 
-    <main>
-      <div class="container hero-grid">
-        <section class="intro" aria-labelledby="page-title">
-          <div>
-            <p class="eyebrow">ESP32-2432S028R flasher</p>
-            <h1 id="page-title">CYD Usage Meter</h1>
-            <p class="lede">
-              CYD 보드에 Codex 또는 Claude Code 사용량 미터 펌웨어를 설치합니다.
-              설정은 보드의 Settings 화면에서 조절하고, BLE 장치명은
-              <strong>CYD Usage Meter</strong>입니다.
-            </p>
-            <ul class="quick-list" aria-label="설치 조건">
-              <li>CYD board</li>
-              <li>USB data cable</li>
-              <li>Chrome / Edge</li>
-              <li>HTTPS or localhost</li>
-            </ul>
-          </div>
-
-          <figure class="preview" data-orientation="portrait" aria-label="펌웨어 미리보기">
-            <figcaption class="preview-head">
-              <span>FIRMWARE PREVIEW</span>
-              <span>BLE</span>
-            </figcaption>
-            <div class="preview-shell">
-              <div class="preview-screen">
-                <img
-                  data-preview-image
-                  src="previews/cyd_2432s028r/portrait_splash.svg?v=0.4.0"
-                  alt="CYD Usage Meter firmware preview"
-                />
-              </div>
-            </div>
-            <div class="tabs" role="group" aria-label="미리보기 화면 선택">
-              <button type="button" class="is-active" data-preview-screen="splash">Splash</button>
-              <button type="button" data-preview-screen="usage">Usage</button>
-              <button type="button" data-preview-screen="settings">Settings</button>
-              <button type="button" data-preview-screen="bluetooth">Bluetooth</button>
-            </div>
-          </figure>
-        </section>
-
-        <section class="install-panel" id="install" aria-labelledby="install-title">
-          <div class="panel-head">
+      <main>
+        <section class="hero">
+          <div class="container hero-grid">
             <div>
-              <h2 id="install-title">Install firmware</h2>
-              <p>화면 방향을 고른 뒤 Install을 누르세요.</p>
-            </div>
-            <span class="version">v0.4.0</span>
-          </div>
-
-          <div class="segments" role="group" aria-label="화면 방향 선택">
-            <button type="button" class="is-active" data-target="portrait" aria-pressed="true">
-              Portrait 240 x 320
-            </button>
-            <button type="button" data-target="landscape" aria-pressed="false">
-              Landscape 320 x 240
-            </button>
-          </div>
-
-          <div class="choice is-active" data-choice="portrait">
-            <div class="choice-title">
-              <strong>Portrait</strong>
-              <span>기본 세로 배치</span>
-            </div>
-            <esp-web-install-button manifest="manifest.json">
-              <button slot="activate" class="install-button">Install Portrait</button>
-              <span slot="unsupported" class="unsupported">
-                Web Serial을 지원하는 Chrome 또는 Edge에서 열어주세요.
-              </span>
-              <span slot="not-allowed" class="not-allowed">
-                Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
-              </span>
-            </esp-web-install-button>
-          </div>
-
-          <div class="choice" data-choice="landscape">
-            <div class="choice-title">
-              <strong>Landscape</strong>
-              <span>가로 거치 배치</span>
-            </div>
-            <esp-web-install-button manifest="manifest-landscape.json">
-              <button slot="activate" class="install-button">Install Landscape</button>
-              <span slot="unsupported" class="unsupported">
-                Web Serial을 지원하는 Chrome 또는 Edge에서 열어주세요.
-              </span>
-              <span slot="not-allowed" class="not-allowed">
-                Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
-              </span>
-            </esp-web-install-button>
-          </div>
-
-          <p class="help">
-            Failed to initialize가 뜨면 BOOT 버튼을 누른 채 Install을 누르고,
-            포트 선택 뒤 Erasing 또는 Installing이 보이면 BOOT에서 손을 떼세요.
-          </p>
-        </section>
-      </div>
-
-      <div class="container sections">
-        <section class="daemon-panel" aria-labelledby="daemon-title">
-          <div class="daemon-grid">
-            <div>
-              <p class="eyebrow">Desktop daemon</p>
-              <h2 id="daemon-title">사용량 전송</h2>
-              <p>
-                펌웨어 설치 후 데스크톱에서 daemon 하나만 실행하세요. Codex와
-                Claude Code daemon을 동시에 켜면 같은 화면에 값을 번갈아 씁니다.
+              <p class="eyebrow" data-i18n="eyebrow">CYD firmware installer</p>
+              <h1>CYD Usage Meter</h1>
+              <p class="lede" data-i18n="lede">
+                CYD 보드용 사용량 미터 펌웨어입니다. Codex와 Claude Code
+                사용량 표시를 모두 지원합니다.
               </p>
-              <div class="daemon-controls">
-                <label>
-                  <span class="control-label">OS</span>
-                  <span class="segments" role="group" aria-label="OS 선택">
-                    <button type="button" class="is-active" data-daemon-os="macos">macOS</button>
-                    <button type="button" data-daemon-os="windows">Windows</button>
-                  </span>
-                </label>
-                <label>
-                  <span class="control-label">Source</span>
-                  <span class="segments" role="group" aria-label="사용량 소스 선택">
-                    <button type="button" class="is-active" data-daemon-target="codex">Codex</button>
-                    <button type="button" data-daemon-target="claude">Claude Code</button>
-                  </span>
-                </label>
-              </div>
+              <ul
+                class="quick-list"
+                aria-label="설치 조건"
+                data-i18n-aria-label="requirementsAria"
+              >
+                <li data-i18n="reqBoard">CYD 보드</li>
+                <li data-i18n="reqCable">USB 데이터 케이블</li>
+                <li data-i18n="reqBrowser">Web Serial</li>
+              </ul>
+
+              <figure
+                class="firmware-preview"
+                data-orientation="portrait"
+                aria-label="CYD Usage Meter 펌웨어 화면 미리보기"
+                data-i18n-aria-label="previewAria"
+              >
+                <figcaption class="preview-top">
+                  <span>FIRMWARE PREVIEW</span>
+                  <span class="status-dot">BLE</span>
+                </figcaption>
+                <div class="preview-shell">
+                  <div class="preview-screen">
+                    <img
+                      data-preview-image
+                      src="previews/cyd_2432s028r/portrait_splash.svg?v=0.4.0"
+                      alt="CYD Usage Meter portrait firmware preview"
+                      data-i18n-alt="previewImageAlt"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="preview-tabs"
+                  role="group"
+                  aria-label="프리뷰 화면 선택"
+                  data-i18n-aria-label="previewTabsAria"
+                >
+                  <button
+                    type="button"
+                    class="is-active"
+                    data-preview-screen="splash"
+                    aria-pressed="true"
+                  >
+                    Splash
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="usage"
+                    aria-pressed="false"
+                  >
+                    Usage
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="settings"
+                    aria-pressed="false"
+                  >
+                    Settings
+                  </button>
+                  <button
+                    type="button"
+                    data-preview-screen="bluetooth"
+                    aria-pressed="false"
+                  >
+                    Bluetooth
+                  </button>
+                </div>
+              </figure>
             </div>
 
-            <article class="daemon-card is-active" data-daemon-card="macos-codex">
-              <h3>macOS - Codex</h3>
-              <pre><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+            <section
+              class="flash-panel"
+              id="install"
+              aria-label="펌웨어 설치"
+              data-i18n-aria-label="installAria"
+            >
+              <div class="panel-head">
+                <div>
+                  <h2 data-i18n="installTitle">설치</h2>
+                  <p data-i18n="installCopy">
+                    보드 방향을 고른 뒤 Install을 누르세요.
+                  </p>
+                </div>
+                <span class="version-pill">v0.4.0</span>
+              </div>
+
+              <div
+                class="segment"
+                role="group"
+                aria-label="화면 방향 선택"
+                data-i18n-aria-label="orientationAria"
+              >
+                <button
+                  type="button"
+                  class="is-active"
+                  data-target="portrait"
+                  aria-pressed="true"
+                >
+                  Portrait
+                  <span>240 x 320</span>
+                </button>
+                <button type="button" data-target="landscape" aria-pressed="false">
+                  Landscape
+                  <span>320 x 240</span>
+                </button>
+              </div>
+
+              <div class="install-choice is-active" data-choice="portrait">
+                <div class="choice-copy">
+                  <div class="choice-title">
+                    <strong data-i18n="portraitTitle">세로 화면</strong>
+                    <span data-i18n="portraitCopy">기본 배치</span>
+                  </div>
+                  <a
+                    class="case-link"
+                    href="https://makerworld.com/ko/models/1382304-aura-smart-weather-forecast-display#profileId-1430951"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span data-i18n="portraitCase">세로형 케이스 출력</span>
+                  </a>
+                </div>
+                <esp-web-install-button manifest="manifest.json">
+                  <button slot="activate" class="install-button">Install Portrait</button>
+                  <span slot="unsupported" class="unsupported">
+                    <span data-i18n="unsupported">
+                      Web Serial을 지원하는 브라우저에서 열어주세요.
+                    </span>
+                  </span>
+                  <span slot="not-allowed" class="not-allowed">
+                    <span data-i18n="notAllowed">
+                      Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    </span>
+                  </span>
+                </esp-web-install-button>
+              </div>
+
+              <div class="install-choice" data-choice="landscape">
+                <div class="choice-copy">
+                  <div class="choice-title">
+                    <strong data-i18n="landscapeTitle">가로 화면</strong>
+                    <span data-i18n="landscapeCopy">눕힌 거치용</span>
+                  </div>
+                  <p class="case-inline">
+                    <span data-i18n="landscapeCaseLead">케이스 출력</span>
+                    <span class="case-separator" aria-hidden="true">·</span>
+                    <a
+                      href="https://makerworld.com/ko/models/49607-desk-stand-for-xtouch-using-esp32-2432s028#profileId-51458"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-i18n="landscapeBackCase"
+                    >
+                      뒷판
+                    </a>
+                    <span class="case-separator" aria-hidden="true">/</span>
+                    <a
+                      href="https://makerworld.com/ko/models/137937-desk-stand-for-xtouch-using-esp322432s028-usb-c#profileId-150115"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-i18n="landscapeUsbCover"
+                    >
+                      C타입 커버
+                    </a>
+                  </p>
+                </div>
+                <esp-web-install-button manifest="manifest-landscape.json">
+                  <button slot="activate" class="install-button">Install Landscape</button>
+                  <span slot="unsupported" class="unsupported">
+                    <span data-i18n="unsupported">
+                      Web Serial을 지원하는 브라우저에서 열어주세요.
+                    </span>
+                  </span>
+                  <span slot="not-allowed" class="not-allowed">
+                    <span data-i18n="notAllowed">
+                      Web Serial은 HTTPS 또는 localhost에서만 동작합니다.
+                    </span>
+                  </span>
+                </esp-web-install-button>
+              </div>
+
+              <p class="panel-note" data-i18n="panelNote">
+                설치 중에는 USB를 분리하지 마세요. 포트가 보이지 않으면 BOOT를
+                누른 채 다시 연결해보세요.
+              </p>
+              <div class="boot-help">
+                <strong data-i18n="bootHelpTitle">초기화 실패 시</strong>
+                <p data-i18n="bootHelpCopy">
+                  BOOT 버튼을 누른 채 Install을 누르고 포트 선택까지 유지하세요.
+                  Erasing 또는 Installing이 뜨면 BOOT에서 손을 떼면 됩니다.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section
+          class="daemon"
+          aria-label="데몬 설치"
+          data-i18n-aria-label="daemonAria"
+        >
+          <div class="container daemon-inner">
+            <div class="daemon-head">
+              <p class="eyebrow" data-i18n="daemonEyebrow">Desktop daemon</p>
+              <h2 data-i18n="daemonTitle">데몬 설치</h2>
+              <p data-i18n="daemonCopy">
+                펌웨어 설치 후 데스크톱에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.
+              </p>
+              <p class="daemon-warning" data-i18n="daemonWarning">
+                Codex용과 Claude Code용 중 하나만 설치하세요. 둘을 동시에 켜면
+                같은 화면에 번갈아 값을 써서 표시가 흔들릴 수 있습니다.
+              </p>
+            </div>
+
+            <div class="daemon-tool">
+              <div
+                class="daemon-controls"
+                aria-label="데몬 설치 옵션"
+                data-i18n-aria-label="daemonOptionsAria"
+              >
+                <div class="daemon-control">
+                  <span data-i18n="daemonOsLabel">OS</span>
+                  <div
+                    class="daemon-segment"
+                    role="group"
+                    aria-label="OS 선택"
+                    data-i18n-aria-label="daemonOsAria"
+                  >
+                    <button
+                      type="button"
+                      class="is-active"
+                      data-daemon-os="macos"
+                      aria-pressed="true"
+                    >
+                      macOS
+                    </button>
+                    <button
+                      type="button"
+                      data-daemon-os="windows"
+                      aria-pressed="false"
+                    >
+                      Windows
+                    </button>
+                  </div>
+                </div>
+
+                <div class="daemon-control">
+                  <span data-i18n="daemonTargetLabel">표시 대상</span>
+                  <div
+                    class="daemon-segment"
+                    role="group"
+                    aria-label="표시 대상 선택"
+                    data-i18n-aria-label="daemonTargetAria"
+                  >
+                    <button
+                      type="button"
+                      class="is-active"
+                      data-daemon-target="codex"
+                      aria-pressed="true"
+                    >
+                      Codex
+                    </button>
+                    <button
+                      type="button"
+                      data-daemon-target="claude"
+                      aria-pressed="false"
+                    >
+                      Claude Code
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <article class="daemon-card" data-daemon-card="macos-codex">
+                <h3 data-i18n="daemonCodexTitle">macOS - Codex 사용량</h3>
+                <p data-i18n="daemonCodexCopy">
+                  Codex CLI에 로그인한 뒤 installer를 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
 cd clawdmeter-cyd
 codex login
 ./install-codex-mac.sh</code></pre>
-            </article>
+                <p class="daemon-log">
+                  <span data-i18n="daemonLogLabel">로그</span>
+                  <code>tail -F ~/Library/Logs/codex-usage-daemon.out.log</code>
+                </p>
+              </article>
 
-            <article class="daemon-card" data-daemon-card="macos-claude">
-              <h3>macOS - Claude Code</h3>
-              <pre><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+              <article class="daemon-card" data-daemon-card="macos-claude" hidden>
+                <h3 data-i18n="daemonClaudeTitle">macOS - Claude Code 사용량</h3>
+                <p data-i18n="daemonClaudeCopy">
+                  Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
 cd clawdmeter-cyd
 ./install-mac.sh</code></pre>
-            </article>
+                <p class="daemon-log">
+                  <span data-i18n="daemonLogLabel">로그</span>
+                  <code>tail -F ~/Library/Logs/claude-usage-daemon.out.log</code>
+                </p>
+              </article>
 
-            <article class="daemon-card" data-daemon-card="windows-codex">
-              <h3>Windows - Codex</h3>
-              <pre><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+              <article class="daemon-card" data-daemon-card="windows-codex" hidden>
+                <h3 data-i18n="daemonWindowsTitle">Windows - Codex 사용량</h3>
+                <p data-i18n="daemonWindowsCopy">
+                  PowerShell에서 수동으로 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
 cd clawdmeter-cyd
 codex login
 py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe -m pip install bleak httpx
 .\daemon\.venv\Scripts\python.exe .\daemon\codex_usage_daemon.py</code></pre>
-            </article>
+                <p class="daemon-log" data-i18n="daemonWindowsNote">
+                  상시 표시하려면 이 PowerShell 창을 열어두세요.
+                </p>
+              </article>
 
-            <article class="daemon-card" data-daemon-card="windows-claude">
-              <h3>Windows - Claude Code</h3>
-              <pre><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
+              <article class="daemon-card" data-daemon-card="windows-claude" hidden>
+                <h3 data-i18n="daemonWindowsClaudeTitle">
+                  Windows - Claude Code 사용량
+                </h3>
+                <p data-i18n="daemonWindowsClaudeCopy">
+                  Claude Code에 로그인한 뒤 PowerShell에서 수동으로 실행합니다.
+                </p>
+                <pre class="command-block"><code>git clone https://github.com/sioaeko/clawdmeter-cyd.git
 cd clawdmeter-cyd
 py -3 -m venv daemon\.venv
 .\daemon\.venv\Scripts\python.exe -m pip install bleak httpx
 .\daemon\.venv\Scripts\python.exe .\daemon\claude_usage_daemon.py</code></pre>
-            </article>
+                <p class="daemon-log" data-i18n="daemonWindowsNote">
+                  상시 표시하려면 이 PowerShell 창을 열어두세요.
+                </p>
+              </article>
+            </div>
           </div>
         </section>
 
-        <section class="note-panel" aria-label="배포 메모">
-          제3자 마스코트, 공식 로고, proprietary font 기반 펌웨어 자산은 포함하지
-          않습니다. Codex와 Claude Code 표기는 호환 대상 설명이며, 이 프로젝트는
-          OpenAI 또는 Anthropic과 공식 제휴가 없습니다.
+        <section class="steps" aria-label="설치 흐름" data-i18n-aria-label="stepsAria">
+          <div class="container steps-grid">
+            <article class="step">
+              <span>01</span>
+              <h3 data-i18n="step1Title">USB 연결</h3>
+              <p data-i18n="step1Copy">CYD 보드를 데이터 케이블로 연결합니다.</p>
+            </article>
+            <article class="step">
+              <span>02</span>
+              <h3 data-i18n="step2Title">방향 선택</h3>
+              <p data-i18n="step2Copy">세로 또는 가로 펌웨어를 고릅니다.</p>
+            </article>
+            <article class="step">
+              <span>03</span>
+              <h3>Install</h3>
+              <p data-i18n="step3Copy">
+                브라우저가 선택한 시리얼 포트에 플래시합니다.
+              </p>
+            </article>
+          </div>
         </section>
-      </div>
-    </main>
+      </main>
 
-    <footer class="footer">
-      <div class="container footer-inner">
-        <span>CYD Usage Meter</span>
-        <div class="footer-links">
-          <a href="manifest.json">portrait manifest</a>
-          <a href="manifest-landscape.json">landscape manifest</a>
-          <a href="README.md">README</a>
+      <footer class="footer">
+        <div class="container footer-inner">
+          <span>CYD Usage Meter</span>
+          <div class="footer-links">
+            <a href="manifest.json">portrait manifest</a>
+            <a href="manifest-landscape.json">landscape manifest</a>
+            <a href="README.md">README</a>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
 
     <script>
-      const assetVersion = "0.4.0";
-      const preview = document.querySelector("[data-orientation]");
-      const previewImage = document.querySelector("[data-preview-image]");
+      const i18n = {
+        ko: {
+          title: "CYD Usage Meter 설치",
+          brandAria: "CYD Usage Meter 설치로 이동",
+          buyCyd: "CYD 구매하기",
+          eyebrow: "CYD 펌웨어 설치",
+          lede:
+            "CYD 보드용 사용량 미터 펌웨어입니다. Codex와 Claude Code 사용량 표시를 모두 지원하며, Night Mode는 보드 Settings에서 조절합니다.",
+          requirementsAria: "설치 조건",
+          reqBoard: "CYD 보드",
+          reqCable: "USB 데이터 케이블",
+          reqBrowser: "Web Serial",
+          previewAria: "CYD Usage Meter 펌웨어 화면 미리보기",
+          previewImageAlt: "CYD Usage Meter 펌웨어 화면 미리보기",
+          previewTabsAria: "프리뷰 화면 선택",
+          installAria: "펌웨어 설치",
+          installTitle: "설치",
+          installCopy: "보드 방향을 고른 뒤 Install을 누르세요.",
+          orientationAria: "화면 방향 선택",
+          portraitTitle: "세로 화면",
+          portraitCopy: "기본 배치",
+          portraitCase: "세로형 케이스 출력",
+          landscapeTitle: "가로 화면",
+          landscapeCopy: "눕힌 거치용",
+          landscapeCaseLead: "케이스 출력",
+          landscapeBackCase: "뒷판",
+          landscapeUsbCover: "C타입 전면",
+          unsupported: "Web Serial을 지원하는 브라우저에서 열어주세요.",
+          notAllowed: "Web Serial은 HTTPS 또는 localhost에서만 동작합니다.",
+          panelNote:
+            "설치 중에는 USB를 분리하지 마세요. Wi-Fi/AP 설정은 없고 Night Mode는 보드 Settings에서 저장됩니다.",
+          bootHelpTitle: "초기화 실패 시",
+          bootHelpCopy:
+            "BOOT 버튼을 누른 채 Install을 누르고 포트 선택까지 유지하세요. Erasing 또는 Installing이 뜨면 BOOT에서 손을 떼면 됩니다.",
+          daemonAria: "데몬 설치",
+          daemonEyebrow: "Desktop daemon",
+          daemonTitle: "데몬 설치",
+          daemonCopy:
+            "펌웨어 설치 후 데스크톱에서 데몬을 실행하면 사용량이 Bluetooth로 전송됩니다.",
+          daemonWarning:
+            "Codex용과 Claude Code용 중 하나만 설치하세요. 둘을 동시에 켜면 같은 화면에 번갈아 값을 써서 표시가 흔들릴 수 있습니다.",
+          daemonOptionsAria: "데몬 설치 옵션",
+          daemonOsLabel: "OS",
+          daemonOsAria: "OS 선택",
+          daemonTargetLabel: "표시 대상",
+          daemonTargetAria: "표시 대상 선택",
+          daemonCodexTitle: "macOS - Codex 사용량",
+          daemonCodexCopy: "Codex CLI에 로그인한 뒤 installer를 실행합니다.",
+          daemonClaudeTitle: "macOS - Claude Code 사용량",
+          daemonClaudeCopy:
+            "Claude Code에 먼저 로그인한 뒤 installer를 실행합니다.",
+          daemonWindowsTitle: "Windows - Codex 사용량",
+          daemonWindowsCopy: "PowerShell에서 수동으로 실행합니다.",
+          daemonWindowsClaudeTitle: "Windows - Claude Code 사용량",
+          daemonWindowsClaudeCopy:
+            "Claude Code에 로그인한 뒤 PowerShell에서 수동으로 실행합니다.",
+          daemonWindowsNote: "상시 표시하려면 이 PowerShell 창을 열어두세요.",
+          daemonLogLabel: "로그",
+          stepsAria: "설치 흐름",
+          step1Title: "USB 연결",
+          step1Copy: "CYD 보드를 데이터 케이블로 연결합니다.",
+          step2Title: "방향 선택",
+          step2Copy: "세로 또는 가로 펌웨어를 고릅니다.",
+          step3Copy: "브라우저가 선택한 시리얼 포트에 플래시합니다.",
+        },
+        en: {
+          title: "Install CYD Usage Meter",
+          brandAria: "Go to the CYD Usage Meter installer",
+          buyCyd: "Buy CYD",
+          eyebrow: "CYD firmware installer",
+          lede:
+            "Usage meter firmware for the CYD board, with Codex and Claude Code usage display support. Night Mode is adjusted on the board Settings screen.",
+          requirementsAria: "Install requirements",
+          reqBoard: "CYD board",
+          reqCable: "USB data cable",
+          reqBrowser: "Web Serial browser",
+          previewAria: "CYD Usage Meter firmware preview",
+          previewImageAlt: "CYD Usage Meter firmware preview",
+          previewTabsAria: "Choose preview screen",
+          installAria: "Firmware installer",
+          installTitle: "Install",
+          installCopy: "Choose the board orientation, then press Install.",
+          orientationAria: "Choose screen orientation",
+          portraitTitle: "Portrait",
+          portraitCopy: "Default layout",
+          portraitCase: "Portrait case print",
+          landscapeTitle: "Landscape",
+          landscapeCopy: "Desk stand layout",
+          landscapeCaseLead: "Case files",
+          landscapeBackCase: "Back plate",
+          landscapeUsbCover: "USB-C front",
+          unsupported: "Open this page in a browser that supports Web Serial.",
+          notAllowed: "Web Serial only works on HTTPS or localhost.",
+          panelNote:
+            "Keep USB connected while flashing. There is no Wi-Fi/AP setup; Night Mode is saved on the board Settings screen.",
+          bootHelpTitle: "If initialization fails",
+          bootHelpCopy:
+            "Hold BOOT, press Install, and keep holding BOOT through port selection. Release BOOT once Erasing or Installing appears.",
+          daemonAria: "Daemon install",
+          daemonEyebrow: "Desktop daemon",
+          daemonTitle: "Install the daemon",
+          daemonCopy:
+            "After flashing, run one desktop daemon to send usage data over Bluetooth.",
+          daemonWarning:
+            "Install either the Codex daemon or the Claude Code daemon. Running both can make the display alternate between two values.",
+          daemonOptionsAria: "Daemon install options",
+          daemonOsLabel: "OS",
+          daemonOsAria: "Choose OS",
+          daemonTargetLabel: "Usage source",
+          daemonTargetAria: "Choose usage source",
+          daemonCodexTitle: "macOS - Codex usage",
+          daemonCodexCopy: "Sign in with the Codex CLI, then run the installer.",
+          daemonClaudeTitle: "macOS - Claude Code usage",
+          daemonClaudeCopy:
+            "Sign in with Claude Code first, then run the installer.",
+          daemonWindowsTitle: "Windows - Codex usage",
+          daemonWindowsCopy: "Run it manually from PowerShell.",
+          daemonWindowsClaudeTitle: "Windows - Claude Code usage",
+          daemonWindowsClaudeCopy:
+            "Sign in with Claude Code, then run it manually from PowerShell.",
+          daemonWindowsNote: "Keep this PowerShell window open for continuous updates.",
+          daemonLogLabel: "Log",
+          stepsAria: "Install flow",
+          step1Title: "Connect USB",
+          step1Copy: "Connect the CYD board with a USB data cable.",
+          step2Title: "Choose layout",
+          step2Copy: "Pick portrait or landscape firmware.",
+          step3Copy: "The browser flashes the selected serial port.",
+        },
+      };
+
+      function resolveLocale() {
+        const requested = new URLSearchParams(window.location.search).get("lang");
+        if (requested === "ko" || requested === "en") return requested;
+        return (navigator.language || "").toLowerCase().startsWith("ko")
+          ? "ko"
+          : "en";
+      }
+
+      const activeLocale = resolveLocale();
+
+      function text(key) {
+        return i18n[activeLocale][key] || i18n.en[key] || key;
+      }
+
+      function applyTranslations() {
+        document.documentElement.lang = activeLocale;
+        document.title = text("title");
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = text(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+          node.setAttribute("aria-label", text(node.dataset.i18nAriaLabel));
+        });
+        document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+          node.setAttribute("alt", text(node.dataset.i18nAlt));
+        });
+      }
+
       const orientationButtons = document.querySelectorAll("[data-target]");
       const choices = document.querySelectorAll("[data-choice]");
       const screenButtons = document.querySelectorAll("[data-preview-screen]");
       const daemonOsButtons = document.querySelectorAll("[data-daemon-os]");
       const daemonTargetButtons = document.querySelectorAll("[data-daemon-target]");
       const daemonCards = document.querySelectorAll("[data-daemon-card]");
+      const preview = document.querySelector("[data-orientation]");
+      const previewImage = document.querySelector("[data-preview-image]");
+      const assetVersion = "0.4.0";
+
+      const previewSources = {
+        portrait: ["splash", "usage", "settings", "bluetooth"],
+        landscape: ["splash", "usage", "settings", "bluetooth"],
+      };
 
       const previewState = {
         orientation: "portrait",
@@ -705,59 +1454,84 @@ py -3 -m venv daemon\.venv
         target: "codex",
       };
 
-      function setPressed(buttons, activeButton) {
-        buttons.forEach((button) => {
-          const active = button === activeButton;
+      function updatePreview() {
+        if (!preview || !previewImage) return;
+        const { orientation, screen } = previewState;
+        if (!previewSources[orientation]?.includes(screen)) return;
+        preview.dataset.orientation = orientation;
+        previewImage.src = `previews/cyd_2432s028r/${orientation}_${screen}.svg?v=${assetVersion}`;
+        previewImage.alt = text("previewImageAlt");
+      }
+
+      function updateDaemonGuide() {
+        const activeCard = `${daemonState.os}-${daemonState.target}`;
+
+        daemonCards.forEach((card) => {
+          card.hidden = card.dataset.daemonCard !== activeCard;
+        });
+
+        daemonOsButtons.forEach((button) => {
+          const active = button.dataset.daemonOs === daemonState.os;
           button.classList.toggle("is-active", active);
-          button.setAttribute("aria-pressed", active ? "true" : "false");
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        daemonTargetButtons.forEach((button) => {
+          const active = button.dataset.daemonTarget === daemonState.target;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
         });
       }
 
-      function updatePreview() {
-        preview.dataset.orientation = previewState.orientation;
-        previewImage.src =
-          `previews/cyd_2432s028r/${previewState.orientation}_${previewState.screen}.svg?v=${assetVersion}`;
-      }
+      applyTranslations();
+      updatePreview();
+      updateDaemonGuide();
 
       orientationButtons.forEach((button) => {
         button.addEventListener("click", () => {
-          previewState.orientation = button.dataset.target;
-          setPressed(orientationButtons, button);
-          choices.forEach((choice) => {
-            choice.classList.toggle("is-active", choice.dataset.choice === previewState.orientation);
+          const target = button.dataset.target;
+
+          orientationButtons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", String(active));
           });
+
+          choices.forEach((choice) => {
+            choice.classList.toggle("is-active", choice.dataset.choice === target);
+          });
+
+          previewState.orientation = target;
           updatePreview();
         });
       });
 
       screenButtons.forEach((button) => {
         button.addEventListener("click", () => {
-          previewState.screen = button.dataset.previewScreen;
-          setPressed(screenButtons, button);
+          const target = button.dataset.previewScreen;
+
+          screenButtons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", String(active));
+          });
+
+          previewState.screen = target;
           updatePreview();
         });
       });
 
-      function updateDaemonCard() {
-        const id = `${daemonState.os}-${daemonState.target}`;
-        daemonCards.forEach((card) => {
-          card.classList.toggle("is-active", card.dataset.daemonCard === id);
-        });
-      }
-
       daemonOsButtons.forEach((button) => {
         button.addEventListener("click", () => {
           daemonState.os = button.dataset.daemonOs;
-          setPressed(daemonOsButtons, button);
-          updateDaemonCard();
+          updateDaemonGuide();
         });
       });
 
       daemonTargetButtons.forEach((button) => {
         button.addEventListener("click", () => {
           daemonState.target = button.dataset.daemonTarget;
-          setPressed(daemonTargetButtons, button);
-          updateDaemonCard();
+          updateDaemonGuide();
         });
       });
     </script>
